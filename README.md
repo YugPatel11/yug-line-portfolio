@@ -32,6 +32,66 @@ All libraries used are strictly free and open-source:
 
 ---
 
+## Local Development & Testing
+
+```bash
+# 1. Install dependencies
+npm install
+
+# 2. Run local development server
+npm run dev
+
+# 3. Build static production distribution
+npm run build
+
+# 4. Run automated integrity audit
+npm test
+
+# 5. Preview production build locally
+npm run preview
+```
+
+---
+
+## Technical Architecture & Highlights
+
+### 1. Dual-Mode Progressive Enhancement
+- **Express Mode (Default/No-JS)**: Semantic, fully accessible single-page layout where all 8 stations are laid out along a vertical transit line. If JavaScript is disabled, 100% of portfolio content, links, and documents remain directly readable.
+- **Journey Mode (Interactive)**: Activated via typed state machine (`src/scripts/journey/machine.ts`). The visitor purchases a station boarding pass at the concourse window, validates it at the turnstile gate, boards a 3-car metro train, and arrives at the station with decision controls to navigate forward or return to base.
+- **Day Pass Skip**: Available on every screen (top navigation and scene overlays), allowing immediate switching back to Express Mode.
+
+### 2. Zero-File Web Audio Synthesizer
+- Built without any external audio asset files or network requests (`src/scripts/sound.ts`).
+- Synthesizes realistic transit mechanical feedback:
+  - Dot-matrix ticket printer noise bursts
+  - High-frequency validation beeps
+  - Gate solenoid thumps & pleasant two-tone chimes
+  - Train motor hums and arrival door-open chimes
+- Default state: **Muted/OFF** (user opt-in via header button or pressing `S`).
+
+### 3. Keyboard Navigation Shortcuts
+- `D`: Toggle Day Pass (Journey Mode / Express Mode)
+- `M`: Toggle Reduced Motion
+- `S`: Toggle Transit Sound Effects
+- `T`: Open Travel Card Passport modal
+- `1` - `8`: Quick-board to Stations 00 through 07
+- `Escape`: Close modals and overlays
+
+---
+
+## Deployment Instructions
+
+### Cloudflare Pages
+- **Build command**: `npm run build`
+- **Build output directory**: `dist`
+- **Environment variables**: Node.js `20.x` or higher
+- Caching and security headers are automatically loaded from `public/_headers`.
+
+### Vercel / Netlify / GitHub Pages
+- **Static deploy**: Deploy the contents of the `dist/` directory directly to any static web host. Zero server-side runtime is required.
+
+---
+
 ## Contrast Check Ratios (WCAG AA Compliance)
 - **Day Mode**:
   - Ink (`#111111`) on Paper (`#F4F1EA`): **16.8:1** (Passes AAA)
