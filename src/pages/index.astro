@@ -10,6 +10,7 @@ import TechLegend from '../components/TechLegend.astro';
 import EducationTicket from '../components/EducationTicket.astro';
 import TerminusContact from '../components/TerminusContact.astro';
 import Pictograms from '../components/Pictograms.astro';
+import JourneyControls from '../components/JourneyControls.astro';
 
 import { PROFILE, PROJECTS } from '../data/portfolio';
 
@@ -52,6 +53,15 @@ const moreProjects = PROJECTS.filter((p) => !p.featured);
 
       <!-- Theme, Motion Toggle & Resume Action -->
       <div class="flex items-center gap-2 sm:gap-3">
+        <!-- Day Pass Skip Button (Visible on every journey screen, Section 6) -->
+        <button
+          type="button"
+          class="day-pass-toggle-btn px-2.5 py-1 bg-surface border border-rule font-mono text-xs text-ink hover:border-ink"
+          aria-label="Day Pass — skip the booking"
+        >
+          Day Pass — skip booking
+        </button>
+
         <button
           type="button"
           id="motion-toggle"
@@ -386,9 +396,32 @@ const moreProjects = PROJECTS.filter((p) => !p.featured);
 
   </main>
 
+  <!-- Journey Controls & Live Region (Section 6 & 10) -->
+  <JourneyControls />
+
   <!-- Interactive Scripts (Client-side interactivity) -->
   <script>
+    import { JourneyStateMachine } from '../scripts/journey/machine';
+
     document.addEventListener('DOMContentLoaded', () => {
+      // Initialize Journey State Machine
+      const machine = new JourneyStateMachine();
+
+      // Expose to window for map/ticket triggers
+      (window as any).__yugline = machine;
+
+      // Header navigation station link delegation
+      document.querySelectorAll('a[href^="#station-"]').forEach((anchor) => {
+        anchor.addEventListener('click', (e) => {
+          const href = anchor.getAttribute('href');
+          if (href) {
+            e.preventDefault();
+            const stationId = href.replace('#', '') as any;
+            machine.navigateToStation(stationId);
+          }
+        });
+      });
+
       // 1. Reduced Motion Toggle
       const motionBtn = document.getElementById('motion-toggle');
       const motionStatus = document.getElementById('motion-status');

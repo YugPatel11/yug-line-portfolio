@@ -1,0 +1,52 @@
+---
+import Pictograms from './Pictograms.astro';
+---
+
+<!-- ARIA Live Announcer for screen readers (Section 10) -->
+<div id="journey-announcer" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+
+<!-- Fixed Decision Bar (Fixed Bottom Center, avoiding bottom-right corner per Rule 6) -->
+<nav
+  id="journey-decision-bar"
+  aria-label="Transit Journey Control Bar"
+  class="fixed bottom-4 left-4 right-4 md:left-1/2 md:-translate-x-1/2 md:w-auto md:max-w-2xl z-40 bg-surface border-2 border-ink shadow-[4px_4px_0_var(--ink)] p-2 md:p-3 flex items-center justify-between gap-3 text-xs font-mono"
+  style="display: none;"
+>
+  <!-- Back to Base / Departure -->
+  <button
+    type="button"
+    id="decision-base-btn"
+    class="px-2.5 py-1.5 border border-rule hover:border-ink bg-paper text-ink font-bold uppercase tracking-wider flex items-center gap-1.5 transition-colors"
+    title="Return to Central Departure (ST-00)"
+  >
+    <span>⏮ Central</span>
+  </button>
+
+  <!-- Ghumify Interchange "Change Line" Action -->
+  <button
+    type="button"
+    id="decision-change-line-btn"
+    class="hidden px-2.5 py-1.5 border border-line-ai bg-paper text-line-ai font-bold uppercase tracking-wider items-center gap-1.5 transition-colors"
+  >
+    <span>Change Line ➔ Projects</span>
+  </button>
+
+  <!-- Next Station Button -->
+  <button
+    type="button"
+    id="decision-next-btn"
+    class="flex-1 px-3 py-1.5 bg-ink text-paper font-bold uppercase tracking-wider flex items-center justify-center gap-2 hover:opacity-90 transition-opacity"
+  >
+    <span>Next Station</span>
+    <span>➔</span>
+  </button>
+
+  <!-- Travel Card Stamp Chip -->
+  <div
+    id="travel-card-chip"
+    class="hidden sm:flex px-2 py-1 bg-paper border border-rule font-bold text-ink uppercase tracking-wider text-[11px]"
+    title="Travel Card Verified Stops"
+  >
+    1 / 8 Stops
+  </div>
+</nav>
