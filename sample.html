@@ -1,0 +1,1999 @@
+<!DOCTYPE html>
+<html class="dark scroll-smooth" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Yug Rojivadiya | Portfolio</title>
+    <link rel="icon" type="image/png" href="images/logo.png" />
+    <meta name="description"
+        content="Yug Rojivadiya | Portfolio - Multidisciplinary Developer 32specializing in Django, Flutter, and Web Development. Explore my projects, experience, and technical arsenal." />
+    <meta name="keywords"
+        content="Yug Rojivadiya, web developer, Django developer, Flutter developer, portfolio, B.Tech CSE, AI/ML, Python developer, India" />
+    <meta name="author" content="Yug Rojivadiya" />
+    <meta name="robots" content="index, follow" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://yugpatel11.github.io/" />
+    <meta property="og:title" content="Yug Rojivadiya | Portfolio" />
+    <meta property="og:description"
+        content="Multidisciplinary Developer building premium digital experiences. Specialist in Django, Flutter, and Responsive Web UIs." />
+    <meta property="og:image" content="https://yugpatel11.github.io/images/my%20photo.jpg" />
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="https://yugpatel11.github.io/" />
+    <meta property="twitter:title" content="Yug Rojivadiya | Portfolio" />
+    <meta property="twitter:description"
+        content="Multidisciplinary Developer building premium digital experiences. Specialist in Django, Flutter, and Responsive Web UIs." />
+    <meta property="twitter:image" content="https://yugpatel11.github.io/images/my%20photo.jpg" />
+
+    <!-- Structured Data (JSON-LD) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "Yug Rojivadiya",
+      "url": "https://yugpatel11.github.io/",
+      "jobTitle": "Developer",
+      "description": "Portfolio website of Yug Rojivadiya, a multidisciplinary developer specializing in Web, Django, and Flutter.",
+      "sameAs": [
+        "https://www.linkedin.com/in/yug-rojivadiya-115bb435a/",
+        "https://github.com/placeholder-username",
+        "https://www.instagram.com/yug.rojivadiya/"
+      ]
+    }
+    </script>
+
+
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,700;1,400;1,700&family=Manrope:wght@200;300;400;500;700;800&display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#ffffff",
+                        "on-primary": "#1a1c1c",
+                        "surface": "#131313",
+                        "on-surface": "#e5e2e1",
+                        "outline-variant": "#474747",
+                        "surface-container-lowest": "#0e0e0e",
+                    },
+                    fontFamily: {
+                        "notoSerif": ["Noto Serif"],
+                        "manrope": ["Manrope"],
+                    }
+                },
+            },
+        }
+    </script>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #131313;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #353534;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #5d5f5f;
+        }
+
+        /* Hide scrollbar for mobile navbar to prevent overflow clipping */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        .liquid-mercury-bg {
+            background: radial-gradient(circle at 50% 50%, #1c1b1b 0%, #0e0e0e 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .liquid-blob {
+            position: absolute;
+            filter: blur(100px);
+            border-radius: 50%;
+            background: linear-gradient(45deg, rgba(255, 255, 255, 0.15) 0%, rgba(198, 198, 199, 0.2) 100%);
+            z-index: 0;
+            animation: blob-spin 20s infinite alternate ease-in-out;
+            box-shadow: 0 0-100px rgba(255, 255, 255, 0.05);
+        }
+
+        .blob-2 {
+            animation-duration: 25s;
+            animation-direction: alternate-reverse;
+            background: linear-gradient(-45deg, rgba(113, 113, 122, 0.2) 0%, rgba(255, 255, 255, 0.1) 100%);
+        }
+
+        .blob-3 {
+            animation-duration: 30s;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(113, 113, 122, 0.15) 100%);
+        }
+
+        /* Grainy Overlay */
+        .noise-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 1;
+            opacity: 0.05;
+            pointer-events: none;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+
+        .glass-pane {
+            backdrop-filter: blur(24px) saturate(180%);
+            background: rgba(25, 25, 25, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+            transform-style: preserve-3d;
+        }
+
+        .glass-pane:hover {
+            transform: scale(1.02) translateY(-5px);
+            background: rgba(40, 40, 40, 0.5);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 20px rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .text-glow {
+            text-shadow: 0 0 30px rgba(255, 255, 255, 0.15);
+        }
+
+        .magnetic-hover {
+            transition: all 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+
+        /* New Advanced Animations */
+        @keyframes shine {
+            0% {
+                background-position: 200% center;
+            }
+
+            100% {
+                background-position: -200% center;
+            }
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0px) rotate(0deg);
+            }
+
+            50% {
+                transform: translateY(-15px) rotate(1deg);
+            }
+        }
+
+        @keyframes blob-spin {
+            0% {
+                transform: rotate(0deg) scale(1);
+            }
+
+            50% {
+                transform: rotate(180deg) scale(1.3);
+            }
+
+            100% {
+                transform: rotate(360deg) scale(1);
+            }
+        }
+
+        .name-animate {
+            background: linear-gradient(90deg, #ffffff 0%, #71717a 50%, #ffffff 100%);
+            background-size: 200% auto;
+            color: transparent;
+            -webkit-background-clip: text;
+            background-clip: text;
+            animation: shine 4s linear infinite;
+        }
+
+        .animate-float {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .preloader-hidden {
+            opacity: 0 !important;
+            visibility: hidden !important;
+        }
+
+        #preloader {
+            position: fixed;
+            inset: 0;
+            background: #090909;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: all 1s cubic-bezier(0.85, 0, 0.15, 1);
+        }
+
+        .preloader-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .lottie-container {
+            width: clamp(250px, 60vw, 400px);
+            height: clamp(250px, 60vw, 400px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .loader-text {
+            font-family: 'Manrope';
+            font-size: 0.75rem;
+            letter-spacing: 0.5em;
+            color: #ffffff;
+            text-transform: uppercase;
+            opacity: 0.6;
+            animation: pulse-text 2s infinite ease-in-out;
+        }
+
+        @keyframes pulse-text {
+
+            0%,
+            100% {
+                opacity: 0.3;
+                transform: scale(0.98);
+            }
+
+            50% {
+                opacity: 0.8;
+                transform: scale(1);
+            }
+        }
+
+
+        #mobile-menu-container {
+            max-height: 0;
+            opacity: 0;
+            transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+            transform: translateY(-10px) scale(0.98);
+            pointer-events: none;
+            backdrop-filter: blur(32px);
+        }
+
+        #mobile-menu-container.open {
+            max-height: 600px;
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            pointer-events: auto;
+        }
+
+        /* Premium Nav Link */
+        .nav-link {
+            position: relative;
+            padding: 0.5rem 0;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 1px;
+            background: #fff;
+            transition: all 0.4s ease;
+            transform: translateX(-50%);
+            opacity: 0;
+        }
+
+        .nav-link:hover::after,
+        .nav-link.active::after {
+            width: 100%;
+            opacity: 1;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+
+        .premium-nav {
+            background: linear-gradient(135deg, rgba(20, 20, 20, 0.8) 0%, rgba(10, 10, 10, 0.9) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.8), inset 0 1px 1px rgba(255, 255, 255, 0.05);
+        }
+
+        /* Hamburger Animation */
+        #menu-toggle.active #bar1 {
+            transform: rotate(45deg) translateY(4.5px);
+        }
+
+        #menu-toggle.active #bar2 {
+            opacity: 0;
+        }
+
+        #menu-toggle.active #bar3 {
+            transform: rotate(-45deg) translateY(-4.5px);
+        }
+
+
+
+
+        html,
+        body {
+            max-width: 100%;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Ghumify Modal Transitions */
+        #ghumify-modal {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.3s ease;
+        }
+
+        #ghumify-modal.modal-open {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+        }
+
+        #ghumify-modal .modal-panel {
+            transform: scale(0.96) translateY(16px);
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+        }
+
+        #ghumify-modal.modal-open .modal-panel {
+            transform: scale(1) translateY(0);
+        }
+    </style>
+
+<body class="bg-surface text-on-surface font-manrope selection:bg-primary selection:text-on-primary overflow-x-hidden">
+
+
+    <div id="preloader">
+        <div class="preloader-content">
+            <div class="lottie-container">
+                <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs"
+                    type="module"></script>
+                <dotlottie-player src="images/preloader.lottie" background="transparent" speed="1"
+                    style="width: 100%; height: 100%;" loop autoplay></dotlottie-player>
+
+            </div>
+            <div class="loader-text">Initializing Experience</div>
+        </div>
+    </div>
+
+
+    <header
+        class="fixed top-0 left-1/2 -translate-x-1/2 z-50 flex flex-col items-center w-full pt-6 px-4 pointer-events-none">
+        <nav
+            class="premium-nav backdrop-blur-2xl text-zinc-100 font-manrope uppercase tracking-[0.2em] text-[10px] rounded-full w-fit max-w-[95vw] px-6 md:px-10 py-3 flex items-center justify-between gap-20 md:gap-14 relative z-[60] transition-all duration-500 pointer-events-auto">
+
+
+
+
+            <div
+                class="flex items-center text-xs md:text-xl font-notoSerif font-bold italic name-animate cursor-default">
+                Yug Rojivadiya
+            </div>
+
+            <div class="hidden md:flex items-center gap-10">
+                <a class="nav-link text-zinc-400 hover:text-white transition-colors" href="#work">Work</a>
+                <a class="nav-link text-zinc-400 hover:text-white transition-colors" href="#experience">Experience</a>
+                <a class="nav-link text-zinc-400 hover:text-white transition-colors" href="#tech">Tech</a>
+                <a class="nav-link text-zinc-400 hover:text-white transition-colors" href="#contact">Contact</a>
+                <a href="resume/YUG ROJIVADIYA  final cv.pdf" download
+                    class="ml-4 bg-white text-black px-6 py-2 rounded-full text-[10px] font-extrabold hover:bg-zinc-200 hover:scale-105 transition-all duration-300 flex items-center gap-2 shadow-xl">
+                    <i class="fa-solid fa-download text-[8px]"></i> Resume
+                </a>
+            </div>
+
+            <button id="menu-toggle" class="md:hidden flex flex-col gap-1.5 p-1 focus:outline-none shrink-0">
+                <div class="w-5 h-[1.5px] bg-white transition-all duration-300" id="bar1"></div>
+                <div class="w-5 h-[1.5px] bg-white transition-all duration-300" id="bar2"></div>
+                <div class="w-5 h-[1.5px] bg-white transition-all duration-300" id="bar3"></div>
+            </button>
+        </nav>
+
+
+        <div id="mobile-menu-container"
+            class="md:hidden w-full max-w-[90vw] mt-3 bg-black/80 backdrop-blur-3xl rounded-[2rem] border border-white/5 overflow-hidden shadow-3xl">
+            <div
+                class="flex flex-col p-8 gap-8 text-center font-notoSerif italic tracking-[0.3em] uppercase text-[10px]">
+                <a class="mobile-nav-link text-white py-2" href="#work">Work</a>
+                <a class="mobile-nav-link text-zinc-500 py-2" href="#experience">Experience</a>
+                <a class="mobile-nav-link text-zinc-500 py-2" href="#tech">Tech</a>
+                <a class="mobile-nav-link text-zinc-500 py-2" href="#contact">Contact</a>
+                <div class="h-[1px] w-12 bg-white/10 mx-auto"></div>
+                <a href="resume/YUG ROJIVADIYA final cv.pdf" download
+                    class="bg-white text-black py-4 rounded-full font-black flex items-center justify-center gap-3">
+                    <i class="fa-solid fa-download"></i> Resume
+                </a>
+            </div>
+        </div>
+    </header>
+
+
+
+
+    <div class="noise-overlay"></div>
+
+    <div class="fixed inset-0 pointer-events-none z-0 liquid-mercury-bg">
+        <div class="liquid-blob w-[800px] h-[800px] top-[-20%] left-[-10%] opacity-60"></div>
+        <div class="liquid-blob blob-2 w-[700px] h-[700px] bottom-[-10%] right-[-10%] opacity-50"></div>
+        <div class="liquid-blob blob-3 w-[600px] h-[600px] top-[30%] right-[20%] opacity-40"></div>
+    </div>
+
+
+    <main class="relative z-10 w-full overflow-x-hidden max-w-full">
+
+        <section class="min-h-screen flex items-center justify-center px-4 md:px-12 pt-48 md:pt-24 overflow-hidden">
+            <div class="max-w-7xl w-full grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+
+                <div class="flex flex-col items-center md:items-start text-center md:text-left order-2 md:order-1">
+                    <p class="font-manrope uppercase tracking-[0.4em] text-zinc-400 text-[8px] md:text-xs mt-20 md:mt-10 mb-4 md:mb-6"
+                        data-aos="fade-right" data-aos-duration="1200">Multidisciplinary Developer</p>
+
+                    <h1 class="font-notoSerif text-[clamp(2.5rem,8vw,6rem)] md:text-7xl lg:text-8xl font-bold text-white tracking-tighter leading-[1] lg:leading-[1.1] italic text-glow mb-6"
+                        data-aos="zoom-out-right" data-aos-duration="1500">
+                        Yug Rojivadiya
+                    </h1>
+
+                    <p class="max-w-md font-manrope text-zinc-400 text-sm md:text-xl md:mt-4 font-light italic leading-relaxed"
+                        data-aos="fade-right" data-aos-delay="300" data-aos-duration="1000">
+                        Builds digital experiences bridging backend logic and smooth UIs.
+                    </p>
+
+                    <div class="mt-8 md:mt-10 flex flex-wrap justify-center md:justify-start gap-4"
+                        data-aos="fade-right" data-aos-delay="500">
+                        <div class="glass-pane px-6 py-3 rounded-full border border-white/10 flex items-center gap-3">
+                            <div
+                                class="w-2 h-2 min-w-2 bg-green-500 rounded-full animate-pulse shadow-[0_0_15px_rgba(34,197,94,1)]">
+                            </div>
+                            <span class="text-xs md:text-sm font-manrope font-light text-white">Open to Internship &
+                                part timeJobs</span>
+                        </div>
+                    </div>
+
+                    <div class="mt-12 md:mt-16 grid grid-cols-2 gap-4 md:gap-6 w-full max-w-2xl" data-aos="fade-up"
+                        data-aos-delay="700">
+                        <div class="glass-pane p-4 md:p-6 rounded-2xl border border-white/5">
+                            <span class="font-notoSerif text-xl md:text-4xl italic text-white block mb-1">₹65k</span>
+                            <span
+                                class="text-[8px] md:text-[10px] uppercase tracking-widest text-zinc-500 font-bold">Government
+                                SSIP Grants</span>
+                        </div>
+                        <div class="glass-pane p-4 md:p-6 rounded-2xl border border-white/5">
+                            <span class="font-notoSerif text-xl md:text-4xl italic text-white block mb-1">2y+</span>
+                            <span
+                                class="text-[8px] md:text-[10px] uppercase tracking-widest text-zinc-500 font-bold">Experience</span>
+                        </div>
+                        <div class="glass-pane p-6 md:p-8 rounded-2xl border border-white/5 col-span-2">
+                            <span class="font-notoSerif text-2xl md:text-5xl italic text-white block mb-2">Vice
+                                President</span>
+                            <span class="text-[10px] md:text-xs uppercase tracking-widest text-zinc-500 font-bold">EBC
+                                Club</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="relative flex justify-center items-center order-1 md:order-2" data-aos="zoom-in"
+                    data-aos-duration="1500" data-aos-delay="400">
+                    <div class="relative w-52 md:w-80 h-auto group">
+
+                        <div
+                            class="absolute inset-0 bg-gradient-to-tr from-white/10 to-transparent rounded-[2rem] border border-white/20 z-0 transform translate-x-4 translate-y-4 transition-transform duration-700">
+                        </div>
+
+                        <div
+                            class="relative z-10 w-full h-full overflow-hidden rounded-[2rem] border border-white/30 shadow-2xl transition-all duration-700">
+                            <img src="images/my photo.jpg" alt="Yug Rojivadiya - Portfolio Profile Photo"
+                                class="w-full h-auto block transition-all duration-1000" loading="lazy">
+                            <div
+                                class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-60">
+                            </div>
+                        </div>
+
+                        <div
+                            class="absolute -bottom-6 -right-6 w-24 h-24 bg-white/5 backdrop-blur-3xl rounded-2xl border border-white/10 z-20 hidden md:flex items-center justify-center animate-float shadow-2xl">
+                            <span class="material-symbols-outlined text-white text-4xl opacity-50">terminal</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+
+        <section class="py-16 md:py-32 px-4 md:px-6">
+            <div class="max-w-6xl mx-auto" data-aos="fade-right" data-aos-duration="1200">
+                <div class="mb-8 md:mb-16 flex items-center gap-4">
+                    <h2 class="font-notoSerif text-2xl md:text-5xl italic text-white mb-0">Academic Background</h2>
+                    <div class="w-12 md:w-24 h-[1px] bg-outline-variant/30"></div>
+                </div>
+
+                <div class="glass-pane p-4 md:p-12 rounded-xl border-l border-white/20 relative overflow-hidden group">
+                    <div
+                        class="absolute top-0 right-0 p-4 md:p-8 opacity-20 group-hover:opacity-40 transition-opacity animate-float">
+                        <span class="material-symbols-outlined text-4xl md:text-8xl text-white"
+                            data-icon="account_balance">account_balance</span>
+                    </div>
+
+                    <div class="relative z-10 w-full flex flex-row items-center justify-between gap-4">
+                        <div class="w-2/3">
+                            <span
+                                class="text-[6px] md:text-[10px] uppercase tracking-widest text-zinc-500 mb-1 md:mb-2 block">P
+                                P Savani University</span>
+                            <h3 class="font-notoSerif text-base md:text-4xl text-white mb-2 md:mb-4 italic">B.Tech in
+                                CSE (AI/ML)</h3>
+
+                            <p
+                                class="font-manrope text-[8px] md:text-sm font-light text-zinc-400 max-w-2xl mb-4 md:mb-8 leading-relaxed">
+                                I focus more on practical skill development by building real projects and working with
+                                modern tools. I am always open to learning any new programming language, framework, or
+                                technology as required.
+                            </p>
+                        </div>
+
+                        <div class="w-1/3 flex flex-col gap-2 md:gap-4 items-end text-right">
+                            <div
+                                class="flex items-center gap-1 md:gap-2 bg-white/5 border border-white/10 px-2 md:px-4 py-1 md:py-2 rounded-full w-fit">
+                                <span class="material-symbols-outlined text-[8px] md:text-sm"
+                                    data-icon="calendar_today">calendar_today</span>
+                                <span class="text-[6px] md:text-sm font-manrope font-light text-zinc-300">2024 - 2028 |
+                                    4th Sem</span>
+                            </div>
+                            <div
+                                class="flex items-center gap-1 md:gap-2 bg-white/5 border border-white/10 px-2 md:px-4 py-1 md:py-2 rounded-full w-fit">
+                                <span class="material-symbols-outlined text-[8px] md:text-sm"
+                                    data-icon="grade">grade</span>
+                                <span class="text-[6px] md:text-sm font-manrope font-light text-zinc-300">7.91 CGPA (1st
+                                    Year)</span>
+                            </div>
+                            <div
+                                class="flex items-center gap-1 md:gap-2 bg-white/5 border border-white/10 px-2 md:px-4 py-1 md:py-2 rounded-full w-fit">
+                                <span class="material-symbols-outlined text-[8px] md:text-sm"
+                                    data-icon="grade">grade</span>
+                                <span class="text-[6px] md:text-sm font-manrope font-light text-zinc-300">7.92 CGPA (2nd
+                                    Year)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="py-16 md:py-32 px-4 md:px-6" id="tech">
+            <div class="max-w-6xl mx-auto" data-aos="fade-left" data-aos-duration="1200">
+                <div class="mb-8 md:mb-16 flex flex-row-reverse items-center gap-4 justify-start">
+                    <h2 class="font-notoSerif text-2xl md:text-5xl italic text-white mb-0">Tech Arsenal</h2>
+                    <div class="w-12 md:w-24 h-[1px] bg-outline-variant/30"></div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-6">
+                    
+                    <!-- Column 1 -->
+                    <div class="flex flex-col gap-3 md:gap-6">
+                        <!-- AI, ML & Automation -->
+                        <div class="glass-pane p-4 md:p-8 rounded-xl border border-outline-variant/5 group hover:border-white/10 transition-colors" data-aos="flip-left" data-aos-delay="100">
+                            <div class="flex items-center gap-3 mb-4 md:mb-6">
+                                <div class="w-6 h-6 md:w-10 md:h-10 flex flex-shrink-0 items-center justify-center bg-white/5 rounded-lg md:rounded-xl border border-white/10 group-hover:bg-white/10 transition-colors">
+                                    <i class="fa-solid fa-robot text-[8px] md:text-sm text-zinc-300"></i>
+                                </div>
+                                <h4 class="font-notoSerif text-[10px] md:text-xl italic text-white m-0">AI, ML & Automation</h4>
+                            </div>
+                            <div class="flex flex-wrap gap-1.5 md:gap-2.5">
+                                <span class="text-[5px] md:text-[10px] uppercase tracking-widest px-1.5 md:px-3 py-0.5 md:py-1 bg-white/5 rounded-full border border-white/10 hover:bg-white/10 transition cursor-default">Gemini/Claude</span>
+                                <span class="text-[5px] md:text-[10px] uppercase tracking-widest px-1.5 md:px-3 py-0.5 md:py-1 bg-white/5 rounded-full border border-white/10 hover:bg-white/10 transition cursor-default">Kimi AI</span>
+                                <span class="text-[5px] md:text-[10px] uppercase tracking-widest px-1.5 md:px-3 py-0.5 md:py-1 bg-white/5 rounded-full border border-white/10 hover:bg-white/10 transition cursor-default">Antigravity</span>
+                                <span class="text-[5px] md:text-[10px] uppercase tracking-widest px-1.5 md:px-3 py-0.5 md:py-1 bg-white/5 rounded-full border border-white/10 hover:bg-white/10 transition cursor-default">Claude Code</span>
+                                <span class="text-[5px] md:text-[10px] uppercase tracking-widest px-1.5 md:px-3 py-0.5 md:py-1 bg-white/5 rounded-full border border-white/10 hover:bg-white/10 transition cursor-default">NumPy</span>
+                                <span class="text-[5px] md:text-[10px] uppercase tracking-widest px-1.5 md:px-3 py-0.5 md:py-1 bg-white/5 rounded-full border border-white/10 hover:bg-white/10 transition cursor-default">Pandas</span>
+                                <span class="text-[5px] md:text-[10px] uppercase tracking-widest px-1.5 md:px-3 py-0.5 md:py-1 bg-white/5 rounded-full border border-white/10 hover:bg-white/10 transition cursor-default">LLM Integration</span>
+                                <span class="text-[5px] md:text-[10px] uppercase tracking-widest px-1.5 md:px-3 py-0.5 md:py-1 bg-white/5 rounded-full border border-white/10 hover:bg-white/10 transition cursor-default">AI API Integration</span>
+                                <span class="text-[5px] md:text-[10px] uppercase tracking-widest px-1.5 md:px-3 py-0.5 md:py-1 bg-white/5 rounded-full border border-white/10 hover:bg-white/10 transition cursor-default">AI Dashboard Dev</span>
+                                <span class="text-[5px] md:text-[10px] uppercase tracking-widest px-1.5 md:px-3 py-0.5 md:py-1 bg-white/5 rounded-full border border-white/10 hover:bg-white/10 transition cursor-default">Prompt Engineering</span>
+                                <span class="text-[5px] md:text-[10px] uppercase tracking-widest px-1.5 md:px-3 py-0.5 md:py-1 bg-white/5 rounded-full border border-white/10 hover:bg-white/10 transition cursor-default">Loop Engineering</span>
+                                <span class="text-[5px] md:text-[10px] uppercase tracking-widest px-1.5 md:px-3 py-0.5 md:py-1 bg-white/5 rounded-full border border-white/10 hover:bg-white/10 transition cursor-default">AI Automation</span>
+                            </div>
+                        </div>
+
+                        <!-- Backend & Databases -->
+                        <div class="glass-pane p-4 md:p-8 rounded-xl border border-outline-variant/5 group hover:border-white/10 transition-colors" data-aos="flip-left" data-aos-delay="200">
+                            <div class="flex items-center gap-3 mb-4 md:mb-6">
+                                <div class="w-6 h-6 md:w-10 md:h-10 flex flex-shrink-0 items-center justify-center bg-white/5 rounded-lg md:rounded-xl border border-white/10 group-hover:bg-white/10 transition-colors">
+                                    <i class="fa-solid fa-database text-[8px] md:text-sm text-zinc-300"></i>
+                                </div>
+                                <h4 class="font-notoSerif text-[10px] md:text-xl italic text-white m-0">Backend & Databases</h4>
+                            </div>
+                            <div class="flex flex-wrap gap-1.5 md:gap-2.5">
+                                <span class="text-[5px] md:text-[10px] uppercase tracking-widest px-1.5 md:px-3 py-0.5 md:py-1 bg-white/5 rounded-full border border-white/10 hover:bg-white/10 transition cursor-default">Django</span>
+                                <span class="text-[5px] md:text-[10px] uppercase tracking-widest px-1.5 md:px-3 py-0.5 md:py-1 bg-white/5 rounded-full border border-white/10 hover:bg-white/10 transition cursor-default">Firebase</span>
+                                <span class="text-[5px] md:text-[10px] uppercase tracking-widest px-1.5 md:px-3 py-0.5 md:py-1 bg-white/5 rounded-full border border-white/10 hover:bg-white/10 transition cursor-default">MongoDB</span>
+                                <span class="text-[5px] md:text-[10px] uppercase tracking-widest px-1.5 md:px-3 py-0.5 md:py-1 bg-white/5 rounded-full border border-white/10 hover:bg-white/10 transition cursor-default">Neon DB</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Column 2 -->
+                    <div class="flex flex-col gap-3 md:gap-6">
+                        <!-- Languages -->
+                        <div class="glass-pane p-4 md:p-8 rounded-xl border border-outline-variant/5 group hover:border-white/10 transition-colors" data-aos="flip-left" data-aos-delay="150">
+                            <div class="flex items-center gap-3 mb-4 md:mb-6">
+                                <div class="w-6 h-6 md:w-10 md:h-10 flex flex-shrink-0 items-center justify-center bg-white/5 rounded-lg md:rounded-xl border border-white/10 group-hover:bg-white/10 transition-colors">
+                                    <i class="fa-solid fa-code text-[8px] md:text-sm text-zinc-300"></i>
+                                </div>
+                                <h4 class="font-notoSerif text-[10px] md:text-xl italic text-white m-0">Languages</h4>
+                            </div>
+                            <div class="flex flex-wrap gap-1.5 md:gap-2.5">
+                                <span class="text-[5px] md:text-[10px] uppercase tracking-widest px-1.5 md:px-3 py-0.5 md:py-1 bg-white/5 rounded-full border border-white/10 hover:bg-white/10 transition cursor-default">Python</span>
+                                <span class="text-[5px] md:text-[10px] uppercase tracking-widest px-1.5 md:px-3 py-0.5 md:py-1 bg-white/5 rounded-full border border-white/10 hover:bg-white/10 transition cursor-default">HTML/CSS</span>
+                                <span class="text-[5px] md:text-[10px] uppercase tracking-widest px-1.5 md:px-3 py-0.5 md:py-1 bg-white/5 rounded-full border border-white/10 hover:bg-white/10 transition cursor-default">SQL</span>
+                            </div>
+                        </div>
+
+                        <!-- Frontend & Mobile -->
+                        <div class="glass-pane p-4 md:p-8 rounded-xl border border-outline-variant/5 group hover:border-white/10 transition-colors" data-aos="flip-left" data-aos-delay="250">
+                            <div class="flex items-center gap-3 mb-4 md:mb-6">
+                                <div class="w-6 h-6 md:w-10 md:h-10 flex flex-shrink-0 items-center justify-center bg-white/5 rounded-lg md:rounded-xl border border-white/10 group-hover:bg-white/10 transition-colors">
+                                    <i class="fa-solid fa-desktop text-[8px] md:text-sm text-zinc-300"></i>
+                                </div>
+                                <h4 class="font-notoSerif text-[10px] md:text-xl italic text-white m-0">Frontend & Mobile</h4>
+                            </div>
+                            <div class="flex flex-wrap gap-1.5 md:gap-2.5">
+                                <span class="text-[5px] md:text-[10px] uppercase tracking-widest px-1.5 md:px-3 py-0.5 md:py-1 bg-white/5 rounded-full border border-white/10 hover:bg-white/10 transition cursor-default">Tailwind</span>
+                                <span class="text-[5px] md:text-[10px] uppercase tracking-widest px-1.5 md:px-3 py-0.5 md:py-1 bg-white/5 rounded-full border border-white/10 hover:bg-white/10 transition cursor-default">FlutterFlow</span>
+                                <span class="text-[5px] md:text-[10px] uppercase tracking-widest px-1.5 md:px-3 py-0.5 md:py-1 bg-white/5 rounded-full border border-white/10 hover:bg-white/10 transition cursor-default">Figma</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Column 3 -->
+                    <div class="flex flex-col gap-3 md:gap-6">
+                        <!-- Tools & Platforms -->
+                        <div class="glass-pane p-4 md:p-8 rounded-xl border border-outline-variant/5 group hover:border-white/10 transition-colors" data-aos="flip-left" data-aos-delay="300">
+                            <div class="flex items-center gap-3 mb-4 md:mb-6">
+                                <div class="w-6 h-6 md:w-10 md:h-10 flex flex-shrink-0 items-center justify-center bg-white/5 rounded-lg md:rounded-xl border border-white/10 group-hover:bg-white/10 transition-colors">
+                                    <i class="fa-solid fa-screwdriver-wrench text-[8px] md:text-sm text-zinc-300"></i>
+                                </div>
+                                <h4 class="font-notoSerif text-[10px] md:text-xl italic text-white m-0">Tools & Platforms</h4>
+                            </div>
+                            <div class="flex flex-wrap gap-1.5 md:gap-2.5">
+                                <span class="text-[5px] md:text-[10px] uppercase tracking-widest px-1.5 md:px-3 py-0.5 md:py-1 bg-white/5 rounded-full border border-white/10 hover:bg-white/10 transition cursor-default">Render</span>
+                                <span class="text-[5px] md:text-[10px] uppercase tracking-widest px-1.5 md:px-3 py-0.5 md:py-1 bg-white/5 rounded-full border border-white/10 hover:bg-white/10 transition cursor-default">Vercel</span>
+                                <span class="text-[5px] md:text-[10px] uppercase tracking-widest px-1.5 md:px-3 py-0.5 md:py-1 bg-white/5 rounded-full border border-white/10 hover:bg-white/10 transition cursor-default">Stitch</span>
+                                <span class="text-[5px] md:text-[10px] uppercase tracking-widest px-1.5 md:px-3 py-0.5 md:py-1 bg-white/5 rounded-full border border-white/10 hover:bg-white/10 transition cursor-default">Google Colab</span>
+                                <span class="text-[5px] md:text-[10px] uppercase tracking-widest px-1.5 md:px-3 py-0.5 md:py-1 bg-white/5 rounded-full border border-white/10 hover:bg-white/10 transition cursor-default">Anaconda</span>
+                            </div>
+                        </div>
+
+                        <!-- Decorative Card -->
+                        <div class="glass-pane p-4 md:p-8 rounded-xl border border-outline-variant/5 group overflow-hidden relative flex-grow min-h-[80px] md:min-h-[160px]" data-aos="flip-left" data-aos-delay="400">
+                            <i class="fa-solid fa-cube text-white/[0.03] text-5xl md:text-8xl absolute -bottom-2 -right-2 md:-bottom-6 md:-right-6 group-hover:scale-110 group-hover:text-white/[0.05] transition-all duration-700"></i>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <section class="py-12 md:py-20 px-4 md:px-6 bg-surface-container-lowest/30 overflow-hidden" data-aos="fade-up">
+            <div class="max-w-6xl mx-auto flex flex-row justify-between items-center gap-4 md:gap-12">
+                <h2 class="font-notoSerif text-xl md:text-5xl italic text-white w-1/3">What I Do</h2>
+                <div class="flex flex-row justify-end gap-2 md:gap-8 w-2/3">
+                    <div class="flex items-center gap-1 md:gap-4 group cursor-default">
+                        <div
+                            class="w-6 h-6 md:w-12 md:h-12 flex-shrink-0 rounded-full border border-white/10 flex items-center justify-center group-hover:bg-white group-hover:text-black transition-all">
+                            <i
+                                class="fa-solid fa-code text-zinc-300 group-hover:text-black transition-colors text-[8px] md:text-base"></i>
+                        </div>
+                        <span class="font-manrope uppercase tracking-widest text-[5px] md:text-sm text-zinc-300">Web
+                            Dev</span>
+                    </div>
+                    <div class="flex items-center gap-1 md:gap-4 group cursor-default">
+                        <div
+                            class="w-6 h-6 md:w-12 md:h-12 flex-shrink-0 rounded-full border border-white/10 flex items-center justify-center group-hover:bg-white group-hover:text-black transition-all">
+                            <i
+                                class="fa-solid fa-palette text-zinc-300 group-hover:text-black transition-colors text-[8px] md:text-base"></i>
+                        </div>
+                        <span class="font-manrope uppercase tracking-widest text-[5px] md:text-sm text-zinc-300">Web
+                            Design</span>
+                    </div>
+                    <div class="flex items-center gap-1 md:gap-4 group cursor-default">
+                        <div
+                            class="w-6 h-6 md:w-12 md:h-12 flex-shrink-0 rounded-full border border-white/10 flex items-center justify-center group-hover:bg-white group-hover:text-black transition-all">
+                            <i
+                                class="fa-solid fa-lightbulb text-zinc-300 group-hover:text-black transition-colors text-[8px] md:text-base"></i>
+                        </div>
+                        <span
+                            class="font-manrope uppercase tracking-widest text-[5px] md:text-sm text-zinc-300">Consulting</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="py-16 md:py-32 px-4 md:px-6" id="experience">
+            <div class="max-w-6xl mx-auto">
+                <div class="mb-8 md:mb-16 flex items-center gap-4" data-aos="fade-up">
+                    <h2 class="font-notoSerif text-2xl md:text-5xl italic text-white mb-0">Professional Journey</h2>
+                    <div class="w-12 md:w-24 h-[1px] bg-outline-variant/30"></div>
+                </div>
+
+                <div class="flex flex-col gap-6 md:gap-10">
+                    <div class="glass-pane p-4 md:p-10 rounded-xl flex flex-row justify-between items-center gap-4 border-l border-white/20 hover:border-white/50 transition-colors group"
+                        data-aos="zoom-in-up" data-aos-delay="100">
+                        <div class="w-1/3">
+                            <span
+                                class="text-[5px] md:text-[10px] uppercase tracking-widest text-zinc-500 bg-white/5 px-2 md:px-3 py-0.5 md:py-1 rounded-full border border-white/10 inline-block w-fit whitespace-nowrap">Frontend
+                                Intern</span>
+                            <h3
+                                class="font-notoSerif text-sm md:text-3xl text-white mt-2 md:mt-4 italic group-hover:scale-105 transition-transform origin-left">
+                                Edverb</h3>
+                        </div>
+                        <div class="w-2/3 text-right">
+                            <p
+                                class="font-manrope text-[7px] md:text-sm font-light text-zinc-400 mb-3 md:mb-6 leading-relaxed">
+                                Completed a front-end development internship at Edverb, where I was responsible for
+                                building and structuring complete website frontends. During my time, I successfully
+                                developed two fully responsive live websites for their platforms.
+                            </p>
+                            <div class="flex flex-row justify-end gap-2 md:gap-4">
+                                <a href="https://edverb.in/" target="_blank"
+                                    class="px-2 md:px-5 py-1 md:py-2.5 border border-white/10 rounded-full text-[5px] md:text-xs font-bold uppercase tracking-widest hover:bg-white hover:text-black transition flex items-center gap-1 md:gap-2">
+                                    Edverb <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                                </a>
+                                <a href="https://blackbanana.in/" target="_blank"
+                                    class="px-2 md:px-5 py-1 md:py-2.5 border border-[#ffffff]/10 bg-black rounded-full text-[5px] md:text-xs font-bold uppercase tracking-widest hover:bg-white hover:text-black transition flex items-center gap-1 md:gap-2 shadow-lg">
+                                    Banana <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="glass-pane p-4 md:p-10 rounded-xl flex flex-row justify-between items-center gap-4 border-l border-white/10 ml-2 md:ml-12 hover:border-white/50 transition-colors group"
+                        data-aos="zoom-in-up" data-aos-delay="200">
+                        <div class="w-1/3">
+                            <span
+                                class="text-[5px] md:text-[10px] uppercase tracking-widest text-zinc-500 bg-white/5 px-2 md:px-3 py-0.5 md:py-1 rounded-full border border-white/10 inline-block w-fit whitespace-nowrap">Leadership</span>
+                            <h3
+                                class="font-notoSerif text-sm md:text-3xl text-white mt-2 md:mt-4 italic group-hover:scale-105 transition-transform origin-left">
+                                VP, EBC Club</h3>
+                        </div>
+                        <div class="w-2/3 text-right flex justify-end">
+                            <ul
+                                class="font-manrope text-[7px] md:text-sm font-light text-zinc-400 list-disc list-inside text-right flex flex-col gap-1 md:gap-2 leading-relaxed">
+                                <li>Led event coordination for major university tech fests.</li>
+                                <li>Managed a team of 50+ students.</li>
+                                <li>Coordinated between faculty and students for smooth operations.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="glass-pane p-4 md:p-10 rounded-xl flex flex-row justify-between items-center gap-4 border-l border-white/5 ml-4 md:ml-24 hover:border-white/50 transition-colors group"
+                        data-aos="zoom-in-up" data-aos-delay="300">
+                        <div class="w-1/3">
+                            <span
+                                class="text-[5px] md:text-[10px] uppercase tracking-widest text-zinc-500 bg-white/5 px-2 md:px-3 py-0.5 md:py-1 rounded-full border border-white/10 inline-block w-fit whitespace-nowrap">Client
+                                • Remote</span>
+                            <h3
+                                class="font-notoSerif text-sm md:text-3xl text-white mt-2 md:mt-4 italic group-hover:scale-105 transition-transform origin-left">
+                                Freelance Dev</h3>
+                        </div>
+                        <div class="w-2/3 text-right flex justify-end">
+                            <ul
+                                class="font-manrope text-[7px] md:text-sm font-light text-zinc-400 list-disc list-inside text-right flex flex-col gap-1 md:gap-2 leading-relaxed">
+                                <li>Developed end-to-end websites from design to deployment.</li>
+                                <li>Built real-world business and management web projects.</li>
+                                <li>Managed client requirements, timelines, and quality delivery.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section
+            class="py-16 md:py-32 px-4 md:px-6 bg-surface-container-lowest/50 backdrop-blur-sm border-y border-white/5 relative">
+            <div class="max-w-6xl mx-auto text-center">
+                <span
+                    class="material-symbols-outlined text-4xl md:text-6xl text-yellow-500 mb-4 md:mb-6 drop-shadow-[0_0_15px_rgba(234,179,8,0.5)] animate-float"
+                    data-icon="emoji_events">emoji_events</span>
+                <h2 class="font-notoSerif text-3xl md:text-5xl italic text-white mb-10 md:mb-16" data-aos="zoom-in"
+                    data-aos-duration="1200">Peak Milestones</h2>
+
+                <div class="grid grid-cols-2 gap-3 md:gap-8 items-stretch">
+
+                    <!-- SIH 2026 Internal Round Winner -->
+                    <div class="glass-pane p-3 md:p-12 rounded-xl md:rounded-[2rem] border border-outline-variant/10 w-full hover:scale-[1.02] transition-all text-left flex flex-col relative overflow-hidden col-span-2"
+                        data-aos="fade-up" data-aos-delay="100"
+                        style="background: linear-gradient(135deg, rgba(234,179,8,0.05) 0%, rgba(25,25,25,0.4) 40%, rgba(25,25,25,0.4) 100%); border-color: rgba(234,179,8,0.15);">
+
+                        <!-- Decorative trophy watermark -->
+                        <div class="absolute top-4 right-4 md:top-8 md:right-8 opacity-[0.04] pointer-events-none">
+                            <i class="fa-solid fa-trophy text-yellow-500 text-6xl md:text-[10rem]"></i>
+                        </div>
+
+                        <div class="relative z-10 flex flex-col md:flex-row md:items-start gap-4 md:gap-10">
+                            <!-- Text Content -->
+                            <div class="md:w-1/2">
+                                <span
+                                    class="text-yellow-400 text-[5px] md:text-[10px] font-bold tracking-widest uppercase bg-yellow-400/10 px-1.5 md:px-3 py-0.5 md:py-1 rounded-full border border-yellow-400/20 mb-1.5 md:mb-6 inline-block">
+                                    <i class="fa-solid fa-trophy text-[5px] md:text-[8px] mr-1"></i>
+                                    Internal Round Winner — SIH 2026
+                                </span>
+                                <h3
+                                    class="font-notoSerif text-[10px] md:text-4xl italic text-white mb-1.5 md:mb-4 mt-0.5 md:mt-2">
+                                    Smart India Hackathon 2026</h3>
+                                <p
+                                    class="font-manrope text-[6px] md:text-sm font-light text-zinc-400 mb-2.5 md:mb-6 leading-relaxed">
+                                    Won the Internal Round of Smart India Hackathon (SIH) 2026, competing against <strong class="text-zinc-200">150+ talented teams</strong> from across our university. SIH is India's largest national-level hackathon initiative organized by the Ministry of Education, where students collaborate to build innovative solutions for real-world problem statements posed by government bodies and industries. Our team developed a working prototype that stood out for its technical depth, practical feasibility, and impactful approach to solving the assigned problem statement — earning us the win and a spot to represent our college at the Grand Finale.</p>
+
+                                <div class="flex flex-wrap gap-1.5 md:gap-3 mb-2.5 md:mb-6">
+                                    <span
+                                        class="font-manrope text-[5px] md:text-[10px] font-bold text-zinc-300 uppercase tracking-widest bg-white/5 w-fit px-1.5 md:px-3 py-0.5 md:py-1.5 rounded-md md:rounded-lg border border-white/10">P P Savani University</span>
+                                    <span
+                                        class="font-manrope text-[5px] md:text-[10px] font-bold text-yellow-300/80 uppercase tracking-widest bg-yellow-400/5 w-fit px-1.5 md:px-3 py-0.5 md:py-1.5 rounded-md md:rounded-lg border border-yellow-400/10">150+ Teams Defeated</span>
+                                    <span
+                                        class="font-manrope text-[5px] md:text-[10px] font-bold text-zinc-300 uppercase tracking-widest bg-white/5 w-fit px-1.5 md:px-3 py-0.5 md:py-1.5 rounded-md md:rounded-lg border border-white/10">Ministry of Education</span>
+                                </div>
+
+                                <a href="https://drive.google.com/drive/folders/1VGbdkfLk9W22SSYEtJS8HZAFWRFObDd6?usp=sharing" target="_blank" id="sih-prototype-link"
+                                    class="inline-flex items-center gap-1 md:gap-2 px-2 md:px-5 py-1 md:py-2.5 border border-yellow-400/20 bg-yellow-400/5 rounded-full text-[5px] md:text-xs font-bold uppercase tracking-widest text-yellow-300/80 hover:bg-yellow-400 hover:text-black transition-all duration-300">
+                                    View Prototype <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                                </a>
+                            </div>
+
+                            <!-- Image Gallery -->
+                            <div class="md:w-1/2 grid grid-cols-2 gap-1.5 md:gap-3">
+                                <div class="col-span-2 bg-black/20 p-1 md:p-1.5 rounded-md md:rounded-xl">
+                                    <img src="images/SIH2026.jpeg"
+                                        alt="SIH 2026 Internal Round Winner - Team Photo"
+                                        class="w-full h-auto block rounded-md md:rounded-xl transition-all duration-500 shadow-xl border border-white/10"
+                                        loading="lazy">
+                                </div>
+                                <div class="bg-black/20 p-1 md:p-1.5 rounded-md md:rounded-xl">
+                                    <img src="images/SIH2026_certificate.jpeg"
+                                        alt="SIH 2026 Winner Certificate - Yug Rojivadiya"
+                                        class="w-full h-auto block rounded-md md:rounded-xl transition-all duration-500 shadow-xl border border-white/10"
+                                        loading="lazy">
+                                </div>
+                                <div class="bg-black/20 p-1 md:p-1.5 rounded-md md:rounded-xl">
+                                    <img src="images/SIH2026_prototype_demo.jpeg"
+                                        alt="SIH 2026 Prototype Demo - Smart India Hackathon"
+                                        class="w-full h-auto block rounded-md md:rounded-xl transition-all duration-500 shadow-xl border border-white/10"
+                                        loading="lazy">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="glass-pane p-3 md:p-12 rounded-xl md:rounded-[2rem] border border-outline-variant/10 w-full hover:scale-[1.02] transition-all text-left flex flex-col md:flex-row md:items-center h-full gap-3 md:gap-8 justify-between relative overflow-hidden col-span-2"
+                        data-aos="fade-up" data-aos-delay="300">
+                        <div class="relative z-10 md:w-3/5">
+                            <span
+                                class="text-emerald-400 text-[5px] md:text-[10px] font-bold tracking-widest uppercase bg-emerald-400/10 px-1.5 md:px-3 py-0.5 md:py-1 rounded-full border border-emerald-400/20 mb-1.5 md:mb-6 inline-block">College
+                                Project</span>
+                            <h3
+                                class="font-notoSerif text-[10px] md:text-4xl italic text-white mb-1.5 md:mb-4 mt-0.5 md:mt-2">
+                                Exam Management System (EMS)</h3>
+                            <p
+                                class="font-manrope text-[6px] md:text-sm font-light text-zinc-400 mb-2.5 md:mb-8 leading-relaxed">
+                                Developed a complete Exam Management System for my college that helps faculty manage the entire examination process digitally. Faculty can create question papers, upload student marks, and analyze results using different filters. The system provides detailed analytics, such as the number of students who passed or failed, along with other performance insights. This automation significantly reduces manual paperwork, allowing tasks that previously took hours or even days to be completed within minutes, making the examination process faster, more efficient, and easier for faculty.</p>
+
+                            <div class="flex flex-wrap gap-2 md:gap-4">
+                                <span
+                                    class="font-manrope text-[5px] md:text-sm font-bold text-zinc-300 uppercase tracking-widest bg-white/5 w-fit px-1.5 md:px-4 py-0.5 md:py-2 rounded-md md:rounded-lg border border-white/10">P P Savani University</span>
+                            </div>
+                        </div>
+
+                        <div class="w-3/5 md:w-2/5 relative z-10 bg-black/20 p-1.5 rounded-md md:rounded-xl">
+                            <img src="images/EMS.png"
+                                alt="Exam Management System - Digital Examination Platform by Yug Rojivadiya"
+                                class="w-full h-auto block rounded-md md:rounded-xl transition-all duration-500 shadow-xl border border-white/10"
+                                loading="lazy">
+                        </div>
+                    </div>
+
+                    <div class="glass-pane p-3 md:p-12 rounded-xl md:rounded-[2rem] border border-outline-variant/10 w-full hover:scale-[1.02] transition-all text-left flex flex-col md:flex-row md:items-center h-full gap-3 md:gap-8 justify-between relative overflow-hidden"
+                        data-aos="fade-up-right" data-aos-delay="250">
+                        <div class="relative z-10 md:w-3/5">
+                            <span
+                                class="text-yellow-500 text-[5px] md:text-[10px] font-bold tracking-widest uppercase bg-yellow-500/10 px-1.5 md:px-3 py-0.5 md:py-1 rounded-full border border-yellow-500/20 mb-1.5 md:mb-6 inline-block">1st
+                                Prize Winner</span>
+                            <h3
+                                class="font-notoSerif text-[10px] md:text-4xl italic text-white mb-1.5 md:mb-4 mt-0.5 md:mt-2">
+                                Website Building Competition</h3>
+                            <p
+                                class="font-manrope text-[6px] md:text-sm font-light text-zinc-400 mb-2.5 md:mb-8 leading-relaxed">
+                                Secured 1st position in the university-level website building competition by designing
+                                and developing a highly responsive and interactive web project under a strict time
+                                limit.</p>
+
+                            <p
+                                class="font-manrope text-[5px] md:text-sm font-bold text-zinc-300 uppercase tracking-widest bg-white/5 w-fit px-1.5 md:px-4 py-0.5 md:py-2 rounded-md md:rounded-lg border border-white/10 mb-2.5 md:mb-8">
+                                P P Savani University</p>
+                        </div>
+
+                        <div class="w-3/5 md:w-2/5 relative z-10 bg-black/20 p-1.5 rounded-md md:rounded-xl">
+                            <img src="images/website-competition.jpeg"
+                                alt="Yug Rojivadiya Securing 1st Prize in Website Building Competition"
+                                class="w-full h-auto block rounded-md md:rounded-xl transition-all duration-500 shadow-xl border border-white/10"
+                                loading="lazy">
+                        </div>
+                    </div>
+
+                    <div class="glass-pane p-3 md:p-12 rounded-xl md:rounded-[2rem] border border-outline-variant/10 w-full hover:scale-[1.02] transition-all text-left flex flex-col h-full justify-between relative overflow-hidden"
+                        data-aos="fade-up-left" data-aos-delay="250">
+                        <div class="relative z-10">
+                            <span
+                                class="text-red-400 text-[5px] md:text-[10px] font-bold tracking-widest uppercase bg-red-400/10 px-1.5 md:px-3 py-0.5 md:py-1 rounded-full border border-red-400/20 mb-1.5 md:mb-6 inline-block">Top
+                                10 Achievement</span>
+                            <h3
+                                class="font-notoSerif text-[10px] md:text-4xl italic text-white mb-1.5 md:mb-4 mt-0.5 md:mt-2">
+                                Indux 5.0 National-level Hackathon</h3>
+                            <p
+                                class="font-manrope text-[6px] md:text-sm font-light text-zinc-400 mb-2.5 md:mb-8 leading-relaxed max-w-md">
+                                Secured a Top 10 position out of 165 teams, competing against top developers from across
+                                the country to solve complex problems under a tight deadline.</p>
+                        </div>
+
+                        <div
+                            class="grid grid-cols-2 gap-1.5 md:gap-4 mt-auto relative z-10 bg-black/20 p-1.5 rounded-md md:rounded-xl items-start">
+                            <img src="images/indux5.0 hackathon1.jpg"
+                                alt="Yug Rojivadiya at Indux 5.0 National-level Hackathon"
+                                class="w-full h-auto block rounded-md md:rounded-xl transition-all duration-500 shadow-xl border border-white/10"
+                                loading="lazy">
+                            <img src="images/indux5.0 hackathon2.png"
+                                alt="Yug Rojivadiya Top 10 Achievement in National Hackathon"
+                                class="w-full h-auto block rounded-md md:rounded-xl  transition-all duration-500 shadow-xl border border-white/10"
+                                loading="lazy">
+                        </div>
+                    </div>
+
+                    <div class="glass-pane p-3 md:p-12 rounded-xl md:rounded-[2rem] border border-outline-variant/10 w-full hover:scale-[1.02] transition-all text-left flex flex-col md:flex-row md:items-center h-full gap-3 md:gap-8 justify-between relative overflow-hidden col-span-2"
+                        data-aos="fade-up" data-aos-delay="350">
+                        <div class="relative z-10 md:w-3/5">
+                            <span
+                                class="text-blue-400 text-[5px] md:text-[10px] font-bold tracking-widest uppercase bg-blue-400/10 px-1.5 md:px-3 py-0.5 md:py-1 rounded-full border border-blue-400/20 mb-1.5 md:mb-6 inline-block">Professional
+                                Recognition</span>
+                            <h3
+                                class="font-notoSerif text-[10px] md:text-4xl italic text-white mb-1.5 md:mb-4 mt-0.5 md:mt-2">
+                                Letter of Recommendation (LOR) – Edverb</h3>
+                            <p
+                                class="font-manrope text-[6px] md:text-sm font-light text-zinc-400 mb-2.5 md:mb-8 leading-relaxed">
+                                Received a Letter of Recommendation (LOR) from Edverb in recognition of my technical skills, project contributions, and professional work. This milestone reflects my commitment to building impactful software solutions and continuously improving my technical expertise.</p>
+
+                            <p
+                                class="font-manrope text-[5px] md:text-sm font-bold text-zinc-300 uppercase tracking-widest bg-white/5 w-fit px-1.5 md:px-4 py-0.5 md:py-2 rounded-md md:rounded-lg border border-white/10 mb-2.5 md:mb-8">
+                                Edverb</p>
+                        </div>
+
+                        <div class="w-2/5 md:w-1/4 relative z-10 bg-black/20 p-1.5 rounded-md md:rounded-xl">
+                            <img src="images/lor.png"
+                                alt="Letter of Recommendation from Edverb for Yug Rojivadiya"
+                                class="w-full h-auto block rounded-md md:rounded-xl transition-all duration-500 shadow-xl border border-white/10"
+                                loading="lazy">
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </section>
+
+        <section class="py-16 md:py-32 px-4 md:px-6" id="work">
+            <div class="max-w-6xl mx-auto">
+                <div class="mb-8 md:mb-16 flex flex-row-reverse items-center gap-4 justify-start" data-aos="fade-left">
+                    <h2 class="font-notoSerif text-2xl md:text-5xl italic text-white mb-0">Curated Projects & Grants
+                    </h2>
+                    <div class="w-12 md:w-24 h-[1px] bg-outline-variant/30"></div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3 md:gap-12 md:max-w-4xl md:mx-auto">
+                    <div class="group" data-aos="fade-up-right" data-aos-delay="150">
+                        <div
+                            class="glass-pane rounded-xl md:rounded-2xl overflow-hidden mb-3 md:mb-6 border border-white/5 relative bg-zinc-900 p-2">
+                            <img alt="Grantpilot - SSIP Grant Winning Project by Yug Rojivadiya"
+                                class="w-full h-auto block rounded-lg md:rounded-xl opacity-60 group-hover:opacity-100 group-hover:scale-105 transition-all duration-1000"
+                                src="images/Grantpilot.jpg" loading="lazy" />
+                            <div class="absolute top-2 right-2 md:top-6 md:right-6">
+                                <span
+                                    class="bg-primary text-on-primary text-[5px] md:text-[10px] font-bold px-2 md:px-4 py-1 md:py-1.5 rounded-full uppercase tracking-widest shadow-lg">₹30,000
+                                    SSIP Grant</span>
+                            </div>
+                        </div>
+                        <h4 class="font-notoSerif text-base md:text-3xl text-white italic mb-1 md:mb-2">Grantpilot</h4>
+                        <p
+                            class="font-manrope text-[7px] md:text-sm text-zinc-400 font-light mb-2 md:mb-4 leading-relaxed">
+                            An SSIP-supported project developed to manage and track student innovation and grant-related
+                            workflows.
+                        </p>
+                        <div class="flex gap-2 md:gap-4">
+                            <span
+                                class="text-[5px] md:text-[10px] px-1 md:px-2 py-0.5 md:py-1 border border-white/10 rounded-md text-zinc-400 uppercase tracking-widest bg-white/5">Django</span>
+                            <span
+                                class="text-[5px] md:text-[10px] px-1 md:px-2 py-0.5 md:py-1 border border-white/10 rounded-md text-zinc-400 uppercase tracking-widest bg-white/5">Python</span>
+                        </div>
+                        <a href="https://iec.ppsu.ac.in/" target="_blank"
+                            class="inline-flex mt-2 md:mt-6 items-center gap-1 md:gap-2 text-[5px] md:text-xs font-bold uppercase tracking-widest text-zinc-400 hover:text-white transition group-hover:text-white">
+                            Visit Project <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                        </a>
+                    </div>
+
+                    <div class="group md:mt-24" data-aos="fade-up-left" data-aos-delay="250">
+                        <div
+                            class="glass-pane rounded-xl md:rounded-2xl overflow-hidden mb-3 md:mb-6 border border-white/5 relative bg-zinc-900 p-2">
+                            <img alt="Cricktraker - Sports Scoring Platform by Yug Rojivadiya"
+                                class="w-full h-auto block rounded-lg md:rounded-xl opacity-60 group-hover:opacity-100 group-hover:scale-105 transition-all duration-1000"
+                                src="images/cricktraker.jpeg" loading="lazy" />
+                            <div class="absolute top-2 right-2 md:top-6 md:right-6">
+                                <span
+                                    class="bg-primary text-on-primary text-[5px] md:text-[10px] font-bold px-2 md:px-4 py-1 md:py-1.5 rounded-full uppercase tracking-widest shadow-lg">₹20,000
+                                    SSIP Grant</span>
+                            </div>
+                        </div>
+                        <h4 class="font-notoSerif text-base md:text-3xl text-white italic mb-1 md:mb-2">Cricktraker</h4>
+                        <p
+                            class="font-manrope text-[7px] md:text-sm text-zinc-400 font-light mb-2 md:mb-4 leading-relaxed">
+                            A comprehensive cricket scoring and tournament tracking platform, similar to Cricheroes.
+                        </p>
+                        <div class="flex flex-wrap gap-2 md:gap-4">
+                            <span
+                                class="text-[5px] md:text-[10px] px-1 md:px-2 py-0.5 md:py-1 border border-white/10 rounded-md text-zinc-400 uppercase tracking-widest bg-white/5">App
+                                Dev</span>
+                            <span
+                                class="text-[5px] md:text-[10px] px-1 md:px-2 py-0.5 md:py-1 border border-white/10 rounded-md text-zinc-400 uppercase tracking-widest bg-white/5">Sports
+                                Tech</span>
+                        </div>
+                    </div>
+
+                    <div class="group" data-aos="fade-up-right" data-aos-delay="150">
+                        <div
+                            class="glass-pane rounded-xl md:rounded-2xl overflow-hidden mb-3 md:mb-6 border border-white/5 relative bg-zinc-900 p-2">
+                            <img alt="GeoBus - Real-time Bus Tracking System by Yug Rojivadiya"
+                                class="w-full h-auto block rounded-lg md:rounded-xl opacity-60 group-hover:opacity-100 group-hover:scale-105 transition-all duration-1000"
+                                src="images/Geobus.jpg" loading="lazy" />
+                            <div class="absolute top-2 right-2 md:top-6 md:right-6">
+                                <span
+                                    class="bg-primary text-on-primary text-[5px] md:text-[10px] font-bold px-2 md:px-4 py-1 md:py-1.5 rounded-full uppercase tracking-widest shadow-lg">₹15,000
+                                    SSIP Grant</span>
+                            </div>
+                        </div>
+                        <h4 class="font-notoSerif text-base md:text-3xl text-white italic mb-1 md:mb-2">GeoBus</h4>
+                        <p
+                            class="font-manrope text-[7px] md:text-sm text-zinc-400 font-light mb-2 md:mb-4 leading-relaxed">
+                            An SSIP-supported project developed to track school buses and provide real-time GPS location
+                            updates for parents and schools.
+                        </p>
+                        <div class="flex gap-2 md:gap-4">
+                            <span
+                                class="text-[5px] md:text-[10px] px-1 md:px-2 py-0.5 md:py-1 border border-white/10 rounded-md text-zinc-400 uppercase tracking-widest bg-white/5">Flutter
+                                Flow</span>
+                            <span
+                                class="text-[5px] md:text-[10px] px-1 md:px-2 py-0.5 md:py-1 border border-white/10 rounded-md text-zinc-400 uppercase tracking-widest bg-white/5">Firebase</span>
+                        </div>
+                    </div>
+
+                    <div class="group md:mt-24" data-aos="fade-up-left" data-aos-delay="250">
+                        <div
+                            class="glass-pane rounded-xl md:rounded-2xl overflow-hidden mb-3 md:mb-6 border border-white/5 relative bg-zinc-900 p-2">
+                            <img alt="Clinic Appointment - Full-stack Booking System by Yug Rojivadiya"
+                                class="w-full h-auto block rounded-lg md:rounded-xl opacity-60 group-hover:opacity-100 group-hover:scale-105 transition-all duration-1000"
+                                src="images/clinic.png" loading="lazy" />
+                        </div>
+                        <h4 class="font-notoSerif text-base md:text-3xl text-white italic mb-1 md:mb-2">Clinic
+                            Appointment System</h4>
+                        <p
+                            class="font-manrope text-[7px] md:text-sm text-zinc-400 font-light mb-2 md:mb-4 leading-relaxed">
+                            A full-stack platform for clinics to manage patient bookings, doctor listings, and real-time
+                            availability tracking.
+                        </p>
+                        <div class="flex flex-wrap gap-2 md:gap-4">
+                            <span
+                                class="text-[5px] md:text-[10px] px-1 md:px-2 py-0.5 md:py-1 border border-white/10 rounded-md text-zinc-400 uppercase tracking-widest bg-white/5">Django</span>
+                            <span
+                                class="text-[5px] md:text-[10px] px-1 md:px-2 py-0.5 md:py-1 border border-white/10 rounded-md text-zinc-400 uppercase tracking-widest bg-white/5">Tailwind
+                                CSS</span>
+                        </div>
+                        <a href="https://clinic-v9j2.onrender.com/" target="_blank"
+                            class="inline-flex mt-2 md:mt-6 items-center gap-1 md:gap-2 text-[5px] md:text-xs font-bold uppercase tracking-widest text-zinc-400 hover:text-white transition group-hover:text-white">
+                            Visit Website <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                        </a>
+                    </div>
+
+                    <div class="group" data-aos="fade-up-right" data-aos-delay="150">
+                        <div
+                            class="glass-pane rounded-xl md:rounded-2xl overflow-hidden mb-3 md:mb-6 border border-white/5 relative bg-zinc-900 p-2">
+                            <img alt="EcoSortX - AI Powered Smart Waste Segregation System by Yug Rojivadiya"
+                                class="w-full h-auto block rounded-lg md:rounded-xl opacity-60 group-hover:opacity-100 group-hover:scale-105 transition-all duration-1000"
+                                src="images/EcosortX.png" loading="lazy" />
+                        </div>
+                        <h4 class="font-notoSerif text-base md:text-3xl text-white italic mb-1 md:mb-2">EcoSortX</h4>
+                        <p
+                            class="font-manrope text-[7px] md:text-sm text-zinc-400 font-light mb-2 md:mb-4 leading-relaxed">
+                            An AI-powered smart waste segregation system that uses computer vision instead of traditional moisture sensors to classify waste as wet or dry. A camera connected to a Raspberry Pi captures images of waste, and a machine learning model trained on over 30,000 images analyzes visual features such as shape, texture, and color to accurately identify the waste type.
+                        </p>
+                        <div class="flex flex-wrap gap-2 md:gap-4">
+                            <span
+                                class="text-[5px] md:text-[10px] px-1 md:px-2 py-0.5 md:py-1 border border-white/10 rounded-md text-zinc-400 uppercase tracking-widest bg-white/5">Python</span>
+                            <span
+                                class="text-[5px] md:text-[10px] px-1 md:px-2 py-0.5 md:py-1 border border-white/10 rounded-md text-zinc-400 uppercase tracking-widest bg-white/5">Machine
+                                Learning</span>
+                            <span
+                                class="text-[5px] md:text-[10px] px-1 md:px-2 py-0.5 md:py-1 border border-white/10 rounded-md text-zinc-400 uppercase tracking-widest bg-white/5">OpenCV</span>
+                            <span
+                                class="text-[5px] md:text-[10px] px-1 md:px-2 py-0.5 md:py-1 border border-white/10 rounded-md text-zinc-400 uppercase tracking-widest bg-white/5">Raspberry
+                                Pi</span>
+                            <span
+                                class="text-[5px] md:text-[10px] px-1 md:px-2 py-0.5 md:py-1 border border-white/10 rounded-md text-zinc-400 uppercase tracking-widest bg-white/5">Computer
+                                Vision</span>
+                        </div>
+                    </div>
+
+                    <div class="group md:mt-24" data-aos="fade-up-left" data-aos-delay="250">
+                        <div
+                            class="glass-pane rounded-xl md:rounded-2xl overflow-hidden mb-3 md:mb-6 border border-white/5 relative bg-zinc-900 p-2">
+                            <img alt="DataMorphix - AI Powered Intelligent Data Dictionary by Yug Rojivadiya"
+                                class="w-full h-auto block rounded-lg md:rounded-xl opacity-60 group-hover:opacity-100 group-hover:scale-105 transition-all duration-1000"
+                                src="images/DataMorfix.png" loading="lazy" />
+                        </div>
+                        <h4 class="font-notoSerif text-base md:text-3xl text-white italic mb-1 md:mb-2">DataMorphix</h4>
+                        <p
+                            class="font-manrope text-[7px] md:text-sm text-zinc-400 font-light mb-2 md:mb-4 leading-relaxed">
+                            An AI-powered Intelligent Data Dictionary platform that helps users understand datasets quickly. It analyzes CSV, Excel, and JSON files to generate AI-based dataset summaries, health scores, smart column rename suggestions, natural language dataset queries, and exportable documentation.
+                        </p>
+                        <div class="flex flex-wrap gap-2 md:gap-4">
+                            <span
+                                class="text-[5px] md:text-[10px] px-1 md:px-2 py-0.5 md:py-1 border border-white/10 rounded-md text-zinc-400 uppercase tracking-widest bg-white/5">React</span>
+                            <span
+                                class="text-[5px] md:text-[10px] px-1 md:px-2 py-0.5 md:py-1 border border-white/10 rounded-md text-zinc-400 uppercase tracking-widest bg-white/5">Django
+                                REST</span>
+                            <span
+                                class="text-[5px] md:text-[10px] px-1 md:px-2 py-0.5 md:py-1 border border-white/10 rounded-md text-zinc-400 uppercase tracking-widest bg-white/5">Python</span>
+                            <span
+                                class="text-[5px] md:text-[10px] px-1 md:px-2 py-0.5 md:py-1 border border-white/10 rounded-md text-zinc-400 uppercase tracking-widest bg-white/5">Pandas</span>
+                            <span
+                                class="text-[5px] md:text-[10px] px-1 md:px-2 py-0.5 md:py-1 border border-white/10 rounded-md text-zinc-400 uppercase tracking-widest bg-white/5">Gemini
+                                AI</span>
+                            <span
+                                class="text-[5px] md:text-[10px] px-1 md:px-2 py-0.5 md:py-1 border border-white/10 rounded-md text-zinc-400 uppercase tracking-widest bg-white/5">Tailwind
+                                CSS</span>
+                        </div>
+                    </div>
+
+                    <!-- Ghumify Flagship AI Project Card -->
+                    <div class="col-span-2 mt-4 md:mt-12 group cursor-pointer" data-aos="fade-up" data-aos-delay="200" onclick="openGhumifyModal()">
+                        <div
+                            class="glass-pane rounded-xl md:rounded-3xl overflow-hidden border border-white/10 hover:border-white/20 relative bg-zinc-900/70 p-2.5 md:p-6 transition-all duration-700">
+                            <div class="grid grid-cols-1 md:grid-cols-12 gap-3 md:gap-8 items-center">
+                                <div class="md:col-span-7 relative overflow-hidden rounded-lg md:rounded-2xl border border-white/5 bg-zinc-950">
+                                    <img alt="Ghumify – The AI-Powered Smart Travel Companion by Yug Rojivadiya"
+                                        class="w-full h-auto block rounded-lg md:rounded-xl opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-1000 object-cover"
+                                        src="images/ghumify.png" loading="lazy" />
+                                    <div class="absolute top-2 right-2 md:top-4 md:right-4">
+                                        <span
+                                            class="bg-primary text-on-primary text-[5px] md:text-[10px] font-bold px-2 md:px-3.5 py-1 md:py-1.5 rounded-full uppercase tracking-widest shadow-lg flex items-center gap-1.5">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                                            Flagship &bull; AI Travel
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="md:col-span-5 flex flex-col justify-between">
+                                    <div>
+                                        <div class="flex items-center gap-2 mb-1.5 md:mb-3">
+                                            <img src="images/ghumify_logo.png" alt="Ghumify Logo" class="h-4 md:h-6 w-auto object-contain" />
+                                            <span class="text-[5px] md:text-[9px] px-2 py-0.5 rounded-full border border-white/10 text-zinc-300 uppercase tracking-widest bg-white/5 font-manrope">Smart Travel Companion</span>
+                                        </div>
+                                        <h4 class="font-notoSerif text-base md:text-3xl lg:text-4xl text-white italic mb-1 md:mb-2">Ghumify</h4>
+                                        <p class="font-manrope text-[7px] md:text-xs text-zinc-300 font-medium mb-1 md:mb-2">
+                                            AI-Powered Time-Bound Travel Planner
+                                        </p>
+                                        <p class="font-manrope text-[7px] md:text-sm text-zinc-400 font-light mb-2 md:mb-4 leading-relaxed">
+                                            Ghumify is an AI-powered travel companion that creates personalized, time-bound travel itineraries based on a user's destination, available time, budget, age, interests and preferences. Unlike traditional travel planners, it adapts to real-world conditions and provides offline planning, multilingual assistance, crowd prediction, smart routing and emergency support.
+                                        </p>
+                                        <div class="flex flex-wrap gap-1.5 md:gap-2 mb-2 md:mb-6">
+                                            <span class="text-[5px] md:text-[10px] px-1 md:px-2 py-0.5 md:py-1 border border-white/10 rounded-md text-zinc-400 uppercase tracking-widest bg-white/5">Flutter</span>
+                                            <span class="text-[5px] md:text-[10px] px-1 md:px-2 py-0.5 md:py-1 border border-white/10 rounded-md text-zinc-400 uppercase tracking-widest bg-white/5">Dart</span>
+                                            <span class="text-[5px] md:text-[10px] px-1 md:px-2 py-0.5 md:py-1 border border-white/10 rounded-md text-zinc-400 uppercase tracking-widest bg-white/5">Next.js 15</span>
+                                            <span class="text-[5px] md:text-[10px] px-1 md:px-2 py-0.5 md:py-1 border border-white/10 rounded-md text-zinc-400 uppercase tracking-widest bg-white/5">TypeScript</span>
+                                            <span class="text-[5px] md:text-[10px] px-1 md:px-2 py-0.5 md:py-1 border border-white/10 rounded-md text-zinc-400 uppercase tracking-widest bg-white/5">Gemini AI</span>
+                                            <span class="text-[5px] md:text-[10px] px-1 md:px-2 py-0.5 md:py-1 border border-white/10 rounded-md text-zinc-400 uppercase tracking-widest bg-white/5">Groq Llama</span>
+                                            <span class="text-[5px] md:text-[10px] px-1 md:px-2 py-0.5 md:py-1 border border-white/10 rounded-md text-zinc-400 uppercase tracking-widest bg-white/5">Firebase</span>
+                                            <span class="text-[5px] md:text-[10px] px-1 md:px-2 py-0.5 md:py-1 border border-white/10 rounded-md text-zinc-400 uppercase tracking-widest bg-white/5">OpenStreetMap</span>
+                                            <span class="text-[5px] md:text-[10px] px-1 md:px-2 py-0.5 md:py-1 border border-white/10 rounded-md text-zinc-400 uppercase tracking-widest bg-white/5">SQLite Caching</span>
+                                        </div>
+                                    </div>
+                                    <button type="button" onclick="openGhumifyModal(); event.stopPropagation();"
+                                        class="inline-flex items-center gap-1.5 md:gap-2 text-[6px] md:text-xs font-bold uppercase tracking-widest text-zinc-300 hover:text-white transition group-hover:text-white mt-1">
+                                        Explore Project <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Dedicated Hackathons & Competitions Section -->
+        <section class="py-16 md:py-32 px-4 md:px-6 bg-surface-container-lowest/30 border-t border-white/5 relative" id="hackathons">
+            <div class="max-w-6xl mx-auto">
+                <div class="mb-8 md:mb-16 flex items-center gap-4" data-aos="fade-right">
+                    <h2 class="font-notoSerif text-2xl md:text-5xl italic text-white mb-0">Hackathons &amp; Competitions</h2>
+                    <div class="w-12 md:w-24 h-[1px] bg-outline-variant/30"></div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 items-stretch">
+                    
+                    <!-- 1. Smart India Hackathon (SIH) – Winner -->
+                    <div class="glass-pane rounded-2xl md:rounded-3xl p-4 md:p-6 border border-yellow-500/20 hover:border-yellow-500/40 transition-all duration-700 bg-zinc-900/60 flex flex-col justify-between group"
+                        data-aos="fade-up" data-aos-delay="100"
+                        style="background: linear-gradient(135deg, rgba(234,179,8,0.04) 0%, rgba(25,25,25,0.5) 40%, rgba(25,25,25,0.6) 100%);">
+                        <div>
+                            <div class="flex items-center justify-between gap-2 mb-3 md:mb-4">
+                                <span class="bg-yellow-400/10 text-yellow-300 border border-yellow-400/25 text-[8px] md:text-xs font-bold uppercase tracking-widest px-2.5 md:px-3 py-1 rounded-full flex items-center gap-1.5 shadow-lg">
+                                    <i class="fa-solid fa-trophy text-yellow-400 text-[10px] md:text-xs"></i> Winner &bull; SIH 2026
+                                </span>
+                                <span class="text-[8px] md:text-xs text-zinc-400 uppercase tracking-widest font-manrope">
+                                    National
+                                </span>
+                            </div>
+
+                            <div class="overflow-hidden rounded-xl md:rounded-2xl mb-4 border border-white/10 bg-black/50 relative">
+                                <img src="images/SIH2026.jpeg" alt="Smart India Hackathon 2026 Winner - Yug Rojivadiya"
+                                    class="w-full h-44 sm:h-52 md:h-56 object-cover object-center opacity-85 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700 block"
+                                    loading="lazy" />
+                                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent pointer-events-none"></div>
+                                <div class="absolute bottom-2.5 left-3 md:bottom-3 md:left-4">
+                                    <span class="text-[9px] md:text-xs text-zinc-200 font-medium flex items-center gap-1.5">
+                                        <i class="fa-solid fa-building-columns text-yellow-400"></i> Ministry of Education &bull; SIH
+                                    </span>
+                                </div>
+                            </div>
+
+                            <h3 class="font-notoSerif text-lg md:text-2xl text-white italic mb-1.5">Smart India Hackathon (SIH)</h3>
+                            <p class="font-manrope text-[11px] md:text-xs text-zinc-300 font-light mb-4 leading-relaxed">
+                                Won the Internal Round of Smart India Hackathon (SIH) 2026, competing against 150+ talented teams across the university to represent the college at the Grand Finale with an innovative software solution.
+                            </p>
+
+                            <!-- Prominent Statistics Grid -->
+                            <div class="grid grid-cols-2 gap-2 mb-4">
+                                <div class="p-2.5 rounded-xl border border-yellow-500/20 bg-yellow-400/[0.04]">
+                                    <div class="text-sm md:text-xl font-bold text-yellow-300 font-manrope">Winner</div>
+                                    <div class="text-[8px] md:text-[10px] text-zinc-400 uppercase tracking-wider mt-0.5">Internal Round</div>
+                                </div>
+                                <div class="p-2.5 rounded-xl border border-white/10 bg-white/[0.03]">
+                                    <div class="text-sm md:text-xl font-bold text-white font-manrope">150+</div>
+                                    <div class="text-[8px] md:text-[10px] text-zinc-400 uppercase tracking-wider mt-0.5">Teams Defeated</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="pt-3 border-t border-white/10 flex items-center justify-between gap-2 text-[9px] md:text-xs">
+                                <span class="px-2 py-0.5 rounded border border-white/10 bg-white/5 text-zinc-400">P P Savani University</span>
+                                <a href="https://drive.google.com/drive/folders/1VGbdkfLk9W22SSYEtJS8HZAFWRFObDd6?usp=sharing" target="_blank"
+                                    class="inline-flex items-center gap-1 text-yellow-300 hover:text-white transition-colors font-semibold">
+                                    Prototype <i class="fa-solid fa-arrow-up-right-from-square text-[9px]"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 2. ZINOVATIO Hackathon – 36th Position -->
+                    <div class="glass-pane rounded-2xl md:rounded-3xl p-4 md:p-6 border border-emerald-500/20 hover:border-emerald-500/40 transition-all duration-700 bg-zinc-900/60 flex flex-col justify-between group"
+                        data-aos="fade-up" data-aos-delay="200"
+                        style="background: linear-gradient(135deg, rgba(16,185,129,0.04) 0%, rgba(25,25,25,0.5) 40%, rgba(25,25,25,0.6) 100%);">
+                        <div>
+                            <div class="flex items-center justify-between gap-2 mb-3 md:mb-4">
+                                <span class="bg-emerald-400/10 text-emerald-300 border border-emerald-400/25 text-[8px] md:text-xs font-bold uppercase tracking-widest px-2.5 md:px-3 py-1 rounded-full flex items-center gap-1.5 shadow-lg">
+                                    <i class="fa-solid fa-medal text-emerald-400 text-[10px] md:text-xs"></i> 36th Position Secured
+                                </span>
+                                <span class="text-[8px] md:text-xs text-zinc-400 uppercase tracking-widest font-manrope">
+                                    All India
+                                </span>
+                            </div>
+
+                            <div class="overflow-hidden rounded-xl md:rounded-2xl mb-4 border border-white/10 bg-black/50 relative">
+                                <img src="images/zinovatio_banner.png" alt="ZINOVATIO Hackathon Selection - Yug Rojivadiya"
+                                    class="w-full h-44 sm:h-52 md:h-56 object-cover object-top opacity-85 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700 block"
+                                    loading="lazy" />
+                                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent pointer-events-none"></div>
+                                <div class="absolute bottom-2.5 left-3 md:bottom-3 md:left-4">
+                                    <span class="text-[9px] md:text-xs text-zinc-200 font-medium flex items-center gap-1.5">
+                                        <i class="fa-solid fa-location-dot text-emerald-400"></i> Chandigarh University
+                                    </span>
+                                </div>
+                            </div>
+
+                            <h3 class="font-notoSerif text-lg md:text-2xl text-white italic mb-1.5">ZINOVATIO Hackathon</h3>
+                            <p class="font-manrope text-[11px] md:text-xs text-zinc-300 font-light mb-4 leading-relaxed">
+                                Selected among 220 teams invited to the offline round of ZINOVATIO Hackathon at Chandigarh University, from 961 registered teams across India. Secured 36th position in the competition.
+                            </p>
+
+                            <!-- Prominent Statistics Grid -->
+                            <div class="grid grid-cols-3 gap-1.5 md:gap-2 mb-4">
+                                <div class="p-2 rounded-xl border border-white/10 bg-white/[0.03] text-center">
+                                    <div class="text-sm md:text-lg font-bold text-white font-manrope">961</div>
+                                    <div class="text-[7px] md:text-[9px] text-zinc-400 uppercase tracking-wider mt-0.5">Registered</div>
+                                </div>
+                                <div class="p-2 rounded-xl border border-white/10 bg-white/[0.03] text-center">
+                                    <div class="text-sm md:text-lg font-bold text-zinc-200 font-manrope">220</div>
+                                    <div class="text-[7px] md:text-[9px] text-zinc-400 uppercase tracking-wider mt-0.5">Offline Teams</div>
+                                </div>
+                                <div class="p-2 rounded-xl border border-emerald-500/20 bg-emerald-400/[0.04] text-center">
+                                    <div class="text-sm md:text-lg font-bold text-emerald-300 font-manrope">36th</div>
+                                    <div class="text-[7px] md:text-[9px] text-emerald-400/80 uppercase tracking-wider mt-0.5">Position</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="pt-3 border-t border-white/10 flex flex-wrap items-center gap-1.5 text-[9px] md:text-xs text-zinc-400">
+                                <span class="px-2 py-0.5 rounded border border-white/10 bg-white/5">Chandigarh University</span>
+                                <span class="px-2 py-0.5 rounded border border-white/10 bg-white/5">Pan-India Offline Round</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 3. INDUX 5.0 – National-Level Hackathon (Consecutive Editions) -->
+                    <div class="glass-pane rounded-2xl md:rounded-3xl p-4 md:p-6 border border-amber-500/20 hover:border-amber-500/40 transition-all duration-700 bg-zinc-900/60 flex flex-col justify-between group md:col-span-2 lg:col-span-1"
+                        data-aos="fade-up" data-aos-delay="300"
+                        style="background: linear-gradient(135deg, rgba(245,158,11,0.04) 0%, rgba(25,25,25,0.5) 40%, rgba(25,25,25,0.6) 100%);">
+                        <div>
+                            <div class="flex items-center justify-between gap-2 mb-3 md:mb-4">
+                                <span class="bg-amber-400/10 text-amber-300 border border-amber-400/25 text-[8px] md:text-xs font-bold uppercase tracking-widest px-2.5 md:px-3 py-1 rounded-full flex items-center gap-1.5 shadow-lg">
+                                    <i class="fa-solid fa-award text-amber-400 text-[10px] md:text-xs"></i> 2&times; National Milestones
+                                </span>
+                                <span class="text-[8px] md:text-xs text-zinc-400 uppercase tracking-widest font-manrope">
+                                    2025 &bull; 2026
+                                </span>
+                            </div>
+
+                            <div class="overflow-hidden rounded-xl md:rounded-2xl mb-4 border border-white/10 bg-black/50 relative">
+                                <img src="images/indux5.0 hackathon1.jpg" alt="INDUX 5.0 National Hackathon - Yug Rojivadiya"
+                                    class="w-full h-44 sm:h-52 md:h-56 object-cover object-center opacity-85 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700 block"
+                                    loading="lazy" />
+                                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent pointer-events-none"></div>
+                                <div class="absolute bottom-2.5 left-3 md:bottom-3 md:left-4">
+                                    <span class="text-[9px] md:text-xs text-zinc-200 font-medium flex items-center gap-1.5">
+                                        <i class="fa-solid fa-location-dot text-rose-400"></i> Vikrant University, Gwalior
+                                    </span>
+                                </div>
+                            </div>
+
+                            <h3 class="font-notoSerif text-lg md:text-2xl text-white italic mb-1.5">INDUX 5.0 – National Hackathon</h3>
+                            <p class="font-manrope text-[11px] md:text-xs text-zinc-300 font-light mb-4 leading-relaxed">
+                                Participated in INDUX 5.0 for two consecutive editions. Secured a Top 10 position in 2025 and returned in 2026, earning finalist selection and an invitation to the offline round among 300+ registered teams.
+                            </p>
+
+                            <!-- Two Separate Year-Wise Milestones -->
+                            <div class="grid grid-cols-2 gap-2 mb-4">
+                                <div class="p-2.5 rounded-xl border border-red-500/20 bg-red-400/[0.04]">
+                                    <div class="text-[9px] md:text-[10px] font-bold text-red-300 uppercase tracking-widest flex items-center gap-1">
+                                        <i class="fa-solid fa-star text-[8px]"></i> 2025 Edition
+                                    </div>
+                                    <div class="text-sm md:text-lg font-bold text-white font-manrope mt-1">Top 10</div>
+                                    <div class="text-[8px] md:text-[10px] text-zinc-400 uppercase tracking-wider mt-0.5">National Rank</div>
+                                </div>
+                                <div class="p-2.5 rounded-xl border border-amber-500/20 bg-amber-400/[0.04]">
+                                    <div class="text-[9px] md:text-[10px] font-bold text-amber-300 uppercase tracking-widest flex items-center gap-1">
+                                        <i class="fa-solid fa-flag text-[8px]"></i> 2026 Edition
+                                    </div>
+                                    <div class="text-sm md:text-lg font-bold text-amber-300 font-manrope mt-1">Finalist</div>
+                                    <div class="text-[8px] md:text-[10px] text-zinc-400 uppercase tracking-wider mt-0.5">300+ Teams &bull; Offline Round</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="pt-3 border-t border-white/10 flex flex-wrap items-center gap-1.5 text-[9px] md:text-xs text-zinc-400">
+                                <span class="px-2 py-0.5 rounded border border-white/10 bg-white/5">2025: Top 10</span>
+                                <span class="px-2 py-0.5 rounded border border-white/10 bg-white/5">2026: Finalist</span>
+                                <span class="px-2 py-0.5 rounded border border-white/10 bg-white/5">Vikrant University, Gwalior</span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <footer
+            class="pt-16 md:pt-32 pb-8 md:pb-12 px-4 md:px-6 bg-transparent text-zinc-400 font-manrope border-t border-white/10"
+            id="contact">
+            <div class="max-w-6xl mx-auto mb-12 md:mb-24 grid grid-cols-2 gap-4 md:gap-12" data-aos="fade-up">
+                <div>
+                    <h2 class="font-notoSerif text-2xl md:text-6xl text-white italic mb-4 md:mb-10">Let's Connect</h2>
+                    <div class="space-y-3 md:space-y-6">
+                        <a class="flex items-center gap-2 md:gap-4 text-[7px] md:text-xl hover:text-white transition-colors w-fit group font-light"
+                            href="https://mail.google.com/mail/?view=cm&fs=1&to=work.yugrojivadiya@gmail.com&su=Portfolio%20Inquiry"
+                            target="_blank">
+                            <div
+                                class="w-6 h-6 md:w-12 md:h-12 rounded-full border border-white/10 flex items-center justify-center group-hover:bg-white/10 transition-colors bg-white/5">
+                                <span class="material-symbols-outlined text-white text-[10px] md:text-lg"
+                                    data-icon="mail">mail</span>
+                            </div>
+                            work.yugrojivadiya@gmail.com
+                        </a>
+
+                        <a class="flex items-center gap-2 md:gap-4 text-[7px] md:text-xl hover:text-white transition-colors w-fit group font-light"
+                            href="https://wa.me/+919106577265" target="_blank">
+                            <div
+                                class="w-6 h-6 md:w-12 md:h-12 rounded-full border border-white/10 flex items-center justify-center group-hover:bg-white/10 transition-colors bg-white/5">
+                                <i class="fa-brands fa-whatsapp text-white text-[10px] md:text-lg"></i>
+                            </div>
+                            +91 91065 77265
+                        </a>
+                    </div>
+                </div>
+
+                <div class="flex flex-col justify-end items-end gap-3 md:gap-6 border-l border-white/10 pl-4 md:pl-12">
+                    <p class="font-notoSerif text-xs md:text-2xl italic text-white mb-1 md:mb-2">Find me on socials.</p>
+                    <div class="flex flex-col md:flex-row justify-end gap-2 md:gap-4">
+                        <a class="glass-pane px-3 md:px-8 py-1.5 md:py-3 rounded-full text-[6px] md:text-xs font-bold uppercase tracking-widest hover:bg-white hover:text-black transition-all flex items-center gap-1 md:gap-2"
+                            href="https://www.linkedin.com/in/yug-rojivadiya-115bb435a/" target="_blank">
+                            <i class="fa-brands fa-linkedin text-[10px] md:text-lg"></i> LinkedIn
+                        </a>
+                        <a class="glass-pane px-3 md:px-8 py-1.5 md:py-3 rounded-full text-[6px] md:text-xs font-bold uppercase tracking-widest hover:bg-white hover:text-black transition-all flex items-center gap-1 md:gap-2"
+                            href="https://www.instagram.com/yug.rojivadiya/" target="_blank">
+                            <i class="fa-brands fa-instagram text-[10px] md:text-lg"></i> Instagram
+                        </a>
+                        <a class="glass-pane px-3 md:px-8 py-1.5 md:py-3 rounded-full text-[6px] md:text-xs font-bold uppercase tracking-widest hover:bg-white hover:text-black transition-all flex items-center gap-1 md:gap-2"
+                            href="https://github.com/YugPatel11" target="_blank">
+                            <i class="fa-brands fa-github text-[10px] md:text-lg"></i> Github
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div
+                class="max-w-6xl mx-auto flex flex-row justify-between items-center w-full pt-6 md:pt-12 text-[6px] md:text-[10px] tracking-widest uppercase gap-4 md:gap-8 text-left">
+                <div class="flex flex-row items-center gap-4 md:gap-8">
+                    <p>© 2026 Yug Rojivadiya</p>
+
+                </div>
+
+                <div class="flex gap-4 md:gap-8 items-center">
+                    <span class="text-zinc-500 flex items-center gap-1 md:gap-2 hidden sm:flex">
+                        Crafted with Code & Creativity
+                    </span>
+                    <a class="text-white font-bold hover:scale-105 transition-all cursor-pointer bg-white/10 px-3 md:px-6 py-1 md:py-2.5 rounded-full"
+                        onclick="window.scrollTo({top: 0, behavior: 'smooth'});">Back to Top</a>
+                </div>
+            </div>
+        </footer>
+
+        <!-- Ghumify Project Detail Modal -->
+        <div id="ghumify-modal" role="dialog" aria-modal="true" aria-labelledby="ghumify-modal-title"
+            class="fixed inset-0 z-[100] flex items-center justify-center p-3 md:p-6 bg-black/85 backdrop-blur-md overflow-hidden"
+            onclick="if(event.target === this) closeGhumifyModal();">
+            
+            <div class="modal-panel relative w-full max-w-5xl max-h-[92vh] bg-[#0d0d0e] border border-white/15 rounded-2xl md:rounded-3xl shadow-2xl overflow-hidden flex flex-col">
+                
+                <!-- Modal Header -->
+                <div class="flex items-center justify-between px-4 md:px-8 py-3.5 md:py-5 border-b border-white/10 bg-zinc-900/60 backdrop-blur-xl">
+                    <div class="flex items-center gap-3">
+                        <img src="images/ghumify_logo.png" alt="Ghumify" class="h-6 md:h-8 w-auto object-contain" />
+                        <div>
+                            <div class="flex items-center gap-2">
+                                <h3 id="ghumify-modal-title" class="font-notoSerif text-sm md:text-2xl text-white italic">Ghumify</h3>
+                                <span class="text-[8px] md:text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 uppercase tracking-widest">
+                                    Smart Travel Companion
+                                </span>
+                            </div>
+                            <p class="font-manrope text-[8px] md:text-xs text-zinc-400">AI-Powered Time-Bound Travel Planner</p>
+                        </div>
+                    </div>
+                    <button type="button" onclick="closeGhumifyModal()" aria-label="Close modal"
+                        class="w-8 h-8 md:w-10 md:h-10 rounded-full border border-white/15 bg-white/5 hover:bg-white/15 text-zinc-300 hover:text-white flex items-center justify-center transition-all">
+                        <i class="fa-solid fa-xmark text-sm md:text-lg"></i>
+                    </button>
+                </div>
+
+                <!-- Modal Body (Scrollable) -->
+                <div class="overflow-y-auto px-4 md:px-8 py-5 md:py-8 space-y-6 md:space-y-10 custom-scrollbar text-zinc-300 font-manrope">
+                    
+                    <!-- Hero Banner & Overview -->
+                    <div class="glass-pane rounded-xl md:rounded-2xl p-3 md:p-6 border border-white/10 bg-zinc-900/40">
+                        <div class="grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-6 items-center">
+                            <div class="md:col-span-6 rounded-lg md:rounded-xl overflow-hidden border border-white/10 shadow-lg bg-black">
+                                <img src="images/ghumify.png" alt="Ghumify Presentation Banner" class="w-full h-auto object-cover" />
+                            </div>
+                            <div class="md:col-span-6 space-y-3">
+                                <div class="flex flex-wrap gap-2 items-center">
+                                    <span class="bg-primary text-on-primary text-[8px] md:text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-widest">
+                                        Track: Smart &amp; Sustainable Cities
+                                    </span>
+                                    <span class="text-[8px] md:text-[10px] px-2.5 py-1 rounded-full border border-white/10 text-zinc-400 bg-white/5">
+                                        Team AI Avengers
+                                    </span>
+                                </div>
+                                <h4 class="font-notoSerif text-base md:text-2xl text-white italic">
+                                    &ldquo;One Trip. One Smart Itinerary. One Platform.&rdquo;
+                                </h4>
+                                <p class="text-xs md:text-sm text-zinc-300 font-light leading-relaxed">
+                                    Ghumify is an AI-powered travel companion that creates personalized, time-bound travel itineraries based on a user's destination, available time, budget, age, interests and preferences. Unlike traditional travel planners, it adapts to real-world conditions and provides offline planning, multilingual assistance, crowd prediction, smart routing and emergency support.
+                                </p>
+                                <div class="grid grid-cols-2 gap-2 pt-2 border-t border-white/10 text-[10px] md:text-xs text-zinc-400">
+                                    <div><i class="fa-solid fa-bolt text-amber-400 mr-1.5"></i> <strong>&lt; 3 Sec</strong> AI Generation</div>
+                                    <div><i class="fa-solid fa-wifi text-emerald-400 mr-1.5"></i> <strong>Offline Ready</strong> (509k+ BharatPOI)</div>
+                                    <div><i class="fa-solid fa-language text-sky-400 mr-1.5"></i> <strong>10 Indian Languages</strong></div>
+                                    <div><i class="fa-solid fa-shield-halved text-rose-400 mr-1.5"></i> <strong>OSM Emergency SOS</strong></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Problem Statement & The "Ground Reality" Gap -->
+                    <div>
+                        <div class="flex items-center gap-3 mb-4">
+                            <span class="w-7 h-7 md:w-9 md:h-9 rounded-full bg-rose-500/10 border border-rose-500/20 text-rose-400 flex items-center justify-center text-xs md:text-sm">
+                                <i class="fa-solid fa-triangle-exclamation"></i>
+                            </span>
+                            <div>
+                                <h4 class="font-notoSerif text-base md:text-2xl text-white italic">The Problem &amp; Why It Matters</h4>
+                                <p class="text-[10px] md:text-xs text-zinc-400">The gap between planning at home and surviving on the ground</p>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4">
+                            <div class="glass-pane rounded-xl p-3 md:p-5 border border-white/10 bg-zinc-900/30">
+                                <div class="text-xs md:text-sm font-bold text-white mb-1.5 flex items-center gap-2">
+                                    <i class="fa-solid fa-layer-group text-zinc-400"></i> The Fragmentation
+                                </div>
+                                <p class="text-[11px] md:text-xs text-zinc-400 font-light leading-relaxed">
+                                    A traveler typically juggles 5+ disconnected apps: one for planning, one for translation, one for maps, one for emergencies, and one for train or bus bookings.
+                                </p>
+                            </div>
+                            <div class="glass-pane rounded-xl p-3 md:p-5 border border-white/10 bg-zinc-900/30">
+                                <div class="text-xs md:text-sm font-bold text-white mb-1.5 flex items-center gap-2">
+                                    <i class="fa-solid fa-compass text-zinc-400"></i> The Ground Reality Gap
+                                </div>
+                                <p class="text-[11px] md:text-xs text-zinc-400 font-light leading-relaxed">
+                                    Travelers spend hours planning at home, but get stranded on the ground. Generic planners fail because they do not handle real-world chaos: language barriers, medical emergencies, or schedule disruptions.
+                                </p>
+                            </div>
+                            <div class="glass-pane rounded-xl p-3 md:p-5 border border-white/10 bg-zinc-900/30">
+                                <div class="text-xs md:text-sm font-bold text-white mb-1.5 flex items-center gap-2">
+                                    <i class="fa-solid fa-map-location-dot text-zinc-400"></i> The India Factor
+                                </div>
+                                <p class="text-[11px] md:text-xs text-zinc-400 font-light leading-relaxed">
+                                    22 official languages, unpredictable weather, and unorganized local markets make standard Western AI planners unreliable for Tier-2 and Tier-3 Indian destinations.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Proposed Solution -->
+                    <div>
+                        <div class="flex items-center gap-3 mb-4">
+                            <span class="w-7 h-7 md:w-9 md:h-9 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center text-xs md:text-sm">
+                                <i class="fa-solid fa-lightbulb"></i>
+                            </span>
+                            <div>
+                                <h4 class="font-notoSerif text-base md:text-2xl text-white italic">The Proposed Solution</h4>
+                                <p class="text-[10px] md:text-xs text-zinc-400">All-in-one, resilient, India-first smart travel companion</p>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4">
+                            <div class="glass-pane rounded-xl p-3 md:p-5 border border-white/10 bg-zinc-900/30">
+                                <div class="text-xs md:text-sm font-bold text-white mb-1.5 flex items-center gap-2">
+                                    <i class="fa-solid fa-mobile-screen-button text-emerald-400"></i> All-in-One India Companion
+                                </div>
+                                <p class="text-[11px] md:text-xs text-zinc-400 font-light leading-relaxed">
+                                    A single unified platform that not only generates slot-by-slot AI itineraries but stays actively with the user on the ground through every leg of the journey.
+                                </p>
+                            </div>
+                            <div class="glass-pane rounded-xl p-3 md:p-5 border border-white/10 bg-zinc-900/30">
+                                <div class="text-xs md:text-sm font-bold text-white mb-1.5 flex items-center gap-2">
+                                    <i class="fa-solid fa-route text-emerald-400"></i> Multi-City Routing
+                                </div>
+                                <p class="text-[11px] md:text-xs text-zinc-400 font-light leading-relaxed">
+                                    Automatically plans inter-connected trips across neighboring cities (e.g., Indore &rarr; Ujjain &rarr; Omkareshwar) with integrated train/bus timings and transit route optimization.
+                                </p>
+                            </div>
+                            <div class="glass-pane rounded-xl p-3 md:p-5 border border-white/10 bg-zinc-900/30">
+                                <div class="text-xs md:text-sm font-bold text-white mb-1.5 flex items-center gap-2">
+                                    <i class="fa-solid fa-shield-virus text-emerald-400"></i> Unfair Resilience Advantage
+                                </div>
+                                <p class="text-[11px] md:text-xs text-zinc-400 font-light leading-relaxed">
+                                    Multi-provider AI fallback (Gemini &rarr; Groq Llama &rarr; OpenRouter) combined with an Offline Rule-Based Engine and 509K+ BharatPOI dataset so itineraries generate even with zero network.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 10 Key Features Highlighted -->
+                    <div>
+                        <div class="flex items-center gap-3 mb-4">
+                            <span class="w-7 h-7 md:w-9 md:h-9 rounded-full bg-primary/10 border border-white/20 text-white flex items-center justify-center text-xs md:text-sm">
+                                <i class="fa-solid fa-cubes-stacked"></i>
+                            </span>
+                            <div>
+                                <h4 class="font-notoSerif text-base md:text-2xl text-white italic">Key Features</h4>
+                                <p class="text-[10px] md:text-xs text-zinc-400">Core intelligent capabilities powering Ghumify</p>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-3 md:gap-4">
+                            <!-- 1 -->
+                            <div class="p-3 md:p-4 rounded-xl border border-white/10 bg-white/[0.02] hover:bg-white/[0.05] transition-colors">
+                                <div class="flex items-center gap-2.5 mb-1.5">
+                                    <span class="w-6 h-6 rounded-md bg-white/10 flex items-center justify-center text-white text-xs"><i class="fa-solid fa-wand-magic-sparkles"></i></span>
+                                    <span class="text-xs md:text-sm font-bold text-white">AI-Powered Personalized Planning</span>
+                                </div>
+                                <p class="text-[11px] md:text-xs text-zinc-400 font-light leading-relaxed">
+                                    Generates customized, slot-by-slot travel itineraries tailored to destination, available hours, party age group, pacing, and interest categories.
+                                </p>
+                            </div>
+                            <!-- 2 -->
+                            <div class="p-3 md:p-4 rounded-xl border border-white/10 bg-white/[0.02] hover:bg-white/[0.05] transition-colors">
+                                <div class="flex items-center gap-2.5 mb-1.5">
+                                    <span class="w-6 h-6 rounded-md bg-white/10 flex items-center justify-center text-white text-xs"><i class="fa-solid fa-signs-post"></i></span>
+                                    <span class="text-xs md:text-sm font-bold text-white">Smart Route Optimization</span>
+                                </div>
+                                <p class="text-[11px] md:text-xs text-zinc-400 font-light leading-relaxed">
+                                    Uses Haversine proximity calculations and Nearest-Neighbor logic to plan efficient, loop-free routes and anchored lunch/dinner schedules.
+                                </p>
+                            </div>
+                            <!-- 3 -->
+                            <div class="p-3 md:p-4 rounded-xl border border-white/10 bg-white/[0.02] hover:bg-white/[0.05] transition-colors">
+                                <div class="flex items-center gap-2.5 mb-1.5">
+                                    <span class="w-6 h-6 rounded-md bg-white/10 flex items-center justify-center text-white text-xs"><i class="fa-solid fa-users"></i></span>
+                                    <span class="text-xs md:text-sm font-bold text-white">Crowd Intelligence</span>
+                                </div>
+                                <p class="text-[11px] md:text-xs text-zinc-400 font-light leading-relaxed">
+                                    Machine learning predicts peak crowd congestion windows at attractions and dynamically suggests calmer alternatives and off-peak visiting slots.
+                                </p>
+                            </div>
+                            <!-- 4 -->
+                            <div class="p-3 md:p-4 rounded-xl border border-white/10 bg-white/[0.02] hover:bg-white/[0.05] transition-colors">
+                                <div class="flex items-center gap-2.5 mb-1.5">
+                                    <span class="w-6 h-6 rounded-md bg-white/10 flex items-center justify-center text-white text-xs"><i class="fa-solid fa-wallet"></i></span>
+                                    <span class="text-xs md:text-sm font-bold text-white">Budget Intelligence</span>
+                                </div>
+                                <p class="text-[11px] md:text-xs text-zinc-400 font-light leading-relaxed">
+                                    Accurately estimates overall trip expenses and includes integer-paise math expense settlement algorithms to eliminate group debt rounding errors.
+                                </p>
+                            </div>
+                            <!-- 5 -->
+                            <div class="p-3 md:p-4 rounded-xl border border-white/10 bg-white/[0.02] hover:bg-white/[0.05] transition-colors">
+                                <div class="flex items-center gap-2.5 mb-1.5">
+                                    <span class="w-6 h-6 rounded-md bg-white/10 flex items-center justify-center text-white text-xs"><i class="fa-solid fa-language"></i></span>
+                                    <span class="text-xs md:text-sm font-bold text-white">Multilingual Translator</span>
+                                </div>
+                                <p class="text-[11px] md:text-xs text-zinc-400 font-light leading-relaxed">
+                                    Built-in two-way translation NLP supporting 10 major Indian languages (Hindi, Gujarati, Marathi, Tamil, Telugu, Bengali, Kannada, Malayalam, Punjabi, Odia).
+                                </p>
+                            </div>
+                            <!-- 6 -->
+                            <div class="p-3 md:p-4 rounded-xl border border-white/10 bg-white/[0.02] hover:bg-white/[0.05] transition-colors">
+                                <div class="flex items-center gap-2.5 mb-1.5">
+                                    <span class="w-6 h-6 rounded-md bg-white/10 flex items-center justify-center text-white text-xs"><i class="fa-solid fa-plane-slash"></i></span>
+                                    <span class="text-xs md:text-sm font-bold text-white">Offline Travel Planning</span>
+                                </div>
+                                <p class="text-[11px] md:text-xs text-zinc-400 font-light leading-relaxed">
+                                    Offline deterministic rule-based engine coupled with a bundled 509K+ BharatPOI dataset and SQLite local storage to generate itineraries without internet.
+                                </p>
+                            </div>
+                            <!-- 7 -->
+                            <div class="p-3 md:p-4 rounded-xl border border-white/10 bg-white/[0.02] hover:bg-white/[0.05] transition-colors">
+                                <div class="flex items-center gap-2.5 mb-1.5">
+                                    <span class="w-6 h-6 rounded-md bg-white/10 flex items-center justify-center text-white text-xs"><i class="fa-solid fa-city"></i></span>
+                                    <span class="text-xs md:text-sm font-bold text-white">Multi-City Travel</span>
+                                </div>
+                                <p class="text-[11px] md:text-xs text-zinc-400 font-light leading-relaxed">
+                                    Seamless interconnected routing across neighboring Indian cities with synchronized inter-city train and bus options and realistic adult/child fares.
+                                </p>
+                            </div>
+                            <!-- 8 -->
+                            <div class="p-3 md:p-4 rounded-xl border border-white/10 bg-white/[0.02] hover:bg-white/[0.05] transition-colors">
+                                <div class="flex items-center gap-2.5 mb-1.5">
+                                    <span class="w-6 h-6 rounded-md bg-white/10 flex items-center justify-center text-white text-xs"><i class="fa-solid fa-truck-medical"></i></span>
+                                    <span class="text-xs md:text-sm font-bold text-white">Emergency Assistance (SOS)</span>
+                                </div>
+                                <p class="text-[11px] md:text-xs text-zinc-400 font-light leading-relaxed">
+                                    1-touch SOS emergency dialing (112, 100, 108) and real-time OpenStreetMap Overpass discovery of nearby hospitals, pharmacies, police stations, and verified restrooms.
+                                </p>
+                            </div>
+                            <!-- 9 -->
+                            <div class="p-3 md:p-4 rounded-xl border border-white/10 bg-white/[0.02] hover:bg-white/[0.05] transition-colors">
+                                <div class="flex items-center gap-2.5 mb-1.5">
+                                    <span class="w-6 h-6 rounded-md bg-white/10 flex items-center justify-center text-white text-xs"><i class="fa-solid fa-arrows-rotate"></i></span>
+                                    <span class="text-xs md:text-sm font-bold text-white">Real-Time Adaptation</span>
+                                </div>
+                                <p class="text-[11px] md:text-xs text-zinc-400 font-light leading-relaxed">
+                                    Automatically recalibrates schedules in response to weather shifts, unexpected venue closures, or in-flight user modifications through conversational AI.
+                                </p>
+                            </div>
+                            <!-- 10 -->
+                            <div class="p-3 md:p-4 rounded-xl border border-white/10 bg-white/[0.02] hover:bg-white/[0.05] transition-colors">
+                                <div class="flex items-center gap-2.5 mb-1.5">
+                                    <span class="w-6 h-6 rounded-md bg-white/10 flex items-center justify-center text-white text-xs"><i class="fa-solid fa-bowl-rice"></i></span>
+                                    <span class="text-xs md:text-sm font-bold text-white">Dietary &amp; Accessibility Support</span>
+                                </div>
+                                <p class="text-[11px] md:text-xs text-zinc-400 font-light leading-relaxed">
+                                    Strict Vegetarian &amp; Jain dietary safety locks, automatic removal of nightlife spots for families with kids, and wheelchair/elderly accessibility checks.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Technical Architecture -->
+                    <div>
+                        <div class="flex items-center gap-3 mb-4">
+                            <span class="w-7 h-7 md:w-9 md:h-9 rounded-full bg-sky-500/10 border border-sky-500/20 text-sky-400 flex items-center justify-center text-xs md:text-sm">
+                                <i class="fa-solid fa-diagram-project"></i>
+                            </span>
+                            <div>
+                                <h4 class="font-notoSerif text-base md:text-2xl text-white italic">Technical Architecture</h4>
+                                <p class="text-[10px] md:text-xs text-zinc-400">Ghumify Tourist Journey Flow &amp; Fault-Tolerant System Design</p>
+                            </div>
+                        </div>
+
+                        <div class="glass-pane rounded-xl md:rounded-2xl p-3 md:p-6 border border-white/10 bg-zinc-900/30 space-y-4">
+                            <div class="rounded-lg md:rounded-xl overflow-hidden border border-white/10 bg-black/60">
+                                <img src="images/ghumify_architecture.png" alt="Ghumify Technical Approach and Tourist Journey Flow" class="w-full h-auto block" />
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-4 gap-3 pt-2">
+                                <div class="p-3 rounded-lg border border-white/5 bg-white/[0.02]">
+                                    <div class="text-[10px] md:text-xs font-bold text-white mb-1"><i class="fa-solid fa-shield-check text-emerald-400 mr-1"></i> Multi-AI Router</div>
+                                    <p class="text-[10px] md:text-[11px] text-zinc-400">Autonomous fallback: Google Gemini &rarr; Groq Llama 3.3 &rarr; OpenRouter Claude.</p>
+                                </div>
+                                <div class="p-3 rounded-lg border border-white/5 bg-white/[0.02]">
+                                    <div class="text-[10px] md:text-xs font-bold text-white mb-1"><i class="fa-solid fa-code-commit text-sky-400 mr-1"></i> Strict Zod Validation</div>
+                                    <p class="text-[10px] md:text-[11px] text-zinc-400">Ensures zero hallucinated JSON structures or corrupt timeline slots.</p>
+                                </div>
+                                <div class="p-3 rounded-lg border border-white/5 bg-white/[0.02]">
+                                    <div class="text-[10px] md:text-xs font-bold text-white mb-1"><i class="fa-solid fa-database text-amber-400 mr-1"></i> SQLite Caching</div>
+                                    <p class="text-[10px] md:text-[11px] text-zinc-400">Keeps full itinerary slots and maps accessible even in complete dead zones.</p>
+                                </div>
+                                <div class="p-3 rounded-lg border border-white/5 bg-white/[0.02]">
+                                    <div class="text-[10px] md:text-xs font-bold text-white mb-1"><i class="fa-solid fa-map text-rose-400 mr-1"></i> Multi-Provider Maps</div>
+                                    <p class="text-[10px] md:text-[11px] text-zinc-400">Falls back seamlessly from Google Places to Geoapify and OpenStreetMap.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Technology Stack Matrix -->
+                    <div>
+                        <div class="flex items-center gap-3 mb-4">
+                            <span class="w-7 h-7 md:w-9 md:h-9 rounded-full bg-purple-500/10 border border-purple-500/20 text-purple-400 flex items-center justify-center text-xs md:text-sm">
+                                <i class="fa-solid fa-microchip"></i>
+                            </span>
+                            <div>
+                                <h4 class="font-notoSerif text-base md:text-2xl text-white italic">Technology Stack</h4>
+                                <p class="text-[10px] md:text-xs text-zinc-400">Production technologies verified from presentation</p>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4">
+                            <div class="p-3.5 md:p-4 rounded-xl border border-white/10 bg-zinc-900/40">
+                                <div class="text-xs md:text-sm font-bold text-white mb-2 flex items-center gap-2">
+                                    <i class="fa-solid fa-mobile-screen text-indigo-400"></i> Frontend
+                                </div>
+                                <div class="flex flex-wrap gap-1.5">
+                                    <span class="text-[10px] md:text-xs px-2 py-0.5 rounded border border-white/10 bg-white/5 text-zinc-300">Flutter</span>
+                                    <span class="text-[10px] md:text-xs px-2 py-0.5 rounded border border-white/10 bg-white/5 text-zinc-300">Dart</span>
+                                    <span class="text-[10px] md:text-xs px-2 py-0.5 rounded border border-white/10 bg-white/5 text-zinc-300">Riverpod</span>
+                                    <span class="text-[10px] md:text-xs px-2 py-0.5 rounded border border-white/10 bg-white/5 text-zinc-300">SharedPreferences</span>
+                                    <span class="text-[10px] md:text-xs px-2 py-0.5 rounded border border-white/10 bg-white/5 text-zinc-300">SQLite</span>
+                                </div>
+                            </div>
+
+                            <div class="p-3.5 md:p-4 rounded-xl border border-white/10 bg-zinc-900/40">
+                                <div class="text-xs md:text-sm font-bold text-white mb-2 flex items-center gap-2">
+                                    <i class="fa-solid fa-server text-cyan-400"></i> Backend &amp; Validation
+                                </div>
+                                <div class="flex flex-wrap gap-1.5">
+                                    <span class="text-[10px] md:text-xs px-2 py-0.5 rounded border border-white/10 bg-white/5 text-zinc-300">Next.js 15</span>
+                                    <span class="text-[10px] md:text-xs px-2 py-0.5 rounded border border-white/10 bg-white/5 text-zinc-300">TypeScript</span>
+                                    <span class="text-[10px] md:text-xs px-2 py-0.5 rounded border border-white/10 bg-white/5 text-zinc-300">Node.js</span>
+                                    <span class="text-[10px] md:text-xs px-2 py-0.5 rounded border border-white/10 bg-white/5 text-zinc-300">Zod Validation</span>
+                                </div>
+                            </div>
+
+                            <div class="p-3.5 md:p-4 rounded-xl border border-white/10 bg-zinc-900/40">
+                                <div class="text-xs md:text-sm font-bold text-white mb-2 flex items-center gap-2">
+                                    <i class="fa-solid fa-database text-amber-400"></i> Database &amp; Auth
+                                </div>
+                                <div class="flex flex-wrap gap-1.5">
+                                    <span class="text-[10px] md:text-xs px-2 py-0.5 rounded border border-white/10 bg-white/5 text-zinc-300">Firebase Auth</span>
+                                    <span class="text-[10px] md:text-xs px-2 py-0.5 rounded border border-white/10 bg-white/5 text-zinc-300">Cloud Firestore</span>
+                                    <span class="text-[10px] md:text-xs px-2 py-0.5 rounded border border-white/10 bg-white/5 text-zinc-300">Firebase Admin SDK</span>
+                                </div>
+                            </div>
+
+                            <div class="p-3.5 md:p-4 rounded-xl border border-white/10 bg-zinc-900/40">
+                                <div class="text-xs md:text-sm font-bold text-white mb-2 flex items-center gap-2">
+                                    <i class="fa-solid fa-brain text-purple-400"></i> AI Engines
+                                </div>
+                                <div class="flex flex-wrap gap-1.5">
+                                    <span class="text-[10px] md:text-xs px-2 py-0.5 rounded border border-white/10 bg-white/5 text-zinc-300">Google Gemini</span>
+                                    <span class="text-[10px] md:text-xs px-2 py-0.5 rounded border border-white/10 bg-white/5 text-zinc-300">Groq Llama</span>
+                                    <span class="text-[10px] md:text-xs px-2 py-0.5 rounded border border-white/10 bg-white/5 text-zinc-300">OpenRouter</span>
+                                    <span class="text-[10px] md:text-xs px-2 py-0.5 rounded border border-white/10 bg-white/5 text-zinc-300">Claude</span>
+                                </div>
+                            </div>
+
+                            <div class="p-3.5 md:p-4 rounded-xl border border-white/10 bg-zinc-900/40">
+                                <div class="text-xs md:text-sm font-bold text-white mb-2 flex items-center gap-2">
+                                    <i class="fa-solid fa-map-location text-emerald-400"></i> Maps &amp; Geolocation
+                                </div>
+                                <div class="flex flex-wrap gap-1.5">
+                                    <span class="text-[10px] md:text-xs px-2 py-0.5 rounded border border-white/10 bg-white/5 text-zinc-300">Google Places</span>
+                                    <span class="text-[10px] md:text-xs px-2 py-0.5 rounded border border-white/10 bg-white/5 text-zinc-300">Geoapify</span>
+                                    <span class="text-[10px] md:text-xs px-2 py-0.5 rounded border border-white/10 bg-white/5 text-zinc-300">OpenStreetMap Overpass</span>
+                                </div>
+                            </div>
+
+                            <div class="p-3.5 md:p-4 rounded-xl border border-white/10 bg-zinc-900/40">
+                                <div class="text-xs md:text-sm font-bold text-white mb-2 flex items-center gap-2">
+                                    <i class="fa-solid fa-hard-drive text-rose-400"></i> Offline Architecture
+                                </div>
+                                <div class="flex flex-wrap gap-1.5">
+                                    <span class="text-[10px] md:text-xs px-2 py-0.5 rounded border border-white/10 bg-white/5 text-zinc-300">SQLite Caching</span>
+                                    <span class="text-[10px] md:text-xs px-2 py-0.5 rounded border border-white/10 bg-white/5 text-zinc-300">509K+ BharatPOI Dataset</span>
+                                    <span class="text-[10px] md:text-xs px-2 py-0.5 rounded border border-white/10 bg-white/5 text-zinc-300">Deterministic Engine</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Real-World Impact & Validation -->
+                    <div>
+                        <div class="flex items-center gap-3 mb-4">
+                            <span class="w-7 h-7 md:w-9 md:h-9 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center text-xs md:text-sm">
+                                <i class="fa-solid fa-chart-line"></i>
+                            </span>
+                            <div>
+                                <h4 class="font-notoSerif text-base md:text-2xl text-white italic">Real-World Impact &amp; Market Value</h4>
+                                <p class="text-[10px] md:text-xs text-zinc-400">On-ground traveler safety, algorithmic rigor, and market feasibility</p>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="rounded-xl overflow-hidden border border-white/10 bg-black/40">
+                                <img src="images/ghumify_advantage.png" alt="Ghumify Advantage - Real World Impact" class="w-full h-auto block" />
+                            </div>
+                            <div class="rounded-xl overflow-hidden border border-white/10 bg-black/40">
+                                <img src="images/ghumify_validation.png" alt="Validation &amp; Technical Feasibility" class="w-full h-auto block" />
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-3 pt-3">
+                            <div class="p-3.5 rounded-xl border border-white/10 bg-zinc-900/30">
+                                <div class="text-xs md:text-sm font-bold text-white mb-1"><i class="fa-solid fa-leaf text-emerald-400 mr-1.5"></i> Social Impact</div>
+                                <p class="text-[11px] md:text-xs text-zinc-400 leading-relaxed font-light">
+                                    Promotes sustainable tourism by diverting excessive crowds toward authentic local hidden gems and cultural heritage sites.
+                                </p>
+                            </div>
+                            <div class="p-3.5 rounded-xl border border-white/10 bg-zinc-900/30">
+                                <div class="text-xs md:text-sm font-bold text-white mb-1"><i class="fa-solid fa-shop text-amber-400 mr-1.5"></i> Economic Impact</div>
+                                <p class="text-[11px] md:text-xs text-zinc-400 leading-relaxed font-light">
+                                    Empowers regional artisans, verified eateries, and local economies across Tier-2 and Tier-3 Indian cities with direct traveler traffic.
+                                </p>
+                            </div>
+                            <div class="p-3.5 rounded-xl border border-white/10 bg-zinc-900/30">
+                                <div class="text-xs md:text-sm font-bold text-white mb-1"><i class="fa-solid fa-lock text-sky-400 mr-1.5"></i> Privacy By Default</div>
+                                <p class="text-[11px] md:text-xs text-zinc-400 leading-relaxed font-light">
+                                    Strips user identifiers before calling external LLMs, ensuring strict DPDP Act compliance and end-to-end user data sovereignty.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Modal Footer -->
+                <div class="flex items-center justify-between px-4 md:px-8 py-3.5 md:py-4 border-t border-white/10 bg-zinc-900/60 backdrop-blur-xl">
+                    <span class="text-[8px] md:text-xs text-zinc-500 uppercase tracking-widest">
+                        Zinno4.0 / Smart &amp; Sustainable Cities
+                    </span>
+                    <button type="button" onclick="closeGhumifyModal()"
+                        class="px-4 md:px-6 py-1.5 md:py-2 rounded-full border border-white/20 bg-white/10 hover:bg-white text-zinc-200 hover:text-black text-xs md:text-sm font-semibold transition-all">
+                        Close Details
+                    </button>
+                </div>
+
+            </div>
+        </div>
+
+    </main>
+
+    <div class="fixed inset-0 pointer-events-none z-[60] opacity-[0.03]"
+        style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBrlm_pSDZq8Q1MvXhleBMyFXs_oXyOk0FWb_1uavK2kXVhjwg6r8hgLw49DH21tmkW2FDhWPHRWECqqeUO3TKE_tS70KlIOFxn21gd4vEF2trAu7rzS-vQAj3DYpI7RC6zB0zW-u_bI2Fmv0x51E37YYEelnx0ObtXTYZDlGSh5df2ILeKB5raTERDLD9W8urBWjtkepFEfh3g4-hxkv1RF7QpYl35Y94nngFfZHZqOg3pLdtxoLG9A8MUFdblYScN60zvYnpKAhs');">
+    </div>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        // Preloader Toggle
+        window.addEventListener('load', () => {
+            const preloader = document.getElementById('preloader');
+            setTimeout(() => {
+                preloader.classList.add('preloader-hidden');
+                document.body.style.overflow = 'auto';
+                AOS.init({
+                    once: false,
+                    duration: 1000,
+                    offset: 30,
+                    easing: 'ease-out-cubic'
+                });
+            }, 1500);
+        });
+
+        // Mobile Menu Toggle
+        const menuToggle = document.getElementById('menu-toggle');
+        const mobileMenu = document.getElementById('mobile-menu-container');
+        const mobileLinks = document.querySelectorAll('.mobile-nav-link');
+
+        menuToggle.addEventListener('click', () => {
+            const isOpen = mobileMenu.classList.toggle('open');
+            menuToggle.classList.toggle('active');
+        });
+
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.remove('open');
+                menuToggle.classList.remove('active');
+            });
+        });
+
+        // Ghumify Project Detail Modal Controls
+        function openGhumifyModal() {
+            const modal = document.getElementById('ghumify-modal');
+            if (modal) {
+                modal.classList.add('modal-open');
+                document.body.style.overflow = 'hidden';
+            }
+        }
+
+        function closeGhumifyModal() {
+            const modal = document.getElementById('ghumify-modal');
+            if (modal) {
+                modal.classList.remove('modal-open');
+                document.body.style.overflow = 'auto';
+            }
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeGhumifyModal();
+            }
+        });
+
+        document.body.style.overflow = 'hidden';
+    </script>
+
+</body>
+
+</html>
