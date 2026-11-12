@@ -43,6 +43,12 @@
   --station-dot-ring: 4px;
   --button-shift: 4px;
   --focus-ring-offset: 3px;
+
+  /* Button and row tokens (Section 5.2) */
+  --btn-h-default: 56px;
+  --btn-h-primary: 64px;
+  --btn-px: 28px;
+  --row-h-dest: 72px;
 }
 
 /* Night mode */

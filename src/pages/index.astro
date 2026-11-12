@@ -34,92 +34,152 @@ const moreProjects = PROJECTS.filter((p) => !p.featured);
     Skip to main content
   </a>
 
-  <!-- Fixed Transit Header Navigation -->
+  <!-- Fixed Transit Header Navigation (Section 5.4 Simplified Header) -->
   <header class="fixed top-0 left-0 right-0 z-50 bg-paper border-b-2 border-ink" role="banner">
-    <div class="max-w-site mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
+    <div class="max-w-site mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+      <!-- 1. Passenger Name & Identity -->
       <div class="flex items-center gap-3">
         <span class="w-3 h-3 rounded-full bg-line-frontend" aria-hidden="true"></span>
-        <a href="#station-00" class="font-archivo font-extrabold text-lg text-ink tracking-tight hover:opacity-80">
-          THE YUG LINE
+        <a href="#station-00" class="font-archivo font-extrabold text-lg sm:text-xl text-ink tracking-tight hover:opacity-80">
+          YUG ROJIVADIYA
         </a>
-        <span class="hidden sm:inline font-mono text-xs text-ink-soft bg-surface px-2 py-0.5 border border-rule">
-          TRANSIT MAP PORTFOLIO
-        </span>
       </div>
 
-      <!-- Quick Stations Jump -->
-      <nav aria-label="Stations transit navigation" class="hidden md:flex items-center gap-5 font-mono text-xs text-ink-soft">
-        <a href="#station-01" class="hover:text-ink">01:BOARD</a>
-        <a href="#station-02" class="hover:text-ink text-line-frontend font-bold">02:GHUMIFY</a>
-        <a href="#station-03" class="hover:text-ink">03:PROJECTS</a>
-        <a href="#station-04" class="hover:text-ink">04:CREW</a>
-        <a href="#station-05" class="hover:text-ink">05:TECH</a>
-        <a href="#station-06" class="hover:text-ink">06:EDU</a>
-        <a href="#station-07" class="hover:text-ink font-bold">07:TERMINUS</a>
-      </nav>
-
-      <!-- Theme, Motion Toggle & Resume Action -->
-      <div class="flex items-center gap-2 sm:gap-3">
-        <!-- Day Pass Skip Button (Visible on every journey screen, Section 6) -->
+      <!-- Desktop Navigation: 4 Core Items + Resume -->
+      <div class="hidden md:flex items-center gap-3 font-mono text-xs">
+        <!-- 2. Skip the metro · see everything (or station links in express mode) -->
         <button
           type="button"
           id="day-pass-btn"
-          class="day-pass-toggle-btn px-2.5 py-1 bg-surface border border-rule font-mono text-xs text-ink hover:border-ink"
-          aria-label="Day Pass — skip the booking"
+          class="day-pass-toggle-btn px-3 py-1.5 bg-surface border border-rule hover:border-ink text-ink font-bold transition-colors"
+          aria-label="Skip the metro · see everything"
         >
-          Day Pass
+          Skip the metro · see everything
         </button>
 
-        <!-- Travel Card Passport Button -->
         <button
           type="button"
           id="travel-card-btn"
-          class="hidden sm:inline-block px-2.5 py-1 bg-surface border border-rule font-mono text-xs text-ink hover:border-ink"
-          aria-label="Open Travel Card"
-          title="Open Travel Card Passport (T)"
+          class="px-3 py-1.5 bg-surface border border-rule hover:border-ink text-ink font-bold transition-colors"
+          aria-label="Open All Stops Overview"
+          title="All Stops (T)"
         >
-          CARD: 1/8
+          All stops
         </button>
 
+        <!-- 3. Sound: On / Off -->
         <button
           type="button"
           id="sound-toggle"
-          class="hidden sm:inline-block p-1.5 border border-rule bg-surface font-mono text-xs text-ink hover:border-ink"
+          class="px-3 py-1.5 border border-rule bg-surface text-ink hover:border-ink transition-colors font-bold"
           aria-label="Toggle Web Audio Sound Effects"
-          title="Toggle Web Audio Sound Effects"
         >
-          <span id="sound-status">SOUND: OFF</span>
+          <span id="sound-status">Sound: Off</span>
         </button>
 
-        <button
-          type="button"
-          id="motion-toggle"
-          class="hidden sm:inline-block p-1.5 border border-rule bg-surface font-mono text-xs text-ink hover:border-ink"
-          aria-label="Toggle Reduced Motion"
-          title="Toggle Reduced Motion"
-        >
-          <span id="motion-status">MOTION: ON</span>
-        </button>
-
+        <!-- 4. Theme: Dark / Light -->
         <button
           type="button"
           id="theme-toggle"
-          class="p-1.5 border border-rule bg-surface font-mono text-xs text-ink hover:border-ink"
+          class="px-3 py-1.5 border border-rule bg-surface text-ink hover:border-ink transition-colors font-bold"
           aria-label="Toggle Night/Day Mode"
         >
-          <span class="hidden dark:inline">☀️ DAY</span>
-          <span class="inline dark:hidden">🌙 NIGHT</span>
+          <span class="hidden dark:inline">Light</span>
+          <span class="inline dark:hidden">Dark</span>
         </button>
 
+        <!-- Hidden motion toggle accessible via key M or screen reader -->
+        <button
+          type="button"
+          id="motion-toggle"
+          class="sr-only focus:not-sr-only px-2 py-1 bg-surface border border-ink text-ink"
+          aria-label="Toggle Reduced Motion"
+        >
+          <span id="motion-status">Motion: On</span>
+        </button>
+
+        <!-- Résumé Button -->
         <a
           href={PROFILE.contacts.resumeUrl}
           download
-          class="font-mono text-xs font-bold uppercase tracking-wider px-3 py-1.5 bg-ink text-paper hover:opacity-90 inline-flex items-center gap-1.5"
+          class="btn-stub !min-h-[38px] !px-4 text-xs"
         >
-          <span>CV</span>
+          <span>Résumé</span>
           <Pictograms name="arrow-up-right" size={12} />
         </a>
       </div>
+
+      <!-- Mobile Menu Button -->
+      <div class="flex items-center gap-2 md:hidden">
+        <button
+          type="button"
+          id="mobile-menu-btn"
+          class="px-3 py-1.5 border-2 border-ink bg-surface font-mono text-xs uppercase font-bold text-ink"
+          aria-expanded="false"
+          aria-controls="mobile-nav-menu"
+        >
+          Menu
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Full-Screen Drawer Menu -->
+    <div
+      id="mobile-nav-menu"
+      class="hidden fixed inset-x-0 top-16 bottom-0 z-50 bg-paper p-6 overflow-y-auto border-t-2 border-ink flex flex-col justify-between"
+    >
+      <div class="space-y-4 font-mono">
+        <div class="text-xs uppercase text-ink-soft border-b border-rule pb-2">
+          // The Yug Line Navigation
+        </div>
+        <button
+          type="button"
+          class="day-pass-toggle-btn w-full p-4 border-2 border-ink bg-surface text-left font-bold text-sm uppercase text-ink"
+        >
+          Skip the metro · see everything
+        </button>
+        <button
+          type="button"
+          id="mobile-all-stops-btn"
+          class="w-full p-4 border-2 border-ink bg-surface text-left font-bold text-sm uppercase text-ink"
+        >
+          All stops (Stops visited: 1 of 7)
+        </button>
+        <div class="grid grid-cols-2 gap-3 pt-2">
+          <button
+            type="button"
+            id="mobile-sound-toggle"
+            class="p-3 border-2 border-ink bg-surface font-bold text-xs uppercase text-ink text-center"
+          >
+            Sound: Off
+          </button>
+          <button
+            type="button"
+            id="mobile-theme-toggle"
+            class="p-3 border-2 border-ink bg-surface font-bold text-xs uppercase text-ink text-center"
+          >
+            Theme
+          </button>
+        </div>
+        <div class="pt-2">
+          <a
+            href={PROFILE.contacts.resumeUrl}
+            download
+            class="btn-stub w-full text-center justify-center"
+          >
+            <span>Download Résumé</span>
+            <Pictograms name="arrow-up-right" size={14} />
+          </a>
+        </div>
+      </div>
+
+      <button
+        type="button"
+        id="mobile-menu-close-btn"
+        class="mt-6 w-full p-3 border-2 border-rule bg-surface font-mono text-xs font-bold uppercase text-ink-soft text-center"
+      >
+        Close ✕
+      </button>
     </div>
   </header>
 
@@ -516,6 +576,50 @@ const moreProjects = PROJECTS.filter((p) => !p.featured);
       if (toggleBtn) {
         toggleBtn.addEventListener('click', () => {
           document.documentElement.classList.toggle('dark');
+        });
+      }
+
+      // Mobile Menu Drawer Binding
+      const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+      const mobileNavMenu = document.getElementById('mobile-nav-menu');
+      const mobileCloseBtn = document.getElementById('mobile-menu-close-btn');
+      const mobileThemeBtn = document.getElementById('mobile-theme-toggle');
+      const mobileSoundBtn = document.getElementById('mobile-sound-toggle');
+      const mobileAllStopsBtn = document.getElementById('mobile-all-stops-btn');
+
+      if (mobileMenuBtn && mobileNavMenu) {
+        mobileMenuBtn.addEventListener('click', () => {
+          mobileNavMenu.classList.toggle('hidden');
+          const isExpanded = !mobileNavMenu.classList.contains('hidden');
+          mobileMenuBtn.setAttribute('aria-expanded', String(isExpanded));
+        });
+      }
+
+      if (mobileCloseBtn && mobileNavMenu) {
+        mobileCloseBtn.addEventListener('click', () => {
+          mobileNavMenu.classList.add('hidden');
+          if (mobileMenuBtn) mobileMenuBtn.setAttribute('aria-expanded', 'false');
+        });
+      }
+
+      if (mobileThemeBtn && toggleBtn) {
+        mobileThemeBtn.addEventListener('click', () => {
+          toggleBtn.click();
+        });
+      }
+
+      if (mobileSoundBtn) {
+        mobileSoundBtn.addEventListener('click', () => {
+          const mainSoundBtn = document.getElementById('sound-toggle');
+          if (mainSoundBtn) mainSoundBtn.click();
+        });
+      }
+
+      if (mobileAllStopsBtn) {
+        mobileAllStopsBtn.addEventListener('click', () => {
+          if (mobileNavMenu) mobileNavMenu.classList.add('hidden');
+          const travelCardBtn = document.getElementById('travel-card-btn');
+          if (travelCardBtn) travelCardBtn.click();
         });
       }
 
