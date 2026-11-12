@@ -57,27 +57,30 @@
 
 /* ============================================
    Paper grain texture (A5.4 Decoration)
-   Subtle SVG noise at ~3% opacity
+   Tactile SVG noise at ~5.5% opacity (z-index 40)
    ============================================ */
 .paper-grain::before {
   content: '';
   position: fixed;
   inset: 0;
   pointer-events: none;
-  z-index: 100;
-  opacity: 0.03;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  z-index: 40;
+  opacity: 0.055;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
 }
 
 /* ============================================
-   Phase U2: Subway Tile Wall Pattern & Station Set
-   Brick-offset 48x24px, 1px grout line, 4-6% contrast
+   Phase U2 & Phase 3: Subway Tile Wall Pattern & Station Set
+   Authentic Running-Bond (Brick-Offset) 64x32px SVG pattern
    ============================================ */
 .subway-tile-wall {
-  background-image: 
-    linear-gradient(to right, var(--rule) 1px, transparent 1px),
-    linear-gradient(to bottom, var(--rule) 1px, transparent 1px);
-  background-size: 48px 24px;
+  background-image: url("data:image/svg+xml,%3Csvg width='64' height='32' viewBox='0 0 64 32' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0 L64 0 M0 16 L64 16 M0 0 L0 16 M32 0 L32 16 M64 0 L64 16 M16 16 L16 32 M48 16 L48 32 M0 32 L64 32' fill='none' stroke='%23111111' stroke-width='1.5' stroke-opacity='0.08'/%3E%3C/svg%3E");
+  background-size: 64px 32px;
+}
+
+.dark .subway-tile-wall {
+  background-image: url("data:image/svg+xml,%3Csvg width='64' height='32' viewBox='0 0 64 32' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0 L64 0 M0 16 L64 16 M0 0 L0 16 M32 0 L32 16 M64 0 L64 16 M16 16 L16 32 M48 16 L48 32 M0 32 L64 32' fill='none' stroke='%23F1EEE6' stroke-width='1.5' stroke-opacity='0.10'/%3E%3C/svg%3E");
+  background-size: 64px 32px;
 }
 
 .wall-frontend { background-color: var(--wall-frontend); }
@@ -86,20 +89,103 @@
 .wall-hardware { background-color: var(--wall-hardware); }
 .wall-neutral { background-color: var(--wall); }
 
-/* Platform floor strip (bottom of each station) */
-.platform-floor-strip {
-  background-color: var(--floor);
-  border-top: 4px solid var(--ink);
+/* Architectural Station Set Container */
+.station-set {
   position: relative;
+  border-left: 3px solid var(--ink);
+  border-right: 3px solid var(--ink);
+  border-bottom: 4px solid var(--ink);
+  box-shadow: 8px 8px 0 var(--ink);
+  overflow: hidden;
 }
 
-.platform-tactile-line {
-  height: 24px;
-  background-color: var(--line-hardware);
+/* Ceiling Architrave Beam */
+.station-architrave {
+  height: 14px;
+  background-color: var(--surface);
   border-bottom: 2px solid var(--ink);
-  background-image: radial-gradient(var(--ink) 20%, transparent 25%);
+  background-image: repeating-linear-gradient(
+    90deg,
+    var(--ink) 0,
+    var(--ink) 3px,
+    transparent 3px,
+    transparent 28px
+  );
+  opacity: 0.35;
+}
+
+/* Platform Floor Strip with Paver Slabs */
+.platform-floor-strip {
+  background-color: var(--floor);
+  border-top: 3px solid var(--ink);
+  position: relative;
+  background-image: 
+    linear-gradient(to right, var(--ink) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--ink) 1px, transparent 1px);
+  background-size: 80px 40px;
+}
+
+/* Tactile Yellow Platform Safety Line with Raised Studs */
+.platform-tactile-line {
+  height: 28px;
+  background-color: var(--line-hardware);
+  border-top: 2px solid var(--ink);
+  border-bottom: 2px solid var(--ink);
+  background-image: 
+    radial-gradient(circle 3px at 50% 50%, var(--ink) 90%, transparent 100%),
+    radial-gradient(circle 4px at 52% 52%, rgba(255,255,255,0.4) 90%, transparent 100%);
   background-size: 16px 16px;
-  opacity: 0.9;
+  background-position: 0 0, 1px 1px;
+}
+
+/* Platform Edge Hazard Strip */
+.platform-edge-hazard {
+  height: 10px;
+  background: repeating-linear-gradient(
+    -45deg,
+    var(--line-hardware),
+    var(--line-hardware) 10px,
+    var(--ink) 10px,
+    var(--ink) 20px
+  );
+  border-bottom: 2px solid var(--ink);
+}
+
+/* Framed Station Wall Poster */
+.poster-frame {
+  position: relative;
+  background-color: var(--surface);
+  border: 2px solid var(--ink);
+  box-shadow: 6px 6px 0 var(--ink);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.poster-frame:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 8px 8px 0 var(--ink);
+}
+.poster-tape-top-left {
+  position: absolute;
+  top: -8px;
+  left: 14px;
+  width: 36px;
+  height: 13px;
+  background: var(--paper);
+  border: 1.5px solid var(--ink);
+  transform: rotate(-4deg);
+  z-index: 10;
+  box-shadow: 1px 1px 0 var(--ink);
+}
+.poster-tape-top-right {
+  position: absolute;
+  top: -8px;
+  right: 14px;
+  width: 36px;
+  height: 13px;
+  background: var(--paper);
+  border: 1.5px solid var(--ink);
+  transform: rotate(4deg);
+  z-index: 10;
+  box-shadow: 1px 1px 0 var(--ink);
 }
 
 /* ============================================

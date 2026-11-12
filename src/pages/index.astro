@@ -10,6 +10,7 @@ import TechLegend from '../components/TechLegend.astro';
 import EducationTicket from '../components/EducationTicket.astro';
 import TerminusContact from '../components/TerminusContact.astro';
 import Pictograms from '../components/Pictograms.astro';
+import MindTheGapDivider from '../components/MindTheGapDivider.astro';
 
 import WelcomeScreen from '../components/WelcomeScreen.astro';
 import StationEntranceLoader from '../components/StationEntranceLoader.astro';
@@ -221,300 +222,358 @@ const moreProjects = PROJECTS.filter((p) => !p.featured);
          STATION 00: CENTRAL DEPARTURE (ORIGIN & IDENTITY)
          Visible in Express Mode and when visiting Station 00
          ======================================================== -->
-    <section id="station-00" aria-labelledby="heading-st-00" class="pt-4 pb-16 relative">
-      <StationHeader
-        code="ST-00"
-        name="Central Departure"
-        category="Origin & Identity"
-        lineVariant="frontend"
-        id="heading-st-00"
-      />
+    <section id="station-00" aria-labelledby="heading-st-00" class="station-set subway-tile-wall wall-frontend my-8 relative">
+      <div class="station-architrave" aria-hidden="true"></div>
+      <div class="p-4 sm:p-8 md:p-10">
+        <StationHeader
+          code="ST-00"
+          name="Central Departure"
+          category="Origin & Identity"
+          lineVariant="frontend"
+          id="heading-st-00"
+        />
 
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-        <!-- Large Origin Ticket -->
-        <div class="lg:col-span-7">
-          <div class="ticket ticket-notched p-6 sm:p-10 bg-surface border-2 border-ink shadow-[8px_8px_0_var(--ink)]">
-            <!-- Routing Header -->
-            <div class="flex flex-wrap items-center justify-between gap-4 border-b-2 border-ink pb-4 mb-6">
-              <div>
-                <span class="mono-label block">FROM STATION</span>
-                <span class="font-mono text-sm sm:text-base font-bold text-ink">BACKEND LOGIC</span>
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+          <!-- Large Origin Ticket -->
+          <div class="lg:col-span-7">
+            <div class="ticket ticket-notched p-6 sm:p-10 bg-surface border-2 border-ink shadow-[8px_8px_0_var(--ink)]">
+              <!-- Routing Header -->
+              <div class="flex flex-wrap items-center justify-between gap-4 border-b-2 border-ink pb-4 mb-6">
+                <div>
+                  <span class="mono-label block">FROM STATION</span>
+                  <span class="font-mono text-sm sm:text-base font-bold text-ink">BACKEND LOGIC</span>
+                </div>
+                <div class="font-mono text-xl text-line-frontend font-black" aria-hidden="true">➔➔➔</div>
+                <div class="text-right">
+                  <span class="mono-label block">TO DESTINATION</span>
+                  <span class="font-mono text-sm sm:text-base font-bold text-ink">SMOOTH UIs</span>
+                </div>
               </div>
-              <div class="font-mono text-xl text-line-frontend font-black" aria-hidden="true">➔➔➔</div>
-              <div class="text-right">
-                <span class="mono-label block">TO DESTINATION</span>
-                <span class="font-mono text-sm sm:text-base font-bold text-ink">SMOOTH UIs</span>
+
+              <!-- Name & Bio -->
+              <div class="mb-6">
+                <span class="mono-label block mb-1">PASSENGER / ARCHITECT</span>
+                <h1 class="font-archivo text-4xl sm:text-6xl lg:text-7xl font-black text-ink tracking-tight uppercase leading-[0.95]">
+                  {PROFILE.name}
+                </h1>
+                <p class="font-mono text-base sm:text-lg text-ink-soft mt-3 font-semibold">
+                  // {PROFILE.role}
+                </p>
+                <p class="font-manrope text-base sm:text-lg text-ink mt-3 leading-relaxed max-w-[65ch]">
+                  "{PROFILE.tagline}"
+                </p>
               </div>
-            </div>
 
-            <!-- Name & Bio -->
-            <div class="mb-6">
-              <span class="mono-label block mb-1">PASSENGER / ARCHITECT</span>
-              <h1 class="font-archivo text-4xl sm:text-6xl lg:text-7xl font-black text-ink tracking-tight uppercase leading-[0.95]">
-                {PROFILE.name}
-              </h1>
-              <p class="font-mono text-base sm:text-lg text-ink-soft mt-3 font-semibold">
-                // {PROFILE.role}
-              </p>
-              <p class="font-manrope text-base sm:text-lg text-ink mt-3 leading-relaxed max-w-[65ch]">
-                "{PROFILE.tagline}"
-              </p>
-            </div>
+              <!-- Proof Chips -->
+              <div class="flex flex-wrap gap-2 mb-8 font-mono text-xs">
+                <span class="px-3 py-1 bg-paper border border-ink text-ink font-bold inline-flex items-center gap-1.5">
+                  <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                  {PROFILE.status}
+                </span>
+                <span class="px-3 py-1 bg-paper border border-rule text-ink">
+                  Exp: {PROFILE.experienceYears}
+                </span>
+                <span class="px-3 py-1 bg-paper border border-rule text-ink">
+                  Grants: {PROFILE.grantTotal}
+                </span>
+                <span class="px-3 py-1 bg-paper border border-rule text-ink">
+                  {PROFILE.leadershipRole}
+                </span>
+              </div>
 
-            <!-- Proof Chips -->
-            <div class="flex flex-wrap gap-2 mb-8 font-mono text-xs">
-              <span class="px-3 py-1 bg-paper border border-ink text-ink font-bold inline-flex items-center gap-1.5">
-                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                {PROFILE.status}
-              </span>
-              <span class="px-3 py-1 bg-paper border border-rule text-ink">
-                Exp: {PROFILE.experienceYears}
-              </span>
-              <span class="px-3 py-1 bg-paper border border-rule text-ink">
-                Grants: {PROFILE.grantTotal}
-              </span>
-              <span class="px-3 py-1 bg-paper border border-rule text-ink">
-                {PROFILE.leadershipRole}
-              </span>
-            </div>
+              <!-- Action Buttons -->
+              <div class="ticket-perforation pt-6 flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
+                <button
+                  type="button"
+                  id="hero-choose-stop-btn"
+                  class="btn-stub btn-stub--primary justify-center"
+                >
+                  <span>Choose a destination stop</span>
+                  <span class="font-bold">➔</span>
+                </button>
 
-            <!-- Action Buttons -->
-            <div class="ticket-perforation pt-6 flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
-              <button
-                type="button"
-                id="hero-choose-stop-btn"
-                class="btn-stub btn-stub--primary justify-center"
-              >
-                <span>Choose a destination stop</span>
-                <span class="font-bold">➔</span>
-              </button>
-
-              <a
-                href={PROFILE.contacts.resumeUrl}
-                download
-                class="btn-stub !bg-surface !text-ink hover:!bg-paper justify-center"
-              >
-                <span>Download Résumé</span>
-                <Pictograms name="arrow-up-right" size={14} />
-              </a>
+                <a
+                  href={PROFILE.contacts.resumeUrl}
+                  download
+                  class="btn-stub !bg-surface !text-ink hover:!bg-paper justify-center"
+                >
+                  <span>Download Résumé</span>
+                  <Pictograms name="arrow-up-right" size={14} />
+                </a>
+              </div>
             </div>
           </div>
-        </div>
 
-        <!-- Transit Route Diagram -->
-        <div class="lg:col-span-5">
-          <OverviewMap />
+          <!-- Transit Route Diagram -->
+          <div class="lg:col-span-5">
+            <OverviewMap />
+          </div>
         </div>
+      </div>
+
+      <!-- Station Platform Floor -->
+      <div class="platform-floor-strip mt-6" aria-hidden="true">
+        <div class="platform-tactile-line"></div>
+        <div class="platform-edge-hazard"></div>
       </div>
     </section>
 
-    <!-- Rail Divider Line -->
-    <div class="w-full h-8 flex items-center justify-center my-6">
-      <div class="w-full border-t-2 border-dashed border-rule"></div>
-    </div>
+    <!-- Rail Divider Strip -->
+    <MindTheGapDivider nextStopCode="ST-01" nextStopName="ACHIEVEMENTS" />
 
     <!-- ========================================================
          STATION 01: ACHIEVEMENTS
          ======================================================== -->
-    <section id="station-01" aria-labelledby="heading-st-01" class="py-12 relative">
-      <StationHeader
-        code="ST-01"
-        name="Achievements"
-        category="Track record & awards"
-        lineVariant="hardware"
-        id="heading-st-01"
-      />
+    <section id="station-01" aria-labelledby="heading-st-01" class="station-set subway-tile-wall wall-hardware my-8 relative">
+      <div class="station-architrave" aria-hidden="true"></div>
+      <div class="p-4 sm:p-8 md:p-10">
+        <StationHeader
+          code="ST-01"
+          name="Achievements"
+          category="Track record & awards"
+          lineVariant="hardware"
+          id="heading-st-01"
+        />
 
-      <DeparturesBoard />
+        <DeparturesBoard />
+      </div>
+
+      <!-- Station Platform Floor -->
+      <div class="platform-floor-strip mt-6" aria-hidden="true">
+        <div class="platform-tactile-line"></div>
+        <div class="platform-edge-hazard"></div>
+      </div>
     </section>
 
-    <!-- Rail Divider Line -->
-    <div class="w-full h-8 flex items-center justify-center my-6" aria-hidden="true">
-      <div class="w-full border-t-2 border-dashed border-rule"></div>
-    </div>
+    <!-- Rail Divider Strip -->
+    <MindTheGapDivider nextStopCode="ST-02" nextStopName="GHUMIFY INTERCHANGE" />
 
     <!-- ========================================================
          STATION 02: GHUMIFY (FLAGSHIP)
          ======================================================== -->
-    <section id="station-02" aria-labelledby="heading-st-02" class="py-12 relative">
-      <StationHeader
-        code="ST-02"
-        name="Ghumify — my flagship project"
-        category="AI travel companion & ground reality router"
-        lineVariant="ai"
-        id="heading-st-02"
-      />
+    <section id="station-02" aria-labelledby="heading-st-02" class="station-set subway-tile-wall wall-ai my-8 relative">
+      <div class="station-architrave" aria-hidden="true"></div>
+      <div class="p-4 sm:p-8 md:p-10">
+        <StationHeader
+          code="ST-02"
+          name="Ghumify — my flagship project"
+          category="AI travel companion & ground reality router"
+          lineVariant="ai"
+          id="heading-st-02"
+        />
 
-      <InterchangeGhumify />
+        <InterchangeGhumify />
+      </div>
+
+      <!-- Station Platform Floor -->
+      <div class="platform-floor-strip mt-6" aria-hidden="true">
+        <div class="platform-tactile-line"></div>
+        <div class="platform-edge-hazard"></div>
+      </div>
     </section>
 
-    <!-- Rail Divider Line -->
-    <div class="w-full h-8 flex items-center justify-center my-6" aria-hidden="true">
-      <div class="w-full border-t-2 border-dashed border-rule"></div>
-    </div>
+    <!-- Rail Divider Strip -->
+    <MindTheGapDivider nextStopCode="ST-03" nextStopName="ALL PROJECTS" />
 
     <!-- ========================================================
          STATION 03: ALL PROJECTS
          ======================================================== -->
-    <section id="station-03" aria-labelledby="heading-st-03" class="py-12 relative">
-      <StationHeader
-        code="ST-03"
-        name="All projects"
-        category="Curated production systems across 4 lines"
-        lineVariant="frontend"
-        id="heading-st-03"
-      />
+    <section id="station-03" aria-labelledby="heading-st-03" class="station-set subway-tile-wall wall-frontend my-8 relative">
+      <div class="station-architrave" aria-hidden="true"></div>
+      <div class="p-4 sm:p-8 md:p-10">
+        <StationHeader
+          code="ST-03"
+          name="All projects"
+          category="Curated production systems across 4 lines"
+          lineVariant="frontend"
+          id="heading-st-03"
+        />
 
-      <!-- Filter Controls -->
-      <div class="flex items-center gap-2 overflow-x-auto pb-4 mb-6 font-mono text-xs" role="toolbar" aria-label="Project line filters">
-        <button
-          type="button"
-          class="project-filter-btn px-4 py-2 border-2 border-ink bg-ink text-paper font-bold uppercase transition-all"
-          data-filter="all"
-          aria-pressed="true"
-        >
-          All Stops
-        </button>
-        <button
-          type="button"
-          class="project-filter-btn px-4 py-2 border-2 border-rule bg-surface text-ink hover:border-ink uppercase transition-all"
-          data-filter="frontend"
-          aria-pressed="false"
-        >
-          Frontend Line
-        </button>
-        <button
-          type="button"
-          class="project-filter-btn px-4 py-2 border-2 border-rule bg-surface text-ink hover:border-ink uppercase transition-all"
-          data-filter="backend"
-          aria-pressed="false"
-        >
-          Backend Line
-        </button>
-        <button
-          type="button"
-          class="project-filter-btn px-4 py-2 border-2 border-rule bg-surface text-ink hover:border-ink uppercase transition-all"
-          data-filter="ai"
-          aria-pressed="false"
-        >
-          AI / ML Line
-        </button>
-        <button
-          type="button"
-          class="project-filter-btn px-4 py-2 border-2 border-rule bg-surface text-ink hover:border-ink uppercase transition-all"
-          data-filter="hardware"
-          aria-pressed="false"
-        >
-          Hardware Line
-        </button>
-      </div>
+        <!-- Filter Controls -->
+        <div class="flex items-center gap-2 overflow-x-auto pb-4 mb-6 font-mono text-xs" role="toolbar" aria-label="Project line filters">
+          <button
+            type="button"
+            class="project-filter-btn px-4 py-2 border-2 border-ink bg-ink text-paper font-bold uppercase transition-all"
+            data-filter="all"
+            aria-pressed="true"
+          >
+            All Stops
+          </button>
+          <button
+            type="button"
+            class="project-filter-btn px-4 py-2 border-2 border-rule bg-surface text-ink hover:border-ink uppercase transition-all"
+            data-filter="frontend"
+            aria-pressed="false"
+          >
+            Frontend Line
+          </button>
+          <button
+            type="button"
+            class="project-filter-btn px-4 py-2 border-2 border-rule bg-surface text-ink hover:border-ink uppercase transition-all"
+            data-filter="backend"
+            aria-pressed="false"
+          >
+            Backend Line
+          </button>
+          <button
+            type="button"
+            class="project-filter-btn px-4 py-2 border-2 border-rule bg-surface text-ink hover:border-ink uppercase transition-all"
+            data-filter="ai"
+            aria-pressed="false"
+          >
+            AI / ML Line
+          </button>
+          <button
+            type="button"
+            class="project-filter-btn px-4 py-2 border-2 border-rule bg-surface text-ink hover:border-ink uppercase transition-all"
+            data-filter="hardware"
+            aria-pressed="false"
+          >
+            Hardware Line
+          </button>
+        </div>
 
-      <!-- Main Project Stops Grid -->
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="projects-grid">
-        {expandedProjects.map((project) => (
-          <ProjectStop project={project} />
-        ))}
-      </div>
-
-      <!-- More Stops Toggle Accordion -->
-      <div class="mt-8">
-        <button
-          type="button"
-          id="toggle-more-stops"
-          class="w-full p-4 border-2 border-dashed border-ink bg-surface font-mono text-xs sm:text-sm font-bold uppercase tracking-wider text-ink hover:bg-paper transition-colors flex items-center justify-center gap-2"
-          aria-expanded="false"
-          aria-controls="more-stops-container"
-        >
-          <span>Show More Stops ({moreProjects.length} Additional Projects: Cricktraker, Clinic, EMS)</span>
-          <span id="more-stops-icon" aria-hidden="true">▼</span>
-        </button>
-
-        <div id="more-stops-container" class="hidden grid-cols-1 md:grid-cols-2 gap-6 mt-6">
-          {moreProjects.map((project) => (
+        <!-- Main Project Stops Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="projects-grid">
+          {expandedProjects.map((project) => (
             <ProjectStop project={project} />
           ))}
         </div>
+
+        <!-- More Stops Toggle Accordion -->
+        <div class="mt-8">
+          <button
+            type="button"
+            id="toggle-more-stops"
+            class="w-full p-4 border-2 border-dashed border-ink bg-surface font-mono text-xs sm:text-sm font-bold uppercase tracking-wider text-ink hover:bg-paper transition-colors flex items-center justify-center gap-2"
+            aria-expanded="false"
+            aria-controls="more-stops-container"
+          >
+            <span>Show More Stops ({moreProjects.length} Additional Projects: Cricktraker, Clinic, EMS)</span>
+            <span id="more-stops-icon" aria-hidden="true">▼</span>
+          </button>
+
+          <div id="more-stops-container" class="hidden grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+            {moreProjects.map((project) => (
+              <ProjectStop project={project} />
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <!-- Station Platform Floor -->
+      <div class="platform-floor-strip mt-6" aria-hidden="true">
+        <div class="platform-tactile-line"></div>
+        <div class="platform-edge-hazard"></div>
       </div>
     </section>
 
-    <!-- Rail Divider Line -->
-    <div class="w-full h-8 flex items-center justify-center my-6" aria-hidden="true">
-      <div class="w-full border-t-2 border-dashed border-rule"></div>
-    </div>
+    <!-- Rail Divider Strip -->
+    <MindTheGapDivider nextStopCode="ST-04" nextStopName="EXPERIENCE" />
 
     <!-- ========================================================
          STATION 04: EXPERIENCE
          ======================================================== -->
-    <section id="station-04" aria-labelledby="heading-st-04" class="py-12 relative">
-      <StationHeader
-        code="ST-04"
-        name="Experience"
-        category="Work history & leadership"
-        lineVariant="backend"
-        id="heading-st-04"
-      />
+    <section id="station-04" aria-labelledby="heading-st-04" class="station-set subway-tile-wall wall-backend my-8 relative">
+      <div class="station-architrave" aria-hidden="true"></div>
+      <div class="p-4 sm:p-8 md:p-10">
+        <StationHeader
+          code="ST-04"
+          name="Experience"
+          category="Work history & leadership"
+          lineVariant="backend"
+          id="heading-st-04"
+        />
 
-      <ExperienceTicket />
+        <ExperienceTicket />
+      </div>
+
+      <!-- Station Platform Floor -->
+      <div class="platform-floor-strip mt-6" aria-hidden="true">
+        <div class="platform-tactile-line"></div>
+        <div class="platform-edge-hazard"></div>
+      </div>
     </section>
 
-    <!-- Rail Divider Line -->
-    <div class="w-full h-8 flex items-center justify-center my-6" aria-hidden="true">
-      <div class="w-full border-t-2 border-dashed border-rule"></div>
-    </div>
+    <!-- Rail Divider Strip -->
+    <MindTheGapDivider nextStopCode="ST-05" nextStopName="SKILLS AND TOOLS" />
 
     <!-- ========================================================
          STATION 05: SKILLS AND TOOLS
          ======================================================== -->
-    <section id="station-05" aria-labelledby="heading-st-05" class="py-12 relative">
-      <StationHeader
-        code="ST-05"
-        name="Skills and tools"
-        category="Technical capabilities"
-        lineVariant="hardware"
-        id="heading-st-05"
-      />
+    <section id="station-05" aria-labelledby="heading-st-05" class="station-set subway-tile-wall wall-hardware my-8 relative">
+      <div class="station-architrave" aria-hidden="true"></div>
+      <div class="p-4 sm:p-8 md:p-10">
+        <StationHeader
+          code="ST-05"
+          name="Skills and tools"
+          category="Technical capabilities"
+          lineVariant="hardware"
+          id="heading-st-05"
+        />
 
-      <TechLegend />
+        <TechLegend />
+      </div>
+
+      <!-- Station Platform Floor -->
+      <div class="platform-floor-strip mt-6" aria-hidden="true">
+        <div class="platform-tactile-line"></div>
+        <div class="platform-edge-hazard"></div>
+      </div>
     </section>
 
-    <!-- Rail Divider Line -->
-    <div class="w-full h-8 flex items-center justify-center my-6" aria-hidden="true">
-      <div class="w-full border-t-2 border-dashed border-rule"></div>
-    </div>
+    <!-- Rail Divider Strip -->
+    <MindTheGapDivider nextStopCode="ST-06" nextStopName="EDUCATION" />
 
     <!-- ========================================================
          STATION 06: EDUCATION
          ======================================================== -->
-    <section id="station-06" aria-labelledby="heading-st-06" class="py-12 relative">
-      <StationHeader
-        code="ST-06"
-        name="Education"
-        category="Degree & foundation"
-        lineVariant="ai"
-        id="heading-st-06"
-      />
+    <section id="station-06" aria-labelledby="heading-st-06" class="station-set subway-tile-wall wall-ai my-8 relative">
+      <div class="station-architrave" aria-hidden="true"></div>
+      <div class="p-4 sm:p-8 md:p-10">
+        <StationHeader
+          code="ST-06"
+          name="Education"
+          category="Degree & foundation"
+          lineVariant="ai"
+          id="heading-st-06"
+        />
 
-      <EducationTicket />
+        <EducationTicket />
+      </div>
+
+      <!-- Station Platform Floor -->
+      <div class="platform-floor-strip mt-6" aria-hidden="true">
+        <div class="platform-tactile-line"></div>
+        <div class="platform-edge-hazard"></div>
+      </div>
     </section>
 
-    <!-- Rail Divider Line -->
-    <div class="w-full h-8 flex items-center justify-center my-6" aria-hidden="true">
-      <div class="w-full border-t-2 border-dashed border-rule"></div>
-    </div>
+    <!-- Rail Divider Strip -->
+    <MindTheGapDivider nextStopCode="ST-07" nextStopName="CONTACT ME (TERMINUS)" />
 
     <!-- ========================================================
          STATION 07: CONTACT ME
          ======================================================== -->
-    <section id="station-07" aria-labelledby="heading-st-07" class="py-12 relative">
-      <StationHeader
-        code="ST-07"
-        name="Contact me"
-        category="Get in touch"
-        lineVariant="default"
-        id="heading-st-07"
-      />
+    <section id="station-07" aria-labelledby="heading-st-07" class="station-set subway-tile-wall wall-neutral my-8 relative">
+      <div class="station-architrave" aria-hidden="true"></div>
+      <div class="p-4 sm:p-8 md:p-10">
+        <StationHeader
+          code="ST-07"
+          name="Contact me"
+          category="Get in touch"
+          lineVariant="default"
+          id="heading-st-07"
+        />
 
-      <TerminusContact />
+        <TerminusContact />
+      </div>
+
+      <!-- Station Platform Floor -->
+      <div class="platform-floor-strip mt-6" aria-hidden="true">
+        <div class="platform-tactile-line"></div>
+        <div class="platform-edge-hazard"></div>
+      </div>
     </section>
 
   </main>

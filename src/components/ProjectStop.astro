@@ -13,9 +13,12 @@ const isDev = import.meta.env.DEV;
 ---
 
 <div
-  class="ticket p-6 sm:p-8 bg-surface border-2 border-ink shadow-[4px_4px_0_var(--ink)] flex flex-col justify-between project-card transition-all"
+  class="poster-frame p-6 sm:p-8 bg-surface flex flex-col justify-between project-card transition-all"
   data-lines={project.lines.join(' ')}
 >
+  <!-- Railway Poster Framing Tape Stickers -->
+  <span class="poster-tape-top-left" aria-hidden="true"></span>
+  <span class="poster-tape-top-right" aria-hidden="true"></span>
   <div>
     <!-- Ticket Header: Pictogram, Lines & Fare -->
     <div class="flex items-start justify-between gap-3 border-b border-rule pb-3 mb-4">
