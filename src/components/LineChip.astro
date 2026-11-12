@@ -1,0 +1,23 @@
+---
+import type { LineId } from '../data/types';
+import { LINES } from '../data/portfolio';
+
+interface Props {
+  line: LineId;
+  size?: 'sm' | 'md';
+}
+
+const { line, size = 'sm' } = Astro.props;
+const info = LINES[line];
+---
+
+<span
+  class={`line-chip ${size === 'sm' ? 'text-xs' : 'text-sm py-1 px-3'} bg-surface text-ink border-rule`}
+  data-line={line}
+>
+  <span
+    class="line-chip__dot"
+    style={`background-color: ${info?.colorVar || 'var(--ink)'};`}
+  ></span>
+  <span>{info?.name.replace(' Line', '') || line}</span>
+</span>

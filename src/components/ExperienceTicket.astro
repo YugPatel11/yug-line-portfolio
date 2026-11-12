@@ -1,0 +1,78 @@
+---
+import { EXPERIENCES, SERVICE_TAGS } from '../data/portfolio';
+import Pictograms from './Pictograms.astro';
+---
+
+<div class="space-y-6">
+  <!-- Service Tags Bar (What I Do) -->
+  <div class="flex flex-wrap items-center gap-3 p-4 bg-surface border-2 border-ink">
+    <span class="font-mono text-xs uppercase tracking-wider text-ink-soft">
+      // AUTHORIZED SERVICE ROLES:
+    </span>
+    {SERVICE_TAGS.map((tag) => (
+      <span class="font-mono text-xs font-bold uppercase tracking-wider px-3 py-1 bg-paper border border-rule text-ink">
+        {tag}
+      </span>
+    ))}
+  </div>
+
+  <!-- Timeline Cards -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    {EXPERIENCES.map((exp, idx) => (
+      <div class="ticket p-5 md:p-6 bg-surface border-2 border-ink shadow-[4px_4px_0_var(--ink)] flex flex-col justify-between">
+        <div>
+          <!-- Header -->
+          <div class="flex items-center justify-between border-b border-rule pb-2 mb-3">
+            <span class="font-mono text-[11px] uppercase tracking-wider text-ink-soft">
+              RECORD 0{idx + 1}
+            </span>
+            <span class="font-mono text-[11px] font-bold text-ink uppercase bg-paper px-2 py-0.5 border border-rule">
+              {exp.type}
+            </span>
+          </div>
+
+          <h3 class="font-archivo text-xl font-bold text-ink">
+            {exp.role}
+          </h3>
+          <p class="font-mono text-xs text-ink-soft uppercase tracking-wider mt-0.5 mb-4">
+            {exp.organization}
+          </p>
+
+          <!-- Bullet Points -->
+          <ul class="space-y-2 text-xs md:text-sm font-manrope text-ink leading-relaxed">
+            {exp.highlights.map((item) => (
+              <li class="flex items-start gap-2">
+                <span class="font-mono text-line-frontend font-bold mt-0.5">•</span>
+                <span>{item}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <!-- Links or status -->
+        <div class="ticket-perforation pt-3 mt-4">
+          {exp.links ? (
+            <div class="flex flex-wrap items-center gap-2">
+              <span class="font-mono text-[10px] text-ink-soft uppercase">Live Works:</span>
+              {exp.links.map((link) => (
+                <a
+                  href={link.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="font-mono text-xs font-bold uppercase tracking-wider text-ink hover:text-line-frontend inline-flex items-center gap-1 border border-rule px-2 py-0.5 bg-paper"
+                >
+                  <span>{link.label}</span>
+                  <Pictograms name="arrow-up-right" size={10} />
+                </a>
+              ))}
+            </div>
+          ) : (
+            <span class="font-mono text-[10px] text-ink-soft uppercase">
+              STATUS // VERIFIED LOG
+            </span>
+          )}
+        </div>
+      </div>
+    ))}
+  </div>
+</div>

@@ -1,0 +1,245 @@
+/* ============================================
+   THE YUG LINE — Base Styles
+   ============================================ */
+@import './tokens.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    font-family: 'Manrope', system-ui, sans-serif;
+    font-size: var(--text-base);
+    line-height: 1.6;
+    color: var(--ink);
+    background-color: var(--paper);
+  }
+
+  /* Selection */
+  ::selection {
+    background-color: var(--ink);
+    color: var(--paper);
+  }
+
+  /* Focus ring */
+  :focus-visible {
+    outline: 3px solid var(--line-frontend);
+    outline-offset: var(--focus-ring-offset);
+  }
+
+  /* System scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--paper);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--rule);
+    border-radius: 4px;
+  }
+}
+
+/* ============================================
+   Paper grain texture (A5.4 Decoration)
+   Subtle SVG noise at ~3% opacity
+   ============================================ */
+.paper-grain::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 100;
+  opacity: 0.03;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+}
+
+/* ============================================
+   Ticket Card (A5.4)
+   --surface bg, 2px ink border, notched edges,
+   dashed perforation, hard 6px offset shadow
+   ============================================ */
+.ticket {
+  position: relative;
+  background: var(--surface);
+  border: var(--ticket-border) solid var(--ink);
+  box-shadow: var(--ticket-shadow) var(--ticket-shadow) 0 var(--ink);
+}
+
+/* Notched side edges via clip-path */
+.ticket-notched {
+  clip-path: polygon(
+    0% 0%,
+    100% 0%,
+    100% calc(50% - 12px),
+    calc(100% - 6px) 50%,
+    100% calc(50% + 12px),
+    100% 100%,
+    0% 100%,
+    0% calc(50% + 12px),
+    6px 50%,
+    0% calc(50% - 12px)
+  );
+}
+
+/* Dashed perforation line */
+.ticket-perforation {
+  border-top: 2px dashed var(--rule);
+}
+
+/* ============================================
+   Station dot (A5.4)
+   White fill, 4px ink ring
+   ============================================ */
+.station-dot {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--paper);
+  border: var(--station-dot-ring) solid var(--ink);
+  flex-shrink: 0;
+}
+
+/* Line-coloured station dots */
+.station-dot--frontend { border-color: var(--line-frontend); }
+.station-dot--backend { border-color: var(--line-backend); }
+.station-dot--ai { border-color: var(--line-ai); }
+.station-dot--hardware { border-color: var(--line-hardware); }
+
+/* ============================================
+   Route line track
+   ============================================ */
+.route-line {
+  position: absolute;
+  width: 4px;
+  background: var(--ink);
+  top: 0;
+  bottom: 0;
+}
+
+/* Line-coloured segments */
+.route-line--frontend { background: var(--line-frontend); }
+.route-line--backend { background: var(--line-backend); }
+.route-line--ai { background: var(--line-ai); }
+.route-line--hardware { background: var(--line-hardware); }
+
+/* ============================================
+   Button — Ticket stub (A5.4)
+   Solid ink with paper text; hover: perforation + 4px shift
+   ============================================ */
+.btn-stub {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+  padding: var(--sp-3) var(--sp-6);
+  background: var(--ink);
+  color: var(--paper);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: var(--text-xs);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  border: var(--ticket-border) solid var(--ink);
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  text-decoration: none;
+}
+.btn-stub:hover {
+  transform: translateX(var(--button-shift));
+  box-shadow: calc(-1 * var(--button-shift)) 0 0 0 var(--paper),
+              calc(-1 * var(--button-shift) - 2px) 0 0 0 var(--ink);
+}
+.btn-stub:focus-visible {
+  outline: 3px solid var(--line-ai);
+  outline-offset: var(--focus-ring-offset);
+}
+
+/* ============================================
+   Line chip (A5.4) — pill with dot
+   ============================================ */
+.line-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 10px 2px 6px;
+  border: 1px solid var(--rule);
+  border-radius: 9999px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+}
+.line-chip__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* ============================================
+   Departures board row (A5.4)
+   Dark surface even in day mode
+   ============================================ */
+.board-surface {
+  background: #111111;
+  color: #F1EEE6;
+}
+
+.board-row {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: var(--text-sm);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  border-bottom: 1px solid #2B2F38;
+}
+
+/* Status tags */
+.status-tag {
+  display: inline-block;
+  padding: 2px 8px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.status-tag--winner {
+  background: #F2B705;
+  color: #111111;
+}
+.status-tag--top10 {
+  background: #E4572E;
+  color: #F1EEE6;
+}
+.status-tag--ontime {
+  background: #0B6E4F;
+  color: #F1EEE6;
+}
+
+/* ============================================
+   Timetable rules (thin horizontal lines)
+   ============================================ */
+.timetable-rule {
+  border-top: 1px solid var(--rule);
+}
+
+/* ============================================
+   Mono label (ticket labels)
+   ============================================ */
+.mono-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: var(--text-xs);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ink-soft);
+}
+

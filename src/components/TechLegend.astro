@@ -1,0 +1,64 @@
+---
+import { TECH_GROUPS, LINES } from '../data/portfolio';
+---
+
+<div class="space-y-6">
+  <!-- Legend Table / Grid -->
+  <div class="ticket p-6 md:p-8 bg-surface border-2 border-ink shadow-[6px_6px_0_var(--ink)]">
+    <div class="border-b border-rule pb-3 mb-6 flex flex-wrap items-center justify-between gap-2">
+      <div class="flex items-center gap-2">
+        <span class="w-2.5 h-2.5 rounded-full bg-ink"></span>
+        <h3 class="font-mono text-sm uppercase tracking-wider text-ink font-bold">
+          TRANSIT CAPABILITIES // LINE LEGEND & STOPS
+        </h3>
+      </div>
+      <span class="font-mono text-xs text-ink-soft uppercase">
+        NO ARBITRARY PERCENTAGES • PURE STACK
+      </span>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {TECH_GROUPS.map((group) => {
+        const line = LINES[group.lineId];
+        return (
+          <div class="p-4 bg-paper border border-rule flex flex-col justify-between">
+            <div>
+              <div class="flex items-center gap-2 mb-3 pb-2 border-b border-rule">
+                <span class="w-3 h-3 rounded-full flex-shrink-0" style={`background-color: ${line?.colorVar || 'var(--ink)'};`}></span>
+                <h4 class="font-archivo text-base font-bold text-ink tracking-tight">
+                  {group.category}
+                </h4>
+              </div>
+
+              <!-- Stops on this track -->
+              <div class="space-y-2">
+                {group.items.map((tech) => (
+                  <div class="flex items-center gap-2 font-mono text-xs text-ink">
+                    <span class="w-1.5 h-1.5 rounded-full bg-rule"></span>
+                    <span>{tech}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div class="mt-4 pt-2 border-t border-rule text-right">
+              <span class="font-mono text-[10px] text-ink-soft uppercase">
+                TRACK // {line?.name || group.lineId}
+              </span>
+            </div>
+          </div>
+        );
+      })}
+    </div>
+
+    <!-- Mandatory Honest AI Workflow Note per brief A7 -->
+    <div class="mt-8 p-4 bg-paper border-l-4 border-line-ai text-xs font-mono text-ink leading-relaxed">
+      <div class="font-bold uppercase tracking-wider text-line-ai mb-1">
+        // AI ASSISTANCE DECLARATION & WORKFLOW DISCLOSURE
+      </div>
+      <p class="text-ink-soft">
+        Modern AI coding assistants (including Antigravity and Claude Code) are integrated into my workflow as accelerators for boilerplate generation, test scaffolding, and research. System architecture, engineering decisions, visual art direction, and code verification remain 100% human-directed and authored by me.
+      </p>
+    </div>
+  </div>
+</div>

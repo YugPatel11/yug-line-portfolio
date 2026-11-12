@@ -1,0 +1,34 @@
+---
+interface Props {
+  code: string;
+  name: string;
+  category: string;
+  lineVariant?: 'frontend' | 'backend' | 'ai' | 'hardware' | 'default';
+}
+
+const {
+  code,
+  name,
+  category,
+  lineVariant = 'default',
+} = Astro.props;
+
+const dotClass = lineVariant !== 'default' ? `station-dot--${lineVariant}` : '';
+---
+
+<div class="flex items-start gap-4 mb-8">
+  <div class={`station-dot ${dotClass} mt-2`}></div>
+  <div>
+    <div class="flex items-center gap-3">
+      <span class="font-mono text-xs uppercase tracking-wider text-ink-soft bg-surface border border-rule px-2 py-0.5 rounded">
+        {code}
+      </span>
+      <span class="font-mono text-xs uppercase tracking-widest text-ink-soft">
+        // {category}
+      </span>
+    </div>
+    <h2 class="font-archivo font-extrabold text-2xl md:text-4xl text-ink tracking-tight mt-1">
+      {name}
+    </h2>
+  </div>
+</div>

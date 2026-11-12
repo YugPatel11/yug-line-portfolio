@@ -1,0 +1,138 @@
+---
+import { ACHIEVEMENTS } from '../data/portfolio';
+import Pictograms from './Pictograms.astro';
+---
+
+<div class="board-surface p-6 md:p-8 border-2 border-ink shadow-[6px_6px_0_var(--ink)]">
+  <!-- Board Header -->
+  <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#2B2F38] pb-4 mb-6">
+    <div class="flex items-center gap-3">
+      <span class="w-3 h-3 rounded-full bg-line-hardware animate-pulse"></span>
+      <h3 class="font-mono text-sm md:text-base font-bold uppercase tracking-wider text-[#F1EEE6]">
+        DEPARTURES & MILESTONES // TRACKING TERMINAL
+      </h3>
+    </div>
+    <div class="flex items-center gap-4 text-xs font-mono text-[#B5B1A6]">
+      <span>SERVICE: ACTIVE</span>
+      <span>STATUS: ON TIME</span>
+    </div>
+  </div>
+
+  <!-- Board Table Header (Desktop) -->
+  <div class="hidden md:grid grid-cols-12 gap-4 pb-3 border-b border-[#2B2F38] text-[11px] font-mono text-[#B5B1A6] uppercase tracking-wider">
+    <div class="col-span-1">PLT</div>
+    <div class="col-span-5">EVENT / DESTINATION</div>
+    <div class="col-span-3">STANDOUT METRIC</div>
+    <div class="col-span-3 text-right">STATUS</div>
+  </div>
+
+  <!-- Board Rows -->
+  <div class="divide-y divide-[#2B2F38]">
+    {ACHIEVEMENTS.map((item, idx) => (
+      <div class="py-4 md:py-5 group cursor-pointer achievement-row" data-id={item.id}>
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-3 items-center">
+          <!-- Platform / Number -->
+          <div class="font-mono text-xs text-[#B5B1A6] flex items-center justify-between md:block md:col-span-1">
+            <span class="md:hidden text-[10px] text-[#B5B1A6] uppercase">Platform</span>
+            <span class="text-line-hardware font-bold">0{idx + 1}</span>
+          </div>
+
+          <!-- Title & Subtitle -->
+          <div class="md:col-span-5">
+            <div class="font-archivo font-bold text-base md:text-lg text-[#F1EEE6] group-hover:text-line-hardware transition-colors">
+              {item.title}
+            </div>
+            <div class="font-mono text-xs text-[#B5B1A6] mt-0.5">
+              {item.subtitle} • {item.institution}
+            </div>
+          </div>
+
+          <!-- Counter Metric -->
+          <div class="md:col-span-3">
+            {item.metricNumber && (
+              <div class="flex items-baseline gap-1.5 font-mono">
+                <span class="text-xl md:text-2xl font-bold text-line-hardware counter-number" data-target={item.metricNumber}>
+                  0
+                </span>
+                <span class="text-line-hardware font-bold">{item.metricSuffix}</span>
+                <span class="text-xs text-[#B5B1A6] uppercase">{item.metricLabel}</span>
+              </div>
+            )}
+          </div>
+
+          <!-- Status Tag -->
+          <div class="md:col-span-3 flex items-center justify-between md:justify-end gap-3">
+            <span class={`status-tag ${
+              item.statusTag === 'WINNER' ? 'status-tag--winner' :
+              item.statusTag === 'TOP 10' ? 'status-tag--top10' :
+              'status-tag--ontime'
+            }`}>
+              {item.statusTag}
+            </span>
+            <span class="font-mono text-xs text-[#B5B1A6] group-hover:text-[#F1EEE6] transition-transform group-hover:translate-x-1">
+              ▼
+            </span>
+          </div>
+        </div>
+
+        <!-- Collapsible Details -->
+        <div class="details-panel hidden mt-4 pt-4 border-t border-[#2B2F38]/60 text-xs md:text-sm font-manrope text-[#B5B1A6] leading-relaxed">
+          <p>{item.details}</p>
+          {item.externalLink && (
+            <div class="mt-3">
+              <a
+                href={item.externalLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="inline-flex items-center gap-1.5 font-mono text-xs font-bold uppercase tracking-wider text-line-hardware hover:underline"
+              >
+                <span>{item.externalLinkText || 'View Link'}</span>
+                <Pictograms name="arrow-up-right" size={14} />
+              </a>
+            </div>
+          )}
+        </div>
+      </div>
+    ))}
+  </div>
+</div>
+
+<script>
+  // Simple interactive accordion and counter animation
+  document.addEventListener('DOMContentLoaded', () => {
+    // Accordion toggle
+    document.querySelectorAll('.achievement-row').forEach(row => {
+      row.addEventListener('click', () => {
+        const panel = row.querySelector('.details-panel');
+        if (panel) {
+          panel.classList.toggle('hidden');
+        }
+      });
+    });
+
+    // Intersection observer for counters
+    const counters = document.querySelectorAll('.counter-number');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const el = entry.target as HTMLElement;
+          const target = parseInt(el.getAttribute('data-target') || '0', 10);
+          let current = 0;
+          const step = Math.max(1, Math.floor(target / 25));
+          const timer = setInterval(() => {
+            current += step;
+            if (current >= target) {
+              el.textContent = target.toString();
+              clearInterval(timer);
+            } else {
+              el.textContent = current.toString();
+            }
+          }, 30);
+          observer.unobserve(el);
+        }
+      });
+    }, { threshold: 0.2 });
+
+    counters.forEach(c => observer.observe(c));
+  });
+</script>

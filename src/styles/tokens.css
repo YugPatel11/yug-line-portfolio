@@ -1,0 +1,61 @@
+/* ============================================
+   THE YUG LINE — Design Tokens
+   A5.1 Colour tokens + A5.2 Typography scale
+   ============================================ */
+
+:root {
+  /* Colour tokens — Day mode */
+  --paper: #F4F1EA;
+  --surface: #FBF9F4;
+  --ink: #111111;
+  --ink-soft: #4A4741;
+  --rule: #D9D3C5;
+
+  /* Line colours — Day */
+  --line-frontend: #E4572E;
+  --line-backend: #0B6E4F;
+  --line-ai: #1B3A8A;
+  --line-hardware: #F2B705;
+
+  /* Typography scale (fluid) */
+  --text-xs: 0.75rem;     /* 12px */
+  --text-sm: 0.875rem;    /* 14px */
+  --text-base: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);  /* 17-18px */
+  --text-lg: 1.5rem;      /* 24px */
+  --text-xl: 2.5rem;      /* 40px */
+  --text-display: clamp(4.5rem, 4rem + 2.5vw, 10rem); /* 72-160px */
+
+  /* Spacing base: 4px */
+  --sp-1: 4px;
+  --sp-2: 8px;
+  --sp-3: 12px;
+  --sp-4: 16px;
+  --sp-6: 24px;
+  --sp-8: 32px;
+  --sp-12: 48px;
+  --sp-18: 72px;
+  --sp-28: 112px;
+  --sp-40: 160px;
+
+  /* Component tokens */
+  --ticket-border: 2px;
+  --ticket-shadow: 6px;
+  --station-dot-ring: 4px;
+  --button-shift: 4px;
+  --focus-ring-offset: 3px;
+}
+
+/* Night mode */
+.dark {
+  --paper: #0F1115;
+  --surface: #171A20;
+  --ink: #F1EEE6;
+  --ink-soft: #B5B1A6;
+  --rule: #2B2F38;
+
+  --line-frontend: #FF7A52;
+  --line-backend: #2FB584;
+  --line-ai: #5B8CFF;
+  --line-hardware: #FFC933;
+}
+

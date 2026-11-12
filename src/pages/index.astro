@@ -1,0 +1,416 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import StationHeader from '../components/StationHeader.astro';
+import OverviewMap from '../components/OverviewMap.astro';
+import DeparturesBoard from '../components/DeparturesBoard.astro';
+import InterchangeGhumify from '../components/InterchangeGhumify.astro';
+import ProjectStop from '../components/ProjectStop.astro';
+import ExperienceTicket from '../components/ExperienceTicket.astro';
+import TechLegend from '../components/TechLegend.astro';
+import EducationTicket from '../components/EducationTicket.astro';
+import TerminusContact from '../components/TerminusContact.astro';
+import Pictograms from '../components/Pictograms.astro';
+
+import { PROFILE, PROJECTS } from '../data/portfolio';
+
+const expandedProjects = PROJECTS.filter((p) => p.featured && p.id !== 'ghumify');
+const moreProjects = PROJECTS.filter((p) => !p.featured);
+---
+
+<BaseLayout>
+  <!-- Fixed Transit Header Navigation -->
+  <header class="fixed top-0 left-0 right-0 z-50 bg-paper/90 backdrop-blur-md border-b border-rule">
+    <div class="max-w-site mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <span class="w-3 h-3 rounded-full bg-line-frontend"></span>
+        <a href="#station-00" class="font-archivo font-extrabold text-lg text-ink tracking-tight hover:opacity-80">
+          THE YUG LINE
+        </a>
+        <span class="hidden sm:inline font-mono text-xs text-ink-soft bg-surface px-2 py-0.5 border border-rule">
+          TRANSIT MAP PORTFOLIO
+        </span>
+      </div>
+
+      <!-- Quick Stations Jump -->
+      <nav class="hidden md:flex items-center gap-5 font-mono text-xs text-ink-soft">
+        <a href="#station-01" class="hover:text-ink">01:BOARD</a>
+        <a href="#station-02" class="hover:text-ink text-line-frontend font-bold">02:GHUMIFY</a>
+        <a href="#station-03" class="hover:text-ink">03:PROJECTS</a>
+        <a href="#station-04" class="hover:text-ink">04:CREW</a>
+        <a href="#station-05" class="hover:text-ink">05:TECH</a>
+        <a href="#station-06" class="hover:text-ink">06:EDU</a>
+        <a href="#station-07" class="hover:text-ink font-bold">07:TERMINUS</a>
+      </nav>
+
+      <!-- Theme Toggle & Resume Action -->
+      <div class="flex items-center gap-3">
+        <button
+          type="button"
+          id="theme-toggle"
+          class="p-1.5 border border-rule bg-surface font-mono text-xs text-ink hover:border-ink"
+          aria-label="Toggle Night/Day Mode"
+        >
+          <span class="hidden dark:inline">☀️ DAY</span>
+          <span class="inline dark:hidden">🌙 NIGHT</span>
+        </button>
+
+        <a
+          href={PROFILE.contacts.resumeUrl}
+          download
+          class="font-mono text-xs font-bold uppercase tracking-wider px-3 py-1.5 bg-ink text-paper hover:opacity-90 inline-flex items-center gap-1.5"
+        >
+          <span>CV</span>
+          <Pictograms name="arrow-up-right" size={12} />
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Central Railway Guide Rails Container -->
+  <div class="max-w-site mx-auto px-4 sm:px-6 pt-24 pb-32 relative">
+    
+    <!-- ========================================================
+         STATION 00: DEPARTURE (HERO)
+         ======================================================== -->
+    <section id="station-00" class="pt-8 pb-20 relative">
+      <StationHeader
+        code="ST-00"
+        name="CENTRAL DEPARTURE"
+        category="ORIGIN & IDENTITY"
+        lineVariant="frontend"
+      />
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        
+        <!-- Large Origin Ticket -->
+        <div class="lg:col-span-7">
+          <div class="ticket ticket-notched p-6 sm:p-10 bg-surface border-2 border-ink shadow-[8px_8px_0_var(--ink)]">
+            <!-- Ticket Routing Header -->
+            <div class="flex flex-wrap items-center justify-between gap-4 border-b-2 border-ink pb-4 mb-6">
+              <div>
+                <span class="mono-label block">FROM STATION</span>
+                <span class="font-mono text-sm sm:text-base font-bold text-ink">BACKEND LOGIC</span>
+              </div>
+              <div class="font-mono text-xl text-line-frontend font-black">➔➔➔</div>
+              <div class="text-right">
+                <span class="mono-label block">TO DESTINATION</span>
+                <span class="font-mono text-sm sm:text-base font-bold text-ink">SMOOTH UIs</span>
+              </div>
+            </div>
+
+            <!-- Name and Title (Huge Archivo per A5.2 & A7) -->
+            <div class="mb-6">
+              <span class="mono-label block mb-1">PASSENGER / ARCHITECT</span>
+              <h1 class="font-archivo text-4xl sm:text-6xl lg:text-7xl font-black text-ink tracking-tight uppercase leading-[0.95]">
+                {PROFILE.name}
+              </h1>
+              <p class="font-mono text-base sm:text-lg text-ink-soft mt-3 font-semibold">
+                // {PROFILE.role}
+              </p>
+              <p class="font-manrope text-base sm:text-lg text-ink mt-3 leading-relaxed">
+                "{PROFILE.tagline}"
+              </p>
+            </div>
+
+            <!-- Status & Highlight Chips -->
+            <div class="flex flex-wrap gap-2 mb-8">
+              <span class="px-3 py-1 bg-paper border border-ink font-mono text-xs text-ink font-bold inline-flex items-center gap-1.5">
+                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                {PROFILE.status}
+              </span>
+              <span class="px-3 py-1 bg-paper border border-rule font-mono text-xs text-ink">
+                Exp: {PROFILE.experienceYears}
+              </span>
+              <span class="px-3 py-1 bg-paper border border-rule font-mono text-xs text-ink">
+                Grants: {PROFILE.grantTotal}
+              </span>
+              <span class="px-3 py-1 bg-paper border border-rule font-mono text-xs text-ink">
+                {PROFILE.leadershipRole}
+              </span>
+            </div>
+
+            <!-- Ticket Stubs (Buttons) -->
+            <div class="ticket-perforation pt-6 flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
+              <a href="#station-01" class="btn-stub justify-center">
+                <span>Ride the line</span>
+                <span class="font-bold">➔</span>
+              </a>
+
+              <a
+                href={PROFILE.contacts.resumeUrl}
+                download
+                class="btn-stub !bg-surface !text-ink hover:!bg-paper justify-center"
+              >
+                <span>Download Résumé</span>
+                <Pictograms name="arrow-up-right" size={14} />
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Overview Transit Map -->
+        <div class="lg:col-span-5">
+          <OverviewMap />
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Rail Divider Line -->
+    <div class="w-full h-8 flex items-center justify-center my-6">
+      <div class="w-full border-t-2 border-dashed border-rule"></div>
+    </div>
+
+    <!-- ========================================================
+         STATION 01: DEPARTURES BOARD (ACHIEVEMENTS)
+         ======================================================== -->
+    <section id="station-01" class="py-12 relative">
+      <StationHeader
+        code="ST-01"
+        name="DEPARTURES BOARD"
+        category="TRACK RECORD & AWARDS"
+        lineVariant="hardware"
+      />
+
+      <DeparturesBoard />
+    </section>
+
+    <!-- Rail Divider Line -->
+    <div class="w-full h-8 flex items-center justify-center my-6">
+      <div class="w-full border-t-2 border-dashed border-rule"></div>
+    </div>
+
+    <!-- ========================================================
+         STATION 02: INTERCHANGE GHUMIFY (FLAGSHIP)
+         ======================================================== -->
+    <section id="station-02" class="py-12 relative">
+      <StationHeader
+        code="ST-02"
+        name="GHUMIFY INTERCHANGE"
+        category="FLAGSHIP AI CONVERGENCE"
+        lineVariant="ai"
+      />
+
+      <InterchangeGhumify />
+    </section>
+
+    <!-- Rail Divider Line -->
+    <div class="w-full h-8 flex items-center justify-center my-6">
+      <div class="w-full border-t-2 border-dashed border-rule"></div>
+    </div>
+
+    <!-- ========================================================
+         STATION 03: LINE STOPS (PROJECTS)
+         ======================================================== -->
+    <section id="station-03" class="py-12 relative">
+      <StationHeader
+        code="ST-03"
+        name="LINE STOPS"
+        category="CURATED PROJECTS & SYSTEMS"
+        lineVariant="frontend"
+      />
+
+      <!-- Filter Controls -->
+      <div class="flex items-center gap-2 overflow-x-auto pb-4 mb-6 font-mono text-xs">
+        <button
+          type="button"
+          class="project-filter-btn px-4 py-2 border-2 border-ink bg-ink text-paper font-bold uppercase transition-all"
+          data-filter="all"
+        >
+          All Stops
+        </button>
+        <button
+          type="button"
+          class="project-filter-btn px-4 py-2 border-2 border-rule bg-surface text-ink hover:border-ink uppercase transition-all"
+          data-filter="frontend"
+        >
+          Frontend Line
+        </button>
+        <button
+          type="button"
+          class="project-filter-btn px-4 py-2 border-2 border-rule bg-surface text-ink hover:border-ink uppercase transition-all"
+          data-filter="backend"
+        >
+          Backend Line
+        </button>
+        <button
+          type="button"
+          class="project-filter-btn px-4 py-2 border-2 border-rule bg-surface text-ink hover:border-ink uppercase transition-all"
+          data-filter="ai"
+        >
+          AI / ML Line
+        </button>
+        <button
+          type="button"
+          class="project-filter-btn px-4 py-2 border-2 border-rule bg-surface text-ink hover:border-ink uppercase transition-all"
+          data-filter="hardware"
+        >
+          Hardware Line
+        </button>
+      </div>
+
+      <!-- Main Project Stops Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="projects-grid">
+        {expandedProjects.map((project) => (
+          <ProjectStop project={project} />
+        ))}
+      </div>
+
+      <!-- More Stops Toggle Accordion -->
+      <div class="mt-8">
+        <button
+          type="button"
+          id="toggle-more-stops"
+          class="w-full p-4 border-2 border-dashed border-ink bg-surface font-mono text-xs sm:text-sm font-bold uppercase tracking-wider text-ink hover:bg-paper transition-colors flex items-center justify-center gap-2"
+        >
+          <span>Show More Stops ({moreProjects.length} Additional Projects: Cricktraker, Clinic, EMS)</span>
+          <span id="more-stops-icon">▼</span>
+        </button>
+
+        <div id="more-stops-container" class="hidden grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+          {moreProjects.map((project) => (
+            <ProjectStop project={project} />
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- Rail Divider Line -->
+    <div class="w-full h-8 flex items-center justify-center my-6">
+      <div class="w-full border-t-2 border-dashed border-rule"></div>
+    </div>
+
+    <!-- ========================================================
+         STATION 04: CREW AND SERVICE RECORD (EXPERIENCE)
+         ======================================================== -->
+    <section id="station-04" class="py-12 relative">
+      <StationHeader
+        code="ST-04"
+        name="CREW & SERVICE RECORD"
+        category="PROFESSIONAL EXPERIENCE"
+        lineVariant="backend"
+      />
+
+      <ExperienceTicket />
+    </section>
+
+    <!-- Rail Divider Line -->
+    <div class="w-full h-8 flex items-center justify-center my-6">
+      <div class="w-full border-t-2 border-dashed border-rule"></div>
+    </div>
+
+    <!-- ========================================================
+         STATION 05: LINE LEGEND (TECH ARSENAL)
+         ======================================================== -->
+    <section id="station-05" class="py-12 relative">
+      <StationHeader
+        code="ST-05"
+        name="LINE LEGEND"
+        category="TECHNICAL CAPABILITIES"
+        lineVariant="hardware"
+      />
+
+      <TechLegend />
+    </section>
+
+    <!-- Rail Divider Line -->
+    <div class="w-full h-8 flex items-center justify-center my-6">
+      <div class="w-full border-t-2 border-dashed border-rule"></div>
+    </div>
+
+    <!-- ========================================================
+         STATION 06: ACADEMIC STOP (EDUCATION)
+         ======================================================== -->
+    <section id="station-06" class="py-12 relative">
+      <StationHeader
+        code="ST-06"
+        name="ACADEMIC JUNCTION"
+        category="DEGREE & FOUNDATION"
+        lineVariant="ai"
+      />
+
+      <EducationTicket />
+    </section>
+
+    <!-- Rail Divider Line -->
+    <div class="w-full h-8 flex items-center justify-center my-6">
+      <div class="w-full border-t-2 border-dashed border-rule"></div>
+    </div>
+
+    <!-- ========================================================
+         STATION 07: TERMINUS & CONTACT
+         ======================================================== -->
+    <section id="station-07" class="py-12 relative">
+      <StationHeader
+        code="ST-07"
+        name="TERMINUS"
+        category="DISPATCH & CONNECT"
+        lineVariant="default"
+      />
+
+      <TerminusContact />
+    </section>
+
+  </div>
+
+  <!-- Interactive Scripts (Client-side interactivity) -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // 1. Theme toggle
+      const toggleBtn = document.getElementById('theme-toggle');
+      if (toggleBtn) {
+        toggleBtn.addEventListener('click', () => {
+          document.documentElement.classList.toggle('dark');
+        });
+      }
+
+      // 2. Project filters
+      const filterBtns = document.querySelectorAll('.project-filter-btn');
+      const cards = document.querySelectorAll('.project-card');
+
+      filterBtns.forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const filter = btn.getAttribute('data-filter');
+
+          // Style active button
+          filterBtns.forEach((b) => {
+            b.classList.remove('bg-ink', 'text-paper', 'border-ink');
+            b.classList.add('bg-surface', 'text-ink', 'border-rule');
+          });
+          btn.classList.add('bg-ink', 'text-paper', 'border-ink');
+          btn.classList.remove('bg-surface', 'text-ink', 'border-rule');
+
+          // Filter cards
+          cards.forEach((card) => {
+            const cardLines = (card.getAttribute('data-lines') || '').split(' ');
+            if (filter === 'all' || cardLines.includes(filter || '')) {
+              (card as HTMLElement).style.display = 'flex';
+            } else {
+              (card as HTMLElement).style.display = 'none';
+            }
+          });
+        });
+      });
+
+      // 3. More stops toggle
+      const moreBtn = document.getElementById('toggle-more-stops');
+      const moreContainer = document.getElementById('more-stops-container');
+      const moreIcon = document.getElementById('more-stops-icon');
+
+      if (moreBtn && moreContainer) {
+        moreBtn.addEventListener('click', () => {
+          const isHidden = moreContainer.classList.contains('hidden');
+          if (isHidden) {
+            moreContainer.classList.remove('hidden');
+            moreContainer.classList.add('grid');
+            if (moreIcon) moreIcon.textContent = '▲';
+          } else {
+            moreContainer.classList.add('hidden');
+            moreContainer.classList.remove('grid');
+            if (moreIcon) moreIcon.textContent = '▼';
+          }
+        });
+      }
+    });
+  </script>
+</BaseLayout>

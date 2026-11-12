@@ -1,0 +1,138 @@
+---
+import { LINES } from '../data/portfolio';
+---
+
+<div class="ticket p-5 md:p-6 rounded-none relative overflow-hidden bg-surface">
+  <div class="flex items-center justify-between border-b border-rule pb-3 mb-4">
+    <div class="flex items-center gap-2">
+      <span class="w-2.5 h-2.5 rounded-full bg-line-frontend animate-pulse"></span>
+      <span class="font-mono text-xs uppercase tracking-widest text-ink font-bold">
+        Network Diagram // 2026 Edition
+      </span>
+    </div>
+    <span class="font-mono text-[11px] uppercase tracking-wider text-ink-soft bg-paper px-2 py-0.5 border border-rule">
+      Zone 1-4
+    </span>
+  </div>
+
+  <!-- SVG Transit Map -->
+  <div class="relative w-full aspect-[16/10] bg-paper border border-rule overflow-hidden p-2">
+    <svg viewBox="0 0 500 320" class="w-full h-full select-none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <!-- Grid pattern -->
+        <pattern id="mapGrid" width="20" height="20" patternUnits="userSpaceOnUse">
+          <path d="M 20 0 L 0 0 0 20" fill="none" stroke="var(--rule)" stroke-width="0.5" opacity="0.4" />
+        </pattern>
+      </defs>
+
+      <rect width="500" height="320" fill="url(#mapGrid)" />
+
+      <!-- Railway Lines -->
+      <!-- AI/ML Line (Blue) -->
+      <path
+        d="M 40 50 L 140 50 L 220 130 L 250 160 L 320 160 L 380 220 L 460 220"
+        fill="none"
+        stroke="var(--line-ai)"
+        stroke-width="5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+
+      <!-- Frontend Line (Orange) -->
+      <path
+        d="M 40 90 L 180 90 L 250 160 L 350 260 L 460 260"
+        fill="none"
+        stroke="var(--line-frontend)"
+        stroke-width="5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+
+      <!-- Backend Line (Green) -->
+      <path
+        d="M 40 160 L 250 160 L 330 80 L 460 80"
+        fill="none"
+        stroke="var(--line-backend)"
+        stroke-width="5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+
+      <!-- Hardware/IoT Line (Yellow) -->
+      <path
+        d="M 40 220 L 120 220 L 180 160 L 250 160 L 300 160 L 360 100 L 460 100"
+        fill="none"
+        stroke="var(--line-hardware)"
+        stroke-width="5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+
+      <!-- Stops on lines -->
+      <!-- EcoSortX -->
+      <circle cx="150" cy="190" r="4" fill="var(--paper)" stroke="var(--ink)" stroke-width="2" />
+      <text x="145" y="210" font-family="'IBM Plex Mono', monospace" font-size="8" fill="var(--ink)" font-weight="bold">ECOSORTX</text>
+
+      <!-- Grantpilot -->
+      <circle cx="120" cy="160" r="4" fill="var(--paper)" stroke="var(--ink)" stroke-width="2" />
+      <text x="100" y="150" font-family="'IBM Plex Mono', monospace" font-size="8" fill="var(--ink)" font-weight="bold">GRANTPILOT</text>
+
+      <!-- GeoBus -->
+      <circle cx="110" cy="90" r="4" fill="var(--paper)" stroke="var(--ink)" stroke-width="2" />
+      <text x="95" y="80" font-family="'IBM Plex Mono', monospace" font-size="8" fill="var(--ink)" font-weight="bold">GEOBUS</text>
+
+      <!-- DataMorphix -->
+      <circle cx="340" cy="180" r="4" fill="var(--paper)" stroke="var(--ink)" stroke-width="2" />
+      <text x="350" y="185" font-family="'IBM Plex Mono', monospace" font-size="8" fill="var(--ink)" font-weight="bold">DATAMORPHIX</text>
+
+      <!-- Clinic -->
+      <circle cx="380" cy="120" r="4" fill="var(--paper)" stroke="var(--ink)" stroke-width="2" />
+      <text x="390" y="125" font-family="'IBM Plex Mono', monospace" font-size="8" fill="var(--ink)">CLINIC</text>
+
+      <!-- MAJOR INTERCHANGE: GHUMIFY (center 250, 160) -->
+      <circle cx="250" cy="160" r="14" fill="var(--paper)" stroke="var(--ink)" stroke-width="4" />
+      <circle cx="250" cy="160" r="7" fill="var(--ink)" />
+      
+      <!-- Interchange Label -->
+      <rect x="195" y="182" width="110" height="24" fill="var(--ink)" rx="2" />
+      <text x="250" y="198" font-family="'Archivo Variable', sans-serif" font-size="11" font-weight="900" fill="var(--paper)" text-anchor="middle" letter-spacing="1">
+        GHUMIFY INTCHG
+      </text>
+
+      <!-- YOU ARE HERE Indicator at Departure -->
+      <g transform="translate(40, 90)">
+        <circle cx="0" cy="0" r="6" fill="var(--line-frontend)" stroke="var(--ink)" stroke-width="2" />
+        <circle cx="0" cy="0" r="12" fill="none" stroke="var(--line-frontend)" stroke-width="1.5" opacity="0.7">
+          <animate attributeName="r" values="6;16;6" dur="2s" repeatCount="indefinite" />
+          <animate attributeName="opacity" values="0.8;0;0.8" dur="2s" repeatCount="indefinite" />
+        </circle>
+        
+        <!-- Callout Pin -->
+        <rect x="8" y="-24" width="86" height="18" fill="var(--ink)" rx="2" />
+        <text x="51" y="-12" font-family="'IBM Plex Mono', monospace" font-size="8" font-weight="700" fill="var(--paper)" text-anchor="middle">
+          YOU ARE HERE
+        </text>
+      </g>
+    </svg>
+  </div>
+
+  <!-- Legend row -->
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-2 mt-4 pt-3 border-t border-rule font-mono text-[11px]">
+    <div class="flex items-center gap-1.5">
+      <span class="w-3 h-1.5 rounded-sm" style={`background-color: ${LINES.frontend.colorVar}`}></span>
+      <span class="text-ink font-medium">Frontend</span>
+    </div>
+    <div class="flex items-center gap-1.5">
+      <span class="w-3 h-1.5 rounded-sm" style={`background-color: ${LINES.backend.colorVar}`}></span>
+      <span class="text-ink font-medium">Backend</span>
+    </div>
+    <div class="flex items-center gap-1.5">
+      <span class="w-3 h-1.5 rounded-sm" style={`background-color: ${LINES.ai.colorVar}`}></span>
+      <span class="text-ink font-medium">AI / ML</span>
+    </div>
+    <div class="flex items-center gap-1.5">
+      <span class="w-3 h-1.5 rounded-sm" style={`background-color: ${LINES.hardware.colorVar}`}></span>
+      <span class="text-ink font-medium">Hardware</span>
+    </div>
+  </div>
+</div>
