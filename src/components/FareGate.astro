@@ -138,10 +138,18 @@ import Pictograms from './Pictograms.astro';
     const stampBadge = document.getElementById('gate-stamp-badge');
 
     const runValidationSequence = () => {
-      // 1. Audio click/beep if sound engine enabled
+      // 1. Audio punch & gate sound if sound engine enabled (Section 8)
+      if ((window as any).__yugsound) {
+        (window as any).__yugsound.punch();
+      }
+
       if (speechBubble) speechBubble.textContent = '"Validating ticket..."';
 
       setTimeout(() => {
+        if ((window as any).__yugsound) {
+          (window as any).__yugsound.gateGreen();
+        }
+
         // 2. Turn light green
         if (ledRed) ledRed.classList.replace('bg-[#D8362B]', 'bg-paper');
         if (ledGreen) {
