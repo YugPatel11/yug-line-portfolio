@@ -7,20 +7,19 @@ import Pictograms from './Pictograms.astro';
      Strictly per Section 3:
      - Fixed full-screen overlay above everything (z-index 90)
      - 4 layers: Far wall, Mid pillars, Train on tracks, Platform floor
-     - Horizon line at ~72% of viewport height (28% platform floor)
+     - Horizon line at ~76% of viewport height (24vh platform floor)
      - Dynamic viewport-calculated train motion (zero clipping)
      - Car 2 center doors align precisely with screen center
-     - Train deceleration with pitch settle, speed streaks fading
-     - Double doors slide open revealing warm interior (#FFD98A)
-     - Centred "Board the metro →" button over car 2 centre door
+     - Direct inline Car 2 SVG doors slide open revealing warm interior
+     - Centred "Board the metro →" button over car 2 centre door (z-50)
      - Departure rightward with page reveal behind tail (~0.9s)
      - Reduced motion calm card fallback
      - Zero external audio/video assets, high-performance WAAPI
      ======================================================== -->
 <div
   id="metro-cinematic-stage"
-  class="fixed inset-0 z-[90] bg-paper overflow-hidden select-none w-full h-full"
-  style="display: none;"
+  class="fixed inset-0 z-[90] bg-paper overflow-hidden select-none"
+  style="display: none; width: 100vw; height: 100vh;"
   role="dialog"
   aria-modal="true"
   aria-label="Metro arrival and boarding"
@@ -62,7 +61,7 @@ import Pictograms from './Pictograms.astro';
     <!-- Repeating Destination Names at Low Contrast (<=10% diff) -->
     <div
       id="metro-wall-watermark"
-      class="absolute top-[16%] left-0 right-0 text-center font-archivo font-black text-5xl sm:text-7xl lg:text-9xl uppercase tracking-tighter opacity-[0.08] text-ink select-none whitespace-nowrap overflow-hidden"
+      class="absolute top-[14%] left-0 right-0 text-center font-archivo font-black text-5xl sm:text-7xl lg:text-9xl uppercase tracking-tighter opacity-[0.08] text-ink select-none whitespace-nowrap overflow-hidden"
     >
       NEXT STOP // THE YUG LINE // TRANSIT
     </div>
@@ -88,7 +87,7 @@ import Pictograms from './Pictograms.astro';
     </div>
 
     <!-- Hanging Blade Sign (Positioned comfortably below top bar) -->
-    <div class="absolute top-20 sm:top-24 left-1/2 -translate-x-1/2 z-20 ticket p-3 sm:p-4 bg-surface border-2 border-ink shadow-[4px_4px_0_var(--ink)] flex items-center gap-3">
+    <div class="absolute top-16 sm:top-20 left-1/2 -translate-x-1/2 z-20 ticket p-3 sm:p-4 bg-surface border-2 border-ink shadow-[4px_4px_0_var(--ink)] flex items-center gap-3">
       <div id="blade-sign-band" class="w-3 h-10 bg-line-frontend"></div>
       <div class="font-mono text-left">
         <div id="blade-sign-code" class="text-xs text-ink-soft uppercase font-bold">PLATFORM 1 // ST-02</div>
@@ -97,11 +96,11 @@ import Pictograms from './Pictograms.astro';
     </div>
   </div>
 
-  <!-- LAYER 4: THE 4-CAR METRO TRAIN (Stands on Track at Horizon ~72%) -->
+  <!-- LAYER 4: THE 4-CAR METRO TRAIN (Stands on Track at Horizon 76%) -->
   <div
     id="layer-train-track"
     class="absolute inset-x-0 z-20 flex items-end overflow-hidden pointer-events-auto"
-    style="bottom: 28%; height: clamp(140px, 32vh, 320px);"
+    style="bottom: 24vh; height: clamp(140px, 30vh, 280px);"
   >
     <!-- Flat Horizontal Speed Streaks -->
     <div
@@ -128,7 +127,7 @@ import Pictograms from './Pictograms.astro';
         preserveAspectRatio="xMinYMax meet"
       >
         <defs>
-          <!-- Middle Car Unit (360 wide, center door at x=180) -->
+          <!-- Middle Car Unit Template for Cars 1, 3, 4 -->
           <g id="metro-car-unit">
             <!-- Car Body -->
             <rect x="0" y="24" width="360" height="175" rx="8" fill="var(--surface)" stroke="var(--ink)" stroke-width="3" />
@@ -167,35 +166,12 @@ import Pictograms from './Pictograms.astro';
             <line x1="249" y1="52" x2="269" y2="98" stroke="#ffffff" stroke-width="2" opacity="0.3" />
             <line x1="263" y1="52" x2="283" y2="98" stroke="#ffffff" stroke-width="1.2" opacity="0.2" />
 
-            <!-- Warm Interior Light Slot at Car Center (x=150 to x=210, width=60) -->
-            <g class="door-interior-slot">
-              <rect x="150" y="38" width="60" height="160" fill="#FFD98A" stroke="var(--ink)" stroke-width="1" />
-              <!-- Handrail Grab Pole -->
-              <line x1="180" y1="38" x2="180" y2="198" stroke="var(--ink)" stroke-width="2.5" />
-              <!-- Commuter Silhouettes Inside -->
-              <circle cx="168" cy="80" r="8" fill="var(--ink)" opacity="0.8" />
-              <rect x="162" y="92" width="12" height="40" rx="3" fill="var(--ink)" opacity="0.8" />
-              <circle cx="192" cy="76" r="8" fill="var(--ink)" opacity="0.8" />
-              <rect x="186" y="88" width="12" height="44" rx="3" fill="var(--ink)" opacity="0.8" />
-            </g>
-
-            <!-- Sliding Double Doors at Car Center (x=150 to x=210) -->
-            <g class="sliding-door-leaves">
-              <!-- Left Door Leaf (x=150, width=30) -->
-              <g class="door-leaf-left" style="will-change: transform;">
-                <rect x="150" y="38" width="30" height="160" fill="var(--surface)" stroke="var(--ink)" stroke-width="2" rx="2" />
-                <rect x="156" y="52" width="18" height="40" rx="3" fill="#111111" />
-                <line x1="160" y1="55" x2="170" y2="88" stroke="#ffffff" stroke-width="1.5" opacity="0.3" />
-              </g>
-              <!-- Right Door Leaf (x=180, width=30) -->
-              <g class="door-leaf-right" style="will-change: transform;">
-                <rect x="180" y="38" width="30" height="160" fill="var(--surface)" stroke="var(--ink)" stroke-width="2" rx="2" />
-                <rect x="186" y="52" width="18" height="40" rx="3" fill="#111111" />
-                <line x1="190" y1="55" x2="200" y2="88" stroke="#ffffff" stroke-width="1.5" opacity="0.3" />
-              </g>
-              <!-- Center Seam Line -->
-              <line class="door-seam" x1="180" y1="38" x2="180" y2="198" stroke="var(--ink)" stroke-width="2" />
-            </g>
+            <!-- Closed Double Doors -->
+            <rect x="150" y="38" width="30" height="160" fill="var(--surface)" stroke="var(--ink)" stroke-width="2" rx="2" />
+            <rect x="156" y="52" width="18" height="40" rx="3" fill="#111111" />
+            <rect x="180" y="38" width="30" height="160" fill="var(--surface)" stroke="var(--ink)" stroke-width="2" rx="2" />
+            <rect x="186" y="52" width="18" height="40" rx="3" fill="#111111" />
+            <line x1="180" y1="38" x2="180" y2="198" stroke="var(--ink)" stroke-width="2" />
           </g>
 
           <!-- Accordion Gangway Bellows -->
@@ -207,7 +183,7 @@ import Pictograms from './Pictograms.astro';
           </g>
         </defs>
 
-        <!-- Rail Track -->
+        <!-- Rail Track Line -->
         <line x1="0" y1="238" x2="1600" y2="238" stroke="var(--ink)" stroke-width="4" />
 
         <!-- CAR 1: Lead Nose Car (0-370) -->
@@ -226,12 +202,79 @@ import Pictograms from './Pictograms.astro';
         <!-- Gangway 1-2 (370-400) -->
         <use href="#accordion-gangway" x="370" y="0" />
 
-        <!-- CAR 2: Centre Passenger Car (400-760, center door at x = 400 + 180 = 580) -->
+        <!-- CAR 2: HERO Centre Passenger Car (400-760, center door at x = 400 + 180 = 580) -->
+        <!-- Inlined directly in SVG so its doors animate open reliably -->
         <g id="train-car-2" transform="translate(400, 0)">
-          <use href="#metro-car-unit" />
+          <!-- Car Body -->
+          <rect x="0" y="24" width="360" height="175" rx="8" fill="var(--surface)" stroke="var(--ink)" stroke-width="3" />
+          
+          <!-- AC Roof Enclosures -->
+          <rect x="40" y="8" width="80" height="16" rx="3" fill="var(--paper)" stroke="var(--ink)" stroke-width="2" />
+          <rect x="240" y="8" width="80" height="16" rx="3" fill="var(--paper)" stroke="var(--ink)" stroke-width="2" />
+
+          <!-- Destination Livery Stripe -->
+          <rect class="car-livery-stripe" x="0" y="152" width="360" height="12" fill="var(--line-frontend)" stroke="var(--ink)" stroke-width="1.5" />
+          <rect x="0" y="164" width="360" height="8" fill="var(--ink)" />
+
+          <!-- Underframe & Lower Skirt -->
+          <rect x="10" y="199" width="340" height="16" fill="var(--ink)" />
+
+          <!-- Bogies and Steel Wheels -->
+          <circle cx="70" cy="222" r="16" fill="var(--ink)" />
+          <circle cx="70" cy="222" r="8" fill="var(--paper)" stroke="var(--ink)" stroke-width="2" />
+          <circle cx="120" cy="222" r="16" fill="var(--ink)" />
+          <circle cx="120" cy="222" r="8" fill="var(--paper)" stroke="var(--ink)" stroke-width="2" />
+          <line x1="50" y1="222" x2="140" y2="222" stroke="var(--ink)" stroke-width="5" />
+
+          <circle cx="240" cy="222" r="16" fill="var(--ink)" />
+          <circle cx="240" cy="222" r="8" fill="var(--paper)" stroke="var(--ink)" stroke-width="2" />
+          <circle cx="290" cy="222" r="16" fill="var(--ink)" />
+          <circle cx="290" cy="222" r="8" fill="var(--paper)" stroke="var(--ink)" stroke-width="2" />
+          <line x1="220" y1="222" x2="310" y2="222" stroke="var(--ink)" stroke-width="5" />
+
+          <!-- Left Passenger Window (x=24, width=105) -->
+          <rect x="24" y="48" width="105" height="55" rx="4" fill="#111111" />
+          <line x1="42" y1="52" x2="62" y2="98" stroke="#ffffff" stroke-width="2" opacity="0.3" />
+          <line x1="56" y1="52" x2="76" y2="98" stroke="#ffffff" stroke-width="1.2" opacity="0.2" />
+
+          <!-- Right Passenger Window (x=231, width=105) -->
+          <rect x="231" y="48" width="105" height="55" rx="4" fill="#111111" />
+          <line x1="249" y1="52" x2="269" y2="98" stroke="#ffffff" stroke-width="2" opacity="0.3" />
+          <line x1="263" y1="52" x2="283" y2="98" stroke="#ffffff" stroke-width="1.2" opacity="0.2" />
+
           <!-- Car 2 Identification Badge -->
           <rect x="160" y="172" width="40" height="14" fill="var(--paper)" stroke="var(--ink)" stroke-width="1.5" />
           <text x="180" y="183" font-family="'IBM Plex Mono', monospace" font-size="9" fill="var(--ink)" font-weight="bold" text-anchor="middle">CAR 02</text>
+
+          <!-- Warm Glowing Door Interior Slot (Revealed on Door Open) -->
+          <g id="car-2-interior" class="door-interior-slot">
+            <rect x="150" y="38" width="60" height="160" fill="#FFD98A" stroke="var(--ink)" stroke-width="1.5" />
+            <!-- Handrail Grab Pole -->
+            <line x1="180" y1="38" x2="180" y2="198" stroke="var(--ink)" stroke-width="2.5" />
+            <!-- Commuter Silhouettes Inside -->
+            <circle cx="168" cy="80" r="8" fill="var(--ink)" opacity="0.8" />
+            <rect x="162" y="92" width="12" height="40" rx="3" fill="var(--ink)" opacity="0.8" />
+            <circle cx="192" cy="76" r="8" fill="var(--ink)" opacity="0.8" />
+            <rect x="186" y="88" width="12" height="44" rx="3" fill="var(--ink)" opacity="0.8" />
+          </g>
+
+          <!-- Directly Animatable Door Leaves -->
+          <!-- Left Door Leaf (x=150, width=30) -->
+          <g id="car-2-door-left" style="transform: translateX(0); transition: transform 0.5s ease-out;">
+            <rect x="150" y="38" width="30" height="160" fill="var(--surface)" stroke="var(--ink)" stroke-width="2" rx="2" />
+            <rect x="156" y="52" width="18" height="40" rx="3" fill="#111111" />
+            <line x1="160" y1="55" x2="170" y2="88" stroke="#ffffff" stroke-width="1.5" opacity="0.3" />
+          </g>
+
+          <!-- Right Door Leaf (x=180, width=30) -->
+          <g id="car-2-door-right" style="transform: translateX(0); transition: transform 0.5s ease-out;">
+            <rect x="180" y="38" width="30" height="160" fill="var(--surface)" stroke="var(--ink)" stroke-width="2" rx="2" />
+            <rect x="186" y="52" width="18" height="40" rx="3" fill="#111111" />
+            <line x1="190" y1="55" x2="200" y2="88" stroke="#ffffff" stroke-width="1.5" opacity="0.3" />
+          </g>
+
+          <!-- Door Center Seam Line -->
+          <line id="car-2-door-seam" x1="180" y1="38" x2="180" y2="198" stroke="var(--ink)" stroke-width="2" />
         </g>
 
         <!-- Gangway 2-3 (760-790) -->
@@ -255,11 +298,11 @@ import Pictograms from './Pictograms.astro';
     </div>
   </div>
 
-  <!-- LAYER 3: PLATFORM FLOOR (In front of train wheels, Horizon ~72%) -->
+  <!-- LAYER 3: PLATFORM FLOOR (Starts right at horizon 24vh, goes to bottom) -->
   <div
     id="layer-platform-floor"
     class="absolute inset-x-0 bottom-0 z-25 border-t-4 border-ink pointer-events-none"
-    style="height: 28%; background-color: var(--surface);"
+    style="height: 24vh; background-color: var(--surface);"
   >
     <!-- Tactile Yellow Safety Line with Tactile Dots -->
     <div class="w-full h-8 bg-line-hardware border-b-2 border-ink flex items-center justify-around px-4">
@@ -269,7 +312,7 @@ import Pictograms from './Pictograms.astro';
     </div>
 
     <!-- Amber LED Station Ticker Board -->
-    <div class="max-w-md mx-auto mt-4 px-4 py-2 bg-[#111111] border-2 border-ink flex items-center justify-between font-mono text-xs text-[#FFB000]">
+    <div class="max-w-md mx-auto mt-3 px-4 py-2 bg-[#111111] border-2 border-ink flex items-center justify-between font-mono text-xs text-[#FFB000]">
       <span class="animate-pulse">● SERVICE 01</span>
       <span id="metro-platform-ticker" class="font-bold tracking-widest uppercase">TRAIN APPROACHING</span>
       <span>PLATFORM 1</span>
@@ -282,16 +325,16 @@ import Pictograms from './Pictograms.astro';
     ></div>
   </div>
 
-  <!-- Centred "Board the metro →" Button (Mounted over Car 2 Centre Doors at z-35) -->
+  <!-- Centred "Board the metro →" Button (Mounted over Car 2 Centre Doors at z-50) -->
   <div
     id="metro-board-btn-container"
-    class="absolute left-1/2 -translate-x-1/2 z-35 opacity-0 pointer-events-none transition-all duration-300 flex flex-col items-center gap-2"
-    style="bottom: calc(28% + 16px);"
+    class="absolute left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 pointer-events-auto"
+    style="display: none; bottom: calc(24vh + 16px); z-index: 50;"
   >
     <button
       type="button"
       id="board-the-metro-btn"
-      class="btn-stub btn-stub--primary !min-h-[56px] sm:!min-h-[64px] !px-8 text-base sm:text-xl font-black justify-center shadow-[6px_6px_0_var(--ink)] animate-pulse"
+      class="btn-stub btn-stub--primary !min-h-[56px] sm:!min-h-[64px] !px-8 text-base sm:text-xl font-black justify-center shadow-[6px_6px_0_var(--ink)] animate-pulse cursor-pointer"
       aria-label="Board the metro"
     >
       <span>Board the metro →</span>
@@ -345,6 +388,10 @@ import Pictograms from './Pictograms.astro';
     const skipBtn = document.getElementById('metro-stage-skip-btn');
     const soundToggle = document.getElementById('metro-stage-sound-toggle');
     const soundLabel = document.getElementById('metro-stage-sound-label');
+
+    const leftDoor = document.getElementById('car-2-door-left');
+    const rightDoor = document.getElementById('car-2-door-right');
+    const doorSeam = document.getElementById('car-2-door-seam');
 
     const reducedCard = document.getElementById('metro-reduced-card');
     const reducedBoardBtn = document.getElementById('reduced-board-btn');
@@ -449,12 +496,12 @@ import Pictograms from './Pictograms.astro';
 
       if (!stage) return;
 
-      // Scroll window to top so layout is anchored
+      // Scroll window to top
       window.scrollTo(0, 0);
 
       updateSignage(currentDestination);
 
-      // 1. Lock page scroll and make background inert (Section 3.1)
+      // 1. Lock page scroll and show stage
       stage.style.display = 'block';
       stage.style.opacity = '1';
       document.body.style.overflow = 'hidden';
@@ -474,18 +521,15 @@ import Pictograms from './Pictograms.astro';
       if (streaks) streaks.style.opacity = '1';
       if (ticker) ticker.textContent = 'TRAIN APPROACHING';
       if (boardContainer) {
+        boardContainer.style.display = 'none';
         boardContainer.style.opacity = '0';
-        boardContainer.classList.add('pointer-events-none');
       }
       if (idleHint) idleHint.classList.add('hidden');
 
       // Reset doors to closed state
-      document.querySelectorAll('.door-leaf-left').forEach((leaf) => {
-        (leaf as HTMLElement).style.transform = 'translateX(0)';
-      });
-      document.querySelectorAll('.door-leaf-right').forEach((leaf) => {
-        (leaf as HTMLElement).style.transform = 'translateX(0)';
-      });
+      if (leftDoor) leftDoor.style.transform = 'translateX(0)';
+      if (rightDoor) rightDoor.style.transform = 'translateX(0)';
+      if (doorSeam) doorSeam.style.opacity = '1';
 
       // Reset pillars & wall
       const wall = document.getElementById('layer-far-wall');
@@ -499,7 +543,7 @@ import Pictograms from './Pictograms.astro';
       // Start approach audio sequence (brown noise, flange, brake squeal, pneumatic hiss)
       metroSound.playArrivalSequence();
 
-      // Train enters and decelerates to stop with WAAPI (Section 3.2: 0.3s - 2.3s)
+      // Train enters and decelerates to stop with WAAPI (0s - 2.0s)
       if (trainWrapper) {
         currentAnim = trainWrapper.animate(
           [
@@ -515,32 +559,23 @@ import Pictograms from './Pictograms.astro';
         );
       }
 
-      // Doors slide open at 2.3s
+      // Doors slide open at 2.1s (immediately after braking)
       doorsTimer = setTimeout(() => {
         if (streaks) streaks.style.opacity = '0';
         if (ticker) ticker.textContent = 'NOW BOARDING';
 
-        // Slide open doors
-        document.querySelectorAll('.door-leaf-left').forEach((leaf) => {
-          (leaf as HTMLElement).animate(
-            [{ transform: 'translateX(0)' }, { transform: 'translateX(-26px)' }],
-            { duration: 500, easing: 'ease-out', fill: 'forwards' }
-          );
-        });
-        document.querySelectorAll('.door-leaf-right').forEach((leaf) => {
-          (leaf as HTMLElement).animate(
-            [{ transform: 'translateX(0)' }, { transform: 'translateX(26px)' }],
-            { duration: 500, easing: 'ease-out', fill: 'forwards' }
-          );
-        });
+        // Slide open doors on Car 2
+        if (leftDoor) leftDoor.style.transform = 'translateX(-26px)';
+        if (rightDoor) rightDoor.style.transform = 'translateX(26px)';
+        if (doorSeam) doorSeam.style.opacity = '0';
 
         // Ding-dong chime
         metroSound.playDoorOpenChime();
 
-        // Reveal Board the metro button over center doors
+        // Reveal Board the metro button directly over center doors
         if (boardContainer) {
+          boardContainer.style.display = 'flex';
           boardContainer.style.opacity = '1';
-          boardContainer.classList.remove('pointer-events-none');
           if (boardBtn) {
             boardBtn.innerHTML = '<span>Board the metro →</span>';
             boardBtn.classList.add('animate-pulse');
@@ -552,7 +587,7 @@ import Pictograms from './Pictograms.astro';
         idleTimer = setTimeout(() => {
           if (idleHint && !isBoarding) idleHint.classList.remove('hidden');
         }, 6000);
-      }, 2300);
+      }, 2100);
     };
 
     // Boarding Trigger
@@ -570,23 +605,14 @@ import Pictograms from './Pictograms.astro';
       // Play 3 beeps & door thump
       await metroSound.playDoorClosingSequence();
 
-      // Close doors with WAAPI
-      document.querySelectorAll('.door-leaf-left').forEach((leaf) => {
-        (leaf as HTMLElement).animate(
-          [{ transform: 'translateX(-26px)' }, { transform: 'translateX(0)' }],
-          { duration: 400, easing: 'ease-in', fill: 'forwards' }
-        );
-      });
-      document.querySelectorAll('.door-leaf-right').forEach((leaf) => {
-        (leaf as HTMLElement).animate(
-          [{ transform: 'translateX(26px)' }, { transform: 'translateX(0)' }],
-          { duration: 400, easing: 'ease-in', fill: 'forwards' }
-        );
-      });
+      // Close doors on Car 2
+      if (leftDoor) leftDoor.style.transform = 'translateX(0)';
+      if (rightDoor) rightDoor.style.transform = 'translateX(0)';
+      if (doorSeam) doorSeam.style.opacity = '1';
 
       // Departure sequence after 0.25s hold
       setTimeout(() => {
-        if (boardContainer) boardContainer.style.opacity = '0';
+        if (boardContainer) boardContainer.style.display = 'none';
         if (streaks) streaks.style.opacity = '1';
         if (ticker) ticker.textContent = 'DEPARTING';
 
