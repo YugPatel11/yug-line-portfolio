@@ -1,5 +1,8 @@
 ---
 import Pictograms from './Pictograms.astro';
+import ProjectMediaPlaceholder from './ProjectMediaPlaceholder.astro';
+
+const isDev = import.meta.env.DEV;
 
 const TECH_ITEMS = [
   { name: 'Flutter', line: 'frontend', color: 'var(--line-frontend)' },
@@ -127,17 +130,28 @@ const TECH_ITEMS = [
     </svg>
   </div>
 
-  <!-- Mandatory TODO-USER Slots per brief A7 -->
-  <div class="p-4 bg-paper border border-dashed border-rule text-xs font-mono space-y-2 mb-6">
-    <div class="font-bold text-ink uppercase tracking-wider">// Verification & Media Placeholders (TODO-USER):</div>
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-2 text-ink-soft">
-      <div>• [TODO-USER: Add Ghumify Demo Video Embed / Link]</div>
-      <div>• [TODO-USER: Add 3 High-Res Screenshots in public/images/]</div>
-      <div>• [TODO-USER: Add Public GitHub Repository Link]</div>
-      <div>• [TODO-USER: Add Live Deployment / Production URL]</div>
-      <div class="md:col-span-2">• [TODO-USER: Add One Real Measured Metric / User Count / Pilot Feedback]</div>
-    </div>
+  <!-- Designed Showcase Frame & Verification Slots (Rule 12) -->
+  <div class="mb-6">
+    <ProjectMediaPlaceholder
+      title="Ghumify — AI Travel Companion Prototype Interface"
+      pictogram="route"
+      techChips={['Flutter', 'Next.js 15', 'Gemini AI', 'OSM']}
+      aspectRatio="aspect-[21/9]"
+    />
   </div>
+
+  {isDev && (
+    <div class="p-3 bg-paper border border-dashed border-rule text-xs font-mono space-y-1 mb-6">
+      <div class="font-bold text-ink uppercase tracking-wider">// DEV: Registered TODO-USER Slots (see TODO-USER.md):</div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-1.5 text-ink-soft text-[11px]">
+        <div>• [Ghumify Demo Video Embed]</div>
+        <div>• [3 High-Res Screenshots in public/images/ghumify/]</div>
+        <div>• [Public GitHub Repository URL]</div>
+        <div>• [Live Deployment URL]</div>
+        <div class="md:col-span-2">• [Verified User Count / Pilot Feedback Metric]</div>
+      </div>
+    </div>
+  )}
 
   <!-- Project Action Buttons -->
   <div class="flex flex-wrap items-center gap-4">

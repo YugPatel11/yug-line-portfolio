@@ -2,12 +2,14 @@
 import type { ProjectItem } from '../data/types';
 import Pictograms from './Pictograms.astro';
 import LineChip from './LineChip.astro';
+import ProjectMediaPlaceholder from './ProjectMediaPlaceholder.astro';
 
 interface Props {
   project: ProjectItem;
 }
 
 const { project } = Astro.props;
+const isDev = import.meta.env.DEV;
 ---
 
 <div
@@ -67,9 +69,14 @@ const { project } = Astro.props;
   <div>
     <!-- Perforation and Verification Slot -->
     <div class="ticket-perforation pt-3 mt-2">
-      <!-- Screenshot Placeholder slot per brief -->
-      <div class="p-2 mb-3 bg-paper border border-dashed border-rule text-[11px] font-mono text-ink-soft text-center">
-        [TODO-USER: Add screenshot for {project.title}]
+      <!-- Designed Media Frame (Rule 12) -->
+      <div class="mb-3">
+        <ProjectMediaPlaceholder
+          title={project.title}
+          pictogram={project.pictogram}
+          techChips={project.techStack}
+          aspectRatio="aspect-[16/7]"
+        />
       </div>
 
       <!-- Action Links -->
@@ -86,19 +93,21 @@ const { project } = Astro.props;
               <Pictograms name="arrow-up-right" size={12} />
             </a>
           ) : (
-            <span class="font-mono text-[11px] text-ink-soft">
-              {project.liveUrl || '[TODO-USER: Live Link]'}
+            <span class="font-mono text-[10px] text-ink-soft uppercase tracking-wider">
+              {isDev ? '[DEV: TODO-USER Live Link]' : 'Demo: Pending'}
             </span>
           )}
 
           {project.repoUrl && (
-            <span class="font-mono text-[11px] text-ink-soft">
-              {project.repoUrl.startsWith('TODO') ? project.repoUrl : (
-                <a href={project.repoUrl} target="_blank" rel="noopener noreferrer" class="hover:underline">
-                  Repo
-                </a>
-              )}
-            </span>
+            project.repoUrl.startsWith('TODO') ? (
+              <span class="font-mono text-[10px] text-ink-soft uppercase tracking-wider">
+                {isDev ? '[DEV: TODO-USER Repo]' : 'Source: Private'}
+              </span>
+            ) : (
+              <a href={project.repoUrl} target="_blank" rel="noopener noreferrer" class="font-mono text-xs text-ink hover:underline">
+                Repo
+              </a>
+            )
           )}
         </div>
 

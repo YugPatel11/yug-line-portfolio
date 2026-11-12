@@ -1,0 +1,48 @@
+---
+import Pictograms from './Pictograms.astro';
+
+interface Props {
+  title: string;
+  pictogram: string;
+  techChips?: string[];
+  aspectRatio?: string;
+}
+
+const {
+  title,
+  pictogram,
+  techChips = [],
+  aspectRatio = 'aspect-[16/9]',
+} = Astro.props;
+
+const isDev = import.meta.env.DEV;
+---
+
+<div class={`w-full ${aspectRatio} bg-paper border border-rule flex flex-col items-center justify-center p-4 relative overflow-hidden text-center select-none`}>
+  {isDev && (
+    <span class="absolute top-2 right-2 font-mono text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 bg-line-hardware text-ink border border-ink">
+      DEV: TODO-USER
+    </span>
+  )}
+
+  <div class="w-10 h-10 border border-rule bg-surface flex items-center justify-center text-ink-soft mb-2">
+    <Pictograms name={pictogram} size={20} />
+  </div>
+
+  <span class="font-mono text-xs font-bold uppercase tracking-wider text-ink">
+    {title}
+  </span>
+  <span class="font-mono text-[10px] text-ink-soft uppercase tracking-wider mt-0.5">
+    System Preview Frame
+  </span>
+
+  {techChips.length > 0 && (
+    <div class="flex flex-wrap justify-center gap-1 mt-2">
+      {techChips.slice(0, 3).map((tech) => (
+        <span class="font-mono text-[9px] uppercase px-1.5 py-0.5 bg-surface border border-rule text-ink-soft">
+          {tech}
+        </span>
+      ))}
+    </div>
+  )}
+</div>
