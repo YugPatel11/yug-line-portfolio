@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <rect width="1200" height="630" fill="#0F1115" />
+  <rect x="40" y="40" width="1120" height="550" fill="#171A20" stroke="#F1EEE6" stroke-width="4" />
+  <rect x="40" y="40" width="1120" height="24" fill="#FF7A52" />
+  
+  <text x="80" y="160" font-family="'IBM Plex Mono', monospace" font-size="24" fill="#B5B1A6" letter-spacing="4">THE YUG LINE // OFFICIAL PORTFOLIO PASS</text>
+  <text x="80" y="270" font-family="'Archivo', sans-serif" font-size="76" font-weight="900" fill="#F1EEE6" letter-spacing="-1">YUG ROJIVADIYA</text>
+  <text x="80" y="340" font-family="'IBM Plex Mono', monospace" font-size="28" fill="#FF7A52">MULTIDISCIPLINARY DEVELOPER</text>
+  <text x="80" y="410" font-family="'Manrope', sans-serif" font-size="26" fill="#B5B1A6">"Builds digital experiences bridging backend logic and smooth UIs."</text>
+  
+  <line x1="80" y1="460" x2="1120" y2="460" stroke="#2B2F38" stroke-width="2" stroke-dasharray="10 10" />
+  
+  <text x="80" y="520" font-family="'IBM Plex Mono', monospace" font-size="20" fill="#F1EEE6">ORIGIN: BACKEND LOGIC  ➔  DESTINATION: SMOOTH UIs</text>
+  <text x="850" y="520" font-family="'IBM Plex Mono', monospace" font-size="20" font-weight="bold" fill="#FFC933">FARE: ₹0 FREE PASS</text>
+</svg>
