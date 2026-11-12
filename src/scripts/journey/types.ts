@@ -1,5 +1,13 @@
 export type JourneyMode = 'journey' | 'express';
 
+export type SimplifiedStep =
+  | 'welcome'
+  | 'choose'
+  | 'ticket'
+  | 'gate'
+  | 'metro'
+  | 'stop';
+
 export type JourneyState =
   | 'welcome'
   | 'concourse'

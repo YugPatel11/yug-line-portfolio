@@ -1,0 +1,137 @@
+---
+import Pictograms from './Pictograms.astro';
+---
+
+<!-- ========================================================
+     STEP 2 OF 3: YOUR TICKET (Calm Boarding Pass Display)
+     Strictly per Section 2 & 5.4:
+     - FROM, TO, DATE, FARE (Free), PNR, small QR code
+     - Destination line colour band
+     - Primary button: Go to the gate →
+     - Secondary button: Choose another stop
+     ======================================================== -->
+<div id="journey-step-ticket" class="w-full max-w-xl mx-auto" style="display: none;">
+  <!-- Progress Header -->
+  <div class="mb-6 p-3 bg-surface border-2 border-ink flex items-center justify-between">
+    <div class="flex items-center gap-2">
+      <span class="w-2.5 h-2.5 rounded-full bg-line-frontend animate-pulse"></span>
+      <span class="font-mono text-xs font-bold uppercase tracking-wider text-ink">
+        Step 2 of 3 · Your ticket
+      </span>
+    </div>
+
+    <!-- 7 Route Dots with Step 2 highlighted -->
+    <div class="flex items-center gap-1.5 sm:gap-2" aria-hidden="true">
+      <span class="w-2.5 h-2.5 rounded-full border border-ink bg-line-frontend"></span>
+      <span class="w-2.5 h-2.5 rounded-full border border-ink bg-line-frontend"></span>
+      {Array.from({ length: 5 }).map(() => (
+        <span class="w-2.5 h-2.5 rounded-full border border-ink bg-paper"></span>
+      ))}
+    </div>
+  </div>
+
+  <div class="text-center mb-6">
+    <h2 id="ticket-step-heading" tabindex="-1" class="font-archivo text-2xl sm:text-3xl font-black text-ink uppercase tracking-tight mb-1 outline-none">
+      Your Boarding Pass
+    </h2>
+    <p class="font-manrope text-sm text-ink-soft">
+      Take your ticket and head to the validation gate.
+    </p>
+  </div>
+
+  <!-- Physical Ticket Card (Notched sides, 6px offset shadow) -->
+  <div
+    id="issued-ticket-card"
+    class="ticket ticket-notched p-6 sm:p-8 bg-surface border-2 border-ink shadow-[6px_6px_0_var(--ink)] mb-8 relative"
+  >
+    <!-- Top Destination Line Band -->
+    <div id="ticket-line-band" class="h-3 w-full bg-line-frontend mb-4"></div>
+
+    <!-- Header Authority -->
+    <div class="flex items-start justify-between gap-4 border-b border-rule pb-4 mb-4">
+      <div>
+        <span class="font-mono text-[10px] text-ink-soft uppercase tracking-wider block">
+          THE YUG LINE // TRANSIT PASS
+        </span>
+        <div id="ticket-destination-title" class="font-archivo text-xl sm:text-2xl font-black text-ink uppercase tracking-tight">
+          GHUMIFY — MY FLAGSHIP PROJECT
+        </div>
+        <span id="ticket-destination-code" class="font-mono text-xs font-bold text-ink-soft">
+          ST-02
+        </span>
+      </div>
+
+      <div class="text-right font-mono flex-shrink-0">
+        <span class="text-[9px] text-ink-soft uppercase block">PNR</span>
+        <span id="ticket-pnr-val" class="text-sm font-bold text-ink tracking-wider">
+          9482019482
+        </span>
+      </div>
+    </div>
+
+    <!-- Essential Meta Grid (FROM, TO, DATE, FARE) -->
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 font-mono text-xs border-b border-rule pb-4 mb-4">
+      <div>
+        <span class="text-[10px] text-ink-soft uppercase block">FROM</span>
+        <span class="font-bold text-ink">CENTRAL (00)</span>
+      </div>
+      <div>
+        <span class="text-[10px] text-ink-soft uppercase block">DATE</span>
+        <span id="ticket-date-val" class="font-bold text-ink">12 NOV 2026</span>
+      </div>
+      <div>
+        <span class="text-[10px] text-ink-soft uppercase block">FARE</span>
+        <span class="font-bold text-emerald-600">Free Pass</span>
+      </div>
+      <div>
+        <span class="text-[10px] text-ink-soft uppercase block">STATUS</span>
+        <span class="font-bold text-ink">Valid</span>
+      </div>
+    </div>
+
+    <!-- QR Code & Deep Link Section -->
+    <div class="flex items-center justify-between gap-4 pt-1">
+      <div class="flex items-center gap-3">
+        <canvas id="ticket-qr-code" width="56" height="56" class="border border-rule bg-paper"></canvas>
+        <div class="font-mono text-[11px] text-ink-soft">
+          <span class="font-bold text-ink block">DEEP LINK QR</span>
+          <span>Instant board</span>
+        </div>
+      </div>
+
+      <span class="font-mono text-xs font-bold text-ink uppercase px-2.5 py-1 bg-paper border border-rule">
+        Coach 01
+      </span>
+    </div>
+  </div>
+
+  <!-- Primary and Secondary Actions -->
+  <div class="space-y-3">
+    <button
+      type="button"
+      id="ticket-proceed-gate-btn"
+      class="btn-stub btn-stub--primary w-full justify-center shadow-[4px_4px_0_var(--ink)]"
+    >
+      <span>Go to the gate →</span>
+      <Pictograms name="arrow-up-right" size={20} />
+    </button>
+
+    <button
+      type="button"
+      id="ticket-change-stop-btn"
+      class="btn-stub w-full !bg-surface !text-ink hover:!bg-paper justify-center"
+    >
+      <span>Choose another stop</span>
+    </button>
+  </div>
+
+  <!-- Skip Link -->
+  <div class="mt-6 text-center">
+    <button
+      type="button"
+      class="day-pass-toggle-btn font-mono text-xs text-ink-soft hover:text-ink underline uppercase tracking-wider"
+    >
+      Skip the metro · see everything
+    </button>
+  </div>
+</div>

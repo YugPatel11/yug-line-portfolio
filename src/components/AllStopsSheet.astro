@@ -1,0 +1,174 @@
+---
+import Pictograms from './Pictograms.astro';
+
+const ALL_STOPS = [
+  { id: 'station-01', code: 'ST-01', title: 'Achievements', desc: 'SIH 2026 Winner & awards' },
+  { id: 'station-02', code: 'ST-02', title: 'Ghumify — my flagship project', desc: 'AI travel planner' },
+  { id: 'station-03', code: 'ST-03', title: 'All projects', desc: '7 production systems' },
+  { id: 'station-04', code: 'ST-04', title: 'Experience', desc: 'Edverb, EBC Club & freelance' },
+  { id: 'station-05', code: 'ST-05', title: 'Skills and tools', desc: 'Technical arsenal' },
+  { id: 'station-06', code: 'ST-06', title: 'Education', desc: 'P P Savani University' },
+  { id: 'station-07', code: 'ST-07', title: 'Contact me', desc: 'Direct channels & socials' },
+];
+---
+
+<!-- ========================================================
+     ALL STOPS SHEET (Plain, Roomy & Beginner-Friendly)
+     Strictly per Section 2 & 5.4:
+     - Shows "Stops visited: X of 7" in plain text
+     - 7 stops with checkmarks for visited
+     - Choosing any stop uses Tap & Go quick jump
+     - Skip the metro · see everything at bottom
+     ======================================================== -->
+<div
+  id="all-stops-sheet"
+  class="fixed inset-0 z-[85] bg-ink/60 flex items-center justify-center p-4 select-none"
+  style="display: none;"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="all-stops-title"
+>
+  <div class="ticket p-6 sm:p-8 max-w-xl w-full bg-paper border-2 border-ink shadow-[8px_8px_0_var(--ink)] max-h-[90vh] overflow-y-auto">
+    <!-- Header -->
+    <div class="flex items-center justify-between border-b-2 border-ink pb-4 mb-4">
+      <div>
+        <h2 id="all-stops-title" class="font-archivo text-2xl font-black text-ink uppercase tracking-tight">
+          All Stops
+        </h2>
+        <p id="all-stops-counter" class="font-mono text-xs font-bold text-line-frontend uppercase mt-1">
+          Stops visited: 1 of 7
+        </p>
+      </div>
+
+      <button
+        type="button"
+        id="all-stops-close-btn"
+        class="px-3 py-1.5 border-2 border-ink bg-surface font-mono text-xs font-bold uppercase text-ink hover:bg-paper transition-colors"
+        aria-label="Close All Stops modal"
+      >
+        Close ✕
+      </button>
+    </div>
+
+    <!-- Instructions -->
+    <p class="font-manrope text-xs sm:text-sm text-ink-soft mb-4">
+      Tap any stop to travel directly using Tap & Go.
+    </p>
+
+    <!-- Stops List -->
+    <div class="space-y-2 mb-6" role="list">
+      {ALL_STOPS.map((stop) => (
+        <button
+          type="button"
+          class="all-stops-jump-btn w-full p-3.5 bg-surface border-2 border-rule hover:border-ink text-left flex items-center justify-between gap-3 transition-all group"
+          data-stop-id={stop.id}
+        >
+          <div class="flex items-center gap-3">
+            <span class="visited-check w-5 h-5 rounded-full border border-rule bg-paper font-mono text-xs font-bold flex items-center justify-center text-emerald-600">
+              ○
+            </span>
+            <div>
+              <div class="font-archivo text-base font-bold text-ink group-hover:text-line-frontend transition-colors">
+                {stop.title}
+              </div>
+              <div class="font-mono text-xs text-ink-soft">
+                {stop.code} · {stop.desc}
+              </div>
+            </div>
+          </div>
+
+          <span class="font-mono text-xs font-bold text-ink group-hover:translate-x-1 transition-transform">
+            ➔
+          </span>
+        </button>
+      ))}
+    </div>
+
+    <!-- Bottom Actions -->
+    <div class="border-t border-rule pt-4 text-center">
+      <button
+        type="button"
+        class="day-pass-toggle-btn font-mono text-xs text-ink-soft hover:text-ink underline uppercase tracking-wider"
+      >
+        Skip the metro · see everything
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const sheet = document.getElementById('all-stops-sheet');
+    const closeBtn = document.getElementById('all-stops-close-btn');
+    const counter = document.getElementById('all-stops-counter');
+    const jumpBtns = document.querySelectorAll('.all-stops-jump-btn');
+
+    const updateVisitedState = () => {
+      let visited: string[] = ['station-00'];
+      try {
+        const stored = localStorage.getItem('yugline_visited');
+        if (stored) visited = JSON.parse(stored);
+      } catch (e) {}
+
+      // Count stops 01 to 07
+      const validStops = ['station-01', 'station-02', 'station-03', 'station-04', 'station-05', 'station-06', 'station-07'];
+      const visitedCount = validStops.filter((s) => visited.includes(s)).length;
+
+      if (counter) {
+        counter.textContent = `Stops visited: ${visitedCount} of 7`;
+      }
+
+      jumpBtns.forEach((btn) => {
+        const id = btn.getAttribute('data-stop-id');
+        const check = btn.querySelector('.visited-check');
+        if (id && visited.includes(id)) {
+          btn.classList.add('border-ink', 'bg-surface');
+          if (check) {
+            check.textContent = '✓';
+            check.classList.add('border-emerald-600', 'bg-emerald-50');
+          }
+        }
+      });
+    };
+
+    // Open sheet triggers
+    const triggers = [
+      document.getElementById('travel-card-btn'),
+      document.getElementById('mobile-all-stops-btn'),
+      document.getElementById('decision-all-stops-btn'),
+    ];
+
+    triggers.forEach((t) => {
+      if (t) {
+        t.addEventListener('click', () => {
+          updateVisitedState();
+          if (sheet) sheet.style.display = 'flex';
+        });
+      }
+    });
+
+    if (closeBtn && sheet) {
+      closeBtn.addEventListener('click', () => {
+        sheet.style.display = 'none';
+      });
+    }
+
+    // Tap & Go Jump Action
+    jumpBtns.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const id = btn.getAttribute('data-stop-id');
+        if (sheet) sheet.style.display = 'none';
+        if (id && (window as any).__yugline) {
+          (window as any).__yugline.navigateToStation(id, true);
+        }
+      });
+    });
+
+    // Close on Escape key
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && sheet && sheet.style.display === 'flex') {
+        sheet.style.display = 'none';
+      }
+    });
+  });
+</script>
