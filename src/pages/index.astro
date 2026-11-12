@@ -63,10 +63,22 @@ const moreProjects = PROJECTS.filter((p) => !p.featured);
         <!-- Day Pass Skip Button (Visible on every journey screen, Section 6) -->
         <button
           type="button"
+          id="day-pass-btn"
           class="day-pass-toggle-btn px-2.5 py-1 bg-surface border border-rule font-mono text-xs text-ink hover:border-ink"
           aria-label="Day Pass — skip the booking"
         >
-          Day Pass — skip booking
+          Day Pass
+        </button>
+
+        <!-- Travel Card Passport Button -->
+        <button
+          type="button"
+          id="travel-card-btn"
+          class="hidden sm:inline-block px-2.5 py-1 bg-surface border border-rule font-mono text-xs text-ink hover:border-ink"
+          aria-label="Open Travel Card"
+          title="Open Travel Card Passport (T)"
+        >
+          CARD: 1/8
         </button>
 
         <button

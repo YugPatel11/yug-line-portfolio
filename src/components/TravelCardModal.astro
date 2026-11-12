@@ -105,6 +105,7 @@ import Pictograms from './Pictograms.astro';
     const modal = document.getElementById('travel-card-modal');
     const closeBtn = document.getElementById('close-travel-card-btn');
     const chip = document.getElementById('travel-card-chip');
+    const headerCardBtn = document.getElementById('travel-card-btn');
     const stampsGrid = document.getElementById('passport-stamps-grid');
     const countDisplay = document.getElementById('modal-stops-count');
     const finaleBanner = document.getElementById('travel-card-finale');
@@ -118,6 +119,10 @@ import Pictograms from './Pictograms.astro';
 
       if (countDisplay) {
         countDisplay.textContent = `${visitedList.length} / 8 STOPS`;
+      }
+
+      if (headerCardBtn) {
+        headerCardBtn.textContent = `CARD: ${visitedList.length}/8`;
       }
 
       document.querySelectorAll('.passport-stamp-cell').forEach((cell) => {
@@ -146,6 +151,15 @@ import Pictograms from './Pictograms.astro';
     if (chip) {
       chip.classList.add('cursor-pointer', 'hover:border-ink');
       chip.addEventListener('click', () => {
+        if (modal) {
+          updateStampsUI();
+          modal.style.display = 'flex';
+        }
+      });
+    }
+
+    if (headerCardBtn) {
+      headerCardBtn.addEventListener('click', () => {
         if (modal) {
           updateStampsUI();
           modal.style.display = 'flex';
