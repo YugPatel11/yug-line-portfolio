@@ -52,3 +52,16 @@ All phases and competition requirements have been implemented and verified:
 - **Total JavaScript (Gzipped)**: ~14 kB (Astro runtime + sound engine + journey machine)
 - **External Network Calls**: 0 (Fully functional offline)
 - **Accessibility Rating**: Passes WCAG 2.1 Level AAA contrast ratios (16.8:1 on day mode, 16.6:1 on night mode).
+
+---
+
+## 4. Experience Overhaul Sign-Off (Phases F1–F6)
+
+| Overhaul Phase | Key Deliverables | Verification | Status |
+| :--- | :--- | :--- | :--- |
+| **F1: Tokens & Labels** | Button tokens (56/64px), destination rows (72px), plain labels, simplified 4-item header | CSS inspect & test suite | ✅ VERIFIED |
+| **F2: Simplified Steps** | Full-screen Welcome with audio consent, Step 1 Choose a stop, Step 2 Your ticket, All stops sheet | Flow walkthrough & QR checks | ✅ VERIFIED |
+| **F3: Gate Swipe Rail** | Horizontal swipe rail (>80% drag threshold) & accessible Scan ticket button | Pointer drag & keyboard scan | ✅ VERIFIED |
+| **F4: Cinematic Metro** | 100dvh 4-layer stage, 4-car train, Car 2 center door alignment, "Board the metro →" button, departure reveal, reduced motion | WAAPI & CSS transform checks | ✅ VERIFIED |
+| **F5: Spatial Sound Engine** | Web Audio stereo panner (left -> center -> right), rumble, brake squeal, chime, beeps, motor whine | AudioContext synthesis tests | ✅ VERIFIED |
+| **F6: Polish & Accessibility** | Slim top bar, fixed bottom decision bar (Next, Back, All stops), live announcer, automated audit | `npm test` & Lighthouse targets | ✅ VERIFIED |

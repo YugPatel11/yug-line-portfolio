@@ -55,27 +55,34 @@ npm run preview
 
 ## Technical Architecture & Highlights
 
-### 1. Dual-Mode Progressive Enhancement
-- **Express Mode (Default/No-JS)**: Semantic, fully accessible single-page layout where all 8 stations are laid out along a vertical transit line. If JavaScript is disabled, 100% of portfolio content, links, and documents remain directly readable.
-- **Journey Mode (Interactive)**: Activated via typed state machine (`src/scripts/journey/machine.ts`). The visitor purchases a station boarding pass at the concourse window, validates it at the turnstile gate, boards a 3-car metro train, and arrives at the station with decision controls to navigate forward or return to base.
-- **Day Pass Skip**: Available on every screen (top navigation and scene overlays), allowing immediate switching back to Express Mode.
+### 1. Dual-Mode Progressive Enhancement & Simplified Journey
+- **Express Mode (No-JS / Skip View)**: Semantic, accessible single-page layout where all 8 stations are laid out along a vertical transit line with generous spacing and sticky station links. If JavaScript is disabled or "Skip the metro · see everything" is chosen, 100% of portfolio content, links, and documents remain directly readable.
+- **Simplified Journey Flow**:
+  - **Step 0 · Welcome (Full Screen)**: Explicit sound choice (`Enter with sound` or `Enter without sound`), unlocks Web Audio context on user gesture.
+  - **Step 1 · Choose a Stop**: Replaces crowded concourse; 40% passenger bio + 60% 7 roomy destination buttons (Achievements, Ghumify, All projects, Experience, Skills & tools, Education, Contact).
+  - **Step 2 · Your Ticket**: Calm boarding pass showing FROM, TO, DATE, FARE (Free), PNR, and small QR code.
+  - **Step 3 · Scan Your Ticket**: Visible horizontal swipe rail (drag >80% to validate) plus prominent `Scan ticket` button.
+  - **Step 4 · Full-Screen Cinematic Metro**: 100dvh 4-layer stage (far wall tiles, pillars, tactile platform edge, 4-car SVG train with warm interior, centred `Board the metro →` button, departure reveal).
+  - **Step 5 · The Stop**: Slim top bar ("You are at: Projects · Stop 3 of 7") and fixed bottom bar (`Next: X →`, `Back to start`, `All stops`).
+- **All Stops Sheet**: Roomy slide-over panel showing "Stops visited: X of 7" with instant Tap & Go jumps.
 
-### 2. Zero-File Web Audio Synthesizer
-- Built without any external audio asset files or network requests (`src/scripts/sound.ts`).
-- Synthesizes realistic transit mechanical feedback:
-  - Dot-matrix ticket printer noise bursts
-  - High-frequency validation beeps
-  - Gate solenoid thumps & pleasant two-tone chimes
-  - Train motor hums and arrival door-open chimes
-- Default state: **Muted/OFF** (user opt-in via header button or pressing `S`).
+### 2. Spatial Web Audio Transit Synthesizer (`src/scripts/sound/metroSound.ts`)
+- Pure zero-file synthesizer with stereo panning and dynamic compressor limiting:
+  - Approach: low rumble (brown noise through 180–400Hz filter panned left to centre) and rail clatter ticks.
+  - Braking: brake squeal (bandpass noise 2.6kHz → 900Hz) and pneumatic air hiss.
+  - Stopped: door slide whoosh and two-tone ding-dong chime (880Hz then 660Hz sine decay).
+  - Waiting: quiet 60Hz station hum loop.
+  - Boarding: three 1kHz door-closing beeps (90ms each) and door thump.
+  - Departure: rising motor inverter whine (sawtooth lowpass rising pitch) and accelerating wheel clatter ticks panned centre to right.
+- Optional audio file fallback: If `public/audio/metro-arrive.mp3`, `metro-doors.mp3`, or `metro-depart.mp3` are placed in `public/audio/`, the engine seamlessly plays them; otherwise it synthesizes everything offline.
 
 ### 3. Keyboard Navigation Shortcuts
-- `D`: Toggle Day Pass (Journey Mode / Express Mode)
+- `D`: Toggle "Skip the metro · see everything" (Journey Mode / Express Mode)
 - `M`: Toggle Reduced Motion
 - `S`: Toggle Transit Sound Effects
-- `T`: Open Travel Card Passport modal
-- `1` - `8`: Quick-board to Stations 00 through 07
-- `Escape`: Close modals and overlays
+- `T`: Open "All stops" sheet
+- `1` - `8`: Quick-board to Stops 00 through 07
+- `Escape`: Close open modals and overlays
 
 ---
 
