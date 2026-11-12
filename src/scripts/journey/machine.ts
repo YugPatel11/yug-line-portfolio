@@ -436,9 +436,3 @@ export class JourneyStateMachine {
   }
 }
 
-// Global initialization
-if (typeof window !== 'undefined') {
-  document.addEventListener('DOMContentLoaded', () => {
-    (window as any).__yugline = new JourneyStateMachine();
-  });
-}

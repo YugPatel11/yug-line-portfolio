@@ -110,17 +110,6 @@ class MetroSoundEngine {
     this.initContext();
     if (!this.ctx || !this.masterGain) return;
 
-    // Optional audio file check (Section 4.5)
-    try {
-      const res = await fetch('/audio/metro-arrive.mp3', { method: 'HEAD' });
-      if (res.ok) {
-        const audio = new Audio('/audio/metro-arrive.mp3');
-        audio.volume = 0.6;
-        audio.play().catch(() => {});
-        return;
-      }
-    } catch (e) {}
-
     const now = this.ctx.currentTime;
 
     // Stereo Panner (Pan left -0.8 -> centre 0.0 over 2 seconds)
@@ -364,17 +353,6 @@ class MetroSoundEngine {
     if (!this.enabled) return;
     this.initContext();
     if (!this.ctx || !this.masterGain) return;
-
-    // Optional audio file check (Section 4.5)
-    try {
-      const res = await fetch('/audio/metro-depart.mp3', { method: 'HEAD' });
-      if (res.ok) {
-        const audio = new Audio('/audio/metro-depart.mp3');
-        audio.volume = 0.6;
-        audio.play().catch(() => {});
-        return;
-      }
-    } catch (e) {}
 
     const now = this.ctx.currentTime;
 

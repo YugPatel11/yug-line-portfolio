@@ -5,13 +5,13 @@ import Pictograms from './Pictograms.astro';
 <!-- ========================================================
      STEP 4: FULL-SCREEN CINEMATIC METRO SCENE
      Strictly per Section 3:
-     - 100dvh fixed overlay above everything (z-index 90)
-     - 4 layers: Far wall, Mid pillars, Platform floor, 4-car train
-     - Horizon line at ~70% of screen height
+     - Fixed full-screen overlay above everything (z-index 90)
+     - 4 layers: Far wall, Mid pillars, Train on tracks, Platform floor
+     - Horizon line at ~72% of viewport height (28% platform floor)
      - Dynamic viewport-calculated train motion (zero clipping)
      - Car 2 center doors align precisely with screen center
      - Train deceleration with pitch settle, speed streaks fading
-     - Door open revealing warm interior (#FFD98A)
+     - Double doors slide open revealing warm interior (#FFD98A)
      - Centred "Board the metro →" button over car 2 centre door
      - Departure rightward with page reveal behind tail (~0.9s)
      - Reduced motion calm card fallback
@@ -19,14 +19,14 @@ import Pictograms from './Pictograms.astro';
      ======================================================== -->
 <div
   id="metro-cinematic-stage"
-  class="fixed inset-0 z-[90] bg-paper overflow-hidden select-none"
-  style="display: none; height: 100dvh;"
+  class="fixed inset-0 z-[90] bg-paper overflow-hidden select-none w-full h-full"
+  style="display: none;"
   role="dialog"
   aria-modal="true"
   aria-label="Metro arrival and boarding"
 >
   <!-- Stage Top Controls Bar -->
-  <div class="absolute top-0 left-0 right-0 z-30 p-4 sm:p-6 flex items-center justify-between pointer-events-auto">
+  <div class="absolute top-0 left-0 right-0 z-40 p-4 sm:p-6 flex items-center justify-between pointer-events-auto">
     <!-- Sound Toggle with Full Text (Section 4.2) -->
     <button
       type="button"
@@ -51,8 +51,7 @@ import Pictograms from './Pictograms.astro';
   <!-- LAYER 1: FAR WALL (Tile grid & subtle destination signs) -->
   <div
     id="layer-far-wall"
-    class="absolute inset-0 z-10 pointer-events-none transition-transform duration-700 ease-out"
-    style="background-color: var(--paper);"
+    class="absolute inset-0 z-10 pointer-events-none transition-transform duration-700 ease-out bg-paper"
   >
     <!-- Tile Grid Lines -->
     <div
@@ -63,7 +62,7 @@ import Pictograms from './Pictograms.astro';
     <!-- Repeating Destination Names at Low Contrast (<=10% diff) -->
     <div
       id="metro-wall-watermark"
-      class="absolute top-[18%] left-0 right-0 text-center font-archivo font-black text-5xl sm:text-7xl lg:text-9xl uppercase tracking-tighter opacity-[0.08] text-ink select-none whitespace-nowrap overflow-hidden"
+      class="absolute top-[16%] left-0 right-0 text-center font-archivo font-black text-5xl sm:text-7xl lg:text-9xl uppercase tracking-tighter opacity-[0.08] text-ink select-none whitespace-nowrap overflow-hidden"
     >
       NEXT STOP // THE YUG LINE // TRANSIT
     </div>
@@ -88,23 +87,23 @@ import Pictograms from './Pictograms.astro';
       <div class="w-8 sm:w-12 h-full bg-surface border-x-2 border-ink shadow-[4px_0_0_rgba(0,0,0,0.1)]"></div>
     </div>
 
-    <!-- Hanging Blade Sign (Line colour band & stop code) -->
-    <div class="absolute top-16 left-1/2 -translate-x-1/2 z-20 ticket p-3 bg-surface border-2 border-ink shadow-[4px_4px_0_var(--ink)] flex items-center gap-3">
-      <div id="blade-sign-band" class="w-2.5 h-8 bg-line-frontend"></div>
+    <!-- Hanging Blade Sign (Positioned comfortably below top bar) -->
+    <div class="absolute top-20 sm:top-24 left-1/2 -translate-x-1/2 z-20 ticket p-3 sm:p-4 bg-surface border-2 border-ink shadow-[4px_4px_0_var(--ink)] flex items-center gap-3">
+      <div id="blade-sign-band" class="w-3 h-10 bg-line-frontend"></div>
       <div class="font-mono text-left">
-        <div id="blade-sign-code" class="text-[10px] text-ink-soft uppercase font-bold">PLATFORM 1 // ST-02</div>
-        <div id="blade-sign-title" class="font-archivo text-sm sm:text-base font-black text-ink uppercase">GHUMIFY INTERCHANGE</div>
+        <div id="blade-sign-code" class="text-xs text-ink-soft uppercase font-bold">PLATFORM 1 // ST-02</div>
+        <div id="blade-sign-title" class="font-archivo text-base sm:text-lg font-black text-ink uppercase">GHUMIFY INTERCHANGE</div>
       </div>
     </div>
   </div>
 
-  <!-- LAYER 4: THE 4-CAR METRO TRAIN (Stands on Track at Horizon 70%) -->
+  <!-- LAYER 4: THE 4-CAR METRO TRAIN (Stands on Track at Horizon ~72%) -->
   <div
     id="layer-train-track"
-    class="absolute left-0 right-0 z-20 flex items-end pointer-events-auto"
-    style="bottom: 28%; height: clamp(150px, 34vh, 380px);"
+    class="absolute inset-x-0 z-20 flex items-end overflow-hidden pointer-events-auto"
+    style="bottom: 28%; height: clamp(140px, 32vh, 320px);"
   >
-    <!-- Flat Horizontal Speed Streaks (brake & acceleration) -->
+    <!-- Flat Horizontal Speed Streaks -->
     <div
       id="metro-speed-streaks"
       class="absolute inset-x-0 top-1/2 -translate-y-1/2 h-16 pointer-events-none overflow-hidden opacity-0 transition-opacity duration-300"
@@ -117,15 +116,16 @@ import Pictograms from './Pictograms.astro';
     <!-- 4-Car Custom SVG Metro Train Container (Dynamically positioned via WAAPI) -->
     <div
       id="metro-train-wrapper"
-      class="flex items-end select-none will-change-transform"
+      class="h-full flex items-end select-none will-change-transform"
       style="transform: translate3d(-3000px, 0, 0);"
     >
       <svg
         id="metro-four-car-svg"
         viewBox="0 0 1600 240"
-        class="h-full w-auto select-none"
+        class="h-full w-auto select-none pointer-events-none"
         xmlns="http://www.w3.org/2000/svg"
         aria-hidden="true"
+        preserveAspectRatio="xMinYMax meet"
       >
         <defs>
           <!-- Middle Car Unit (360 wide, center door at x=180) -->
@@ -255,10 +255,10 @@ import Pictograms from './Pictograms.astro';
     </div>
   </div>
 
-  <!-- LAYER 3: PLATFORM FLOOR (In front of train wheels, Horizon 70%) -->
+  <!-- LAYER 3: PLATFORM FLOOR (In front of train wheels, Horizon ~72%) -->
   <div
     id="layer-platform-floor"
-    class="absolute inset-x-0 bottom-0 z-25 transition-transform duration-700 ease-out border-t-4 border-ink"
+    class="absolute inset-x-0 bottom-0 z-25 border-t-4 border-ink pointer-events-none"
     style="height: 28%; background-color: var(--surface);"
   >
     <!-- Tactile Yellow Safety Line with Tactile Dots -->
@@ -286,12 +286,12 @@ import Pictograms from './Pictograms.astro';
   <div
     id="metro-board-btn-container"
     class="absolute left-1/2 -translate-x-1/2 z-35 opacity-0 pointer-events-none transition-all duration-300 flex flex-col items-center gap-2"
-    style="bottom: clamp(22%, 29vh, 32%);"
+    style="bottom: calc(28% + 16px);"
   >
     <button
       type="button"
       id="board-the-metro-btn"
-      class="btn-stub btn-stub--primary !min-h-[60px] sm:!min-h-[64px] !px-8 text-base sm:text-xl font-black justify-center shadow-[6px_6px_0_var(--ink)] animate-pulse"
+      class="btn-stub btn-stub--primary !min-h-[56px] sm:!min-h-[64px] !px-8 text-base sm:text-xl font-black justify-center shadow-[6px_6px_0_var(--ink)] animate-pulse"
       aria-label="Board the metro"
     >
       <span>Board the metro →</span>
@@ -351,6 +351,7 @@ import Pictograms from './Pictograms.astro';
 
     let currentDestination: StationCode = 'station-02';
     let isBoarding = false;
+    let isLaunching = false;
     let idleTimer: any = null;
     let doorsTimer: any = null;
     let currentAnim: Animation | null = null;
@@ -383,18 +384,15 @@ import Pictograms from './Pictograms.astro';
     // SVG viewBox: 1600 x 240.
     // Car 2 center door is at x = 580 in SVG coordinates (Car 2 starts at 400 + 180 center door = 580).
     const calculatePositions = () => {
-      const svgEl = document.getElementById('metro-four-car-svg');
       const trackEl = document.getElementById('layer-train-track');
       const viewportWidth = window.innerWidth;
 
-      let renderedHeight = 240;
-      if (svgEl && svgEl.clientHeight > 0) {
-        renderedHeight = svgEl.clientHeight;
-      } else if (trackEl && trackEl.clientHeight > 0) {
-        renderedHeight = trackEl.clientHeight;
+      let trackHeight = 200;
+      if (trackEl && trackEl.getBoundingClientRect().height > 0) {
+        trackHeight = trackEl.getBoundingClientRect().height;
       }
 
-      const scale = renderedHeight / 240;
+      const scale = trackHeight / 240;
       const totalTrainWidth = 1600 * scale;
       const car2CenterDoorOffset = 580 * scale;
 
@@ -402,10 +400,10 @@ import Pictograms from './Pictograms.astro';
       const stopX = Math.round((viewportWidth / 2) - car2CenterDoorOffset);
 
       // Start position: Train begins fully off-screen left
-      const startX = Math.round(-totalTrainWidth - 120);
+      const startX = Math.round(-totalTrainWidth - 150);
 
       // Depart position: Train exits fully off-screen right
-      const departX = Math.round(viewportWidth + 120);
+      const departX = Math.round(viewportWidth + 150);
 
       return { scale, totalTrainWidth, car2CenterDoorOffset, startX, stopX, departX };
     };
@@ -439,6 +437,10 @@ import Pictograms from './Pictograms.astro';
 
     // Main Cinematic Execution Function
     const launchMetro = (destinationId: string) => {
+      if (isLaunching) return;
+      isLaunching = true;
+      setTimeout(() => { isLaunching = false; }, 800);
+
       currentDestination = destinationId as StationCode;
       isBoarding = false;
       clearTimeout(idleTimer);
@@ -446,6 +448,9 @@ import Pictograms from './Pictograms.astro';
       if (currentAnim) currentAnim.cancel();
 
       if (!stage) return;
+
+      // Scroll window to top so layout is anchored
+      window.scrollTo(0, 0);
 
       updateSignage(currentDestination);
 
