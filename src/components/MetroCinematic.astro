@@ -1,0 +1,532 @@
+---
+import Pictograms from './Pictograms.astro';
+---
+
+<!-- ========================================================
+     STEP 4: FULL-SCREEN CINEMATIC METRO SCENE
+     Strictly per Section 3:
+     - 100dvh fixed overlay above everything (z-index 90)
+     - 4 layers: Far wall, Mid pillars, Platform floor, 4-car train
+     - Horizon line at ~70% of screen height
+     - Train deceleration with pitch settle, speed streaks fading
+     - Door open revealing warm interior (#FFD98A)
+     - Centred "Board the metro →" button over car 2 centre door
+     - Departure rightward with page reveal behind tail (~0.9s)
+     - Reduced motion calm card fallback
+     - Zero external libraries, high-performance WAAPI/CSS
+     ======================================================== -->
+<div
+  id="metro-cinematic-stage"
+  class="fixed inset-0 z-[90] bg-paper overflow-hidden select-none"
+  style="display: none; height: 100dvh;"
+  role="dialog"
+  aria-modal="true"
+  aria-label="Metro arrival and boarding"
+>
+  <!-- Stage Top Controls Bar -->
+  <div class="absolute top-0 left-0 right-0 z-30 p-4 sm:p-6 flex items-center justify-between pointer-events-auto">
+    <!-- Sound Toggle with Full Text (Section 4.2) -->
+    <button
+      type="button"
+      id="metro-stage-sound-toggle"
+      class="px-3 py-1.5 border-2 border-ink bg-surface text-ink font-mono text-xs font-bold uppercase hover:bg-paper transition-colors shadow-[2px_2px_0_var(--ink)]"
+      aria-label="Toggle Sound"
+    >
+      <span id="metro-stage-sound-label">Sound: Off</span>
+    </button>
+
+    <!-- Skip Animation Button (Section 3.2) -->
+    <button
+      type="button"
+      id="metro-stage-skip-btn"
+      class="px-3 py-1.5 border-2 border-ink bg-ink text-paper font-mono text-xs font-bold uppercase hover:opacity-90 transition-opacity shadow-[2px_2px_0_var(--paper)]"
+      aria-label="Skip animation"
+    >
+      Skip animation ➔
+    </button>
+  </div>
+
+  <!-- LAYER 1: FAR WALL (Tile grid & subtle destination signs) -->
+  <div
+    id="layer-far-wall"
+    class="absolute inset-0 z-10 pointer-events-none transition-transform duration-700 ease-out"
+    style="background-color: var(--paper);"
+  >
+    <!-- Tile Grid Lines -->
+    <div
+      class="absolute inset-0 opacity-20"
+      style="background-image: linear-gradient(to right, var(--rule) 1px, transparent 1px), linear-gradient(to bottom, var(--rule) 1px, transparent 1px); background-size: 80px 80px;"
+    ></div>
+
+    <!-- Repeating Destination Names at Low Contrast (<=10% diff) -->
+    <div
+      id="metro-wall-watermark"
+      class="absolute top-[18%] left-0 right-0 text-center font-archivo font-black text-6xl sm:text-8xl lg:text-9xl uppercase tracking-tighter opacity-[0.08] text-ink select-none whitespace-nowrap overflow-hidden"
+    >
+      NEXT STOP // THE YUG LINE // TRANSIT
+    </div>
+
+    <!-- Ceiling Lights Row -->
+    <div class="absolute top-0 left-0 right-0 h-10 flex items-center justify-around px-8 opacity-40">
+      {Array.from({ length: 12 }).map(() => (
+        <div class="w-16 h-2 bg-surface border border-rule"></div>
+      ))}
+    </div>
+  </div>
+
+  <!-- LAYER 2: MID PILLARS & OVERHEAD SIGN -->
+  <div
+    id="layer-mid-pillars"
+    class="absolute inset-0 z-15 pointer-events-none transition-transform duration-700 ease-out"
+  >
+    <!-- Architectural Pillars every ~480px -->
+    <div class="absolute inset-0 flex justify-between px-6 sm:px-16 pointer-events-none">
+      <div class="w-8 sm:w-12 h-full bg-surface border-x-2 border-ink shadow-[4px_0_0_rgba(0,0,0,0.1)]"></div>
+      <div class="w-8 sm:w-12 h-full bg-surface border-x-2 border-ink shadow-[4px_0_0_rgba(0,0,0,0.1)] hidden md:block"></div>
+      <div class="w-8 sm:w-12 h-full bg-surface border-x-2 border-ink shadow-[4px_0_0_rgba(0,0,0,0.1)]"></div>
+    </div>
+
+    <!-- Hanging Blade Sign (Line colour band & stop code) -->
+    <div class="absolute top-16 left-1/2 -translate-x-1/2 z-20 ticket p-3 bg-surface border-2 border-ink shadow-[4px_4px_0_var(--ink)] flex items-center gap-3">
+      <div id="blade-sign-band" class="w-2.5 h-8 bg-line-frontend"></div>
+      <div class="font-mono text-left">
+        <div id="blade-sign-code" class="text-[10px] text-ink-soft uppercase font-bold">PLATFORM 1 // ST-02</div>
+        <div id="blade-sign-title" class="font-archivo text-sm sm:text-base font-black text-ink uppercase">GHUMIFY INTERCHANGE</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LAYER 4: THE 4-CAR METRO TRAIN (Stands on Track at Horizon 70%) -->
+  <div
+    id="layer-train-track"
+    class="absolute left-0 right-0 z-20 flex items-end pointer-events-auto"
+    style="bottom: 28%; height: clamp(150px, 34vh, 380px);"
+  >
+    <!-- Flat Horizontal Speed Streaks (brake & acceleration) -->
+    <div
+      id="metro-speed-streaks"
+      class="absolute inset-x-0 top-1/2 -translate-y-1/2 h-16 pointer-events-none overflow-hidden opacity-0 transition-opacity duration-300"
+    >
+      <div class="w-full h-1 bg-ink opacity-40 mb-2 transform -translate-x-12"></div>
+      <div class="w-3/4 h-1.5 bg-line-frontend opacity-60 mb-2 transform translate-x-24"></div>
+      <div class="w-full h-1 bg-ink opacity-30 transform -translate-x-8"></div>
+    </div>
+
+    <!-- 4-Car Custom SVG Metro Train Container (Animated with translate3d) -->
+    <div
+      id="metro-train-wrapper"
+      class="flex items-end select-none will-change-transform"
+      style="transform: translate3d(-100vw, 0, 0);"
+    >
+      <svg
+        id="metro-four-car-svg"
+        viewBox="0 0 1600 240"
+        class="h-full w-auto select-none"
+        xmlns="http://www.w3.org/2000/svg"
+        aria-hidden="true"
+      >
+        <defs>
+          <!-- Middle Car Symbol -->
+          <g id="metro-car-unit">
+            <!-- Car Body -->
+            <rect x="0" y="24" width="360" height="175" rx="8" fill="var(--surface)" stroke="var(--ink)" stroke-width="3" />
+            
+            <!-- AC Roof Enclosures -->
+            <rect x="40" y="8" width="80" height="16" rx="3" fill="var(--paper)" stroke="var(--ink)" stroke-width="2" />
+            <rect x="240" y="8" width="80" height="16" rx="3" fill="var(--paper)" stroke="var(--ink)" stroke-width="2" />
+
+            <!-- Destination Livery Stripe -->
+            <rect class="car-livery-stripe" x="0" y="152" width="360" height="12" fill="var(--line-frontend)" stroke="var(--ink)" stroke-width="1.5" />
+            <rect x="0" y="164" width="360" height="8" fill="var(--ink)" />
+
+            <!-- Underframe & Lower Skirt -->
+            <rect x="10" y="199" width="340" height="16" fill="var(--ink)" />
+
+            <!-- Bogies and Steel Wheels -->
+            <circle cx="70" cy="222" r="16" fill="var(--ink)" />
+            <circle cx="70" cy="222" r="8" fill="var(--paper)" stroke="var(--ink)" stroke-width="2" />
+            <circle cx="120" cy="222" r="16" fill="var(--ink)" />
+            <circle cx="120" cy="222" r="8" fill="var(--paper)" stroke="var(--ink)" stroke-width="2" />
+            <line x1="50" y1="222" x2="140" y2="222" stroke="var(--ink)" stroke-width="5" />
+
+            <circle cx="240" cy="222" r="16" fill="var(--ink)" />
+            <circle cx="240" cy="222" r="8" fill="var(--paper)" stroke="var(--ink)" stroke-width="2" />
+            <circle cx="290" cy="222" r="16" fill="var(--ink)" />
+            <circle cx="290" cy="222" r="8" fill="var(--paper)" stroke="var(--ink)" stroke-width="2" />
+            <line x1="220" y1="222" x2="310" y2="222" stroke="var(--ink)" stroke-width="5" />
+
+            <!-- Windows (Black glass with diagonal reflection bars) -->
+            <g>
+              <rect x="25" y="44" width="70" height="60" rx="4" fill="#111111" />
+              <line x1="38" y1="48" x2="52" y2="98" stroke="#ffffff" stroke-width="2.5" opacity="0.3" />
+              <line x1="48" y1="48" x2="62" y2="98" stroke="#ffffff" stroke-width="1.5" opacity="0.2" />
+
+              <rect x="145" y="44" width="70" height="60" rx="4" fill="#111111" />
+              <line x1="158" y1="48" x2="172" y2="98" stroke="#ffffff" stroke-width="2.5" opacity="0.3" />
+              <line x1="168" y1="48" x2="182" y2="98" stroke="#ffffff" stroke-width="1.5" opacity="0.2" />
+
+              <rect x="265" y="44" width="70" height="60" rx="4" fill="#111111" />
+              <line x1="278" y1="48" x2="292" y2="98" stroke="#ffffff" stroke-width="2.5" opacity="0.3" />
+              <line x1="288" y1="48" x2="302" y2="98" stroke="#ffffff" stroke-width="1.5" opacity="0.2" />
+            </g>
+
+            <!-- Warm Interior Light Behind Doors (#FFD98A) with Silhouettes -->
+            <g class="door-interior-slot" transform="translate(100, 40)">
+              <rect x="0" y="0" width="50" height="154" fill="#FFD98A" />
+              <!-- Handrail & Passenger Silhouette -->
+              <line x1="25" y1="0" x2="25" y2="154" stroke="var(--ink)" stroke-width="2" />
+              <circle cx="25" cy="50" r="10" fill="var(--ink)" opacity="0.8" />
+              <rect x="15" y="65" width="20" height="50" rx="4" fill="var(--ink)" opacity="0.8" />
+            </g>
+
+            <!-- Sliding Doors (Left & Right leaves) -->
+            <g class="sliding-door-leaves">
+              <!-- Left Leaf -->
+              <rect class="door-leaf-left" x="98" y="38" width="27" height="158" fill="var(--surface)" stroke="var(--ink)" stroke-width="2" rx="2" style="transition: transform 0.5s ease-out;" />
+              <!-- Right Leaf -->
+              <rect class="door-leaf-right" x="125" y="38" width="27" height="158" fill="var(--surface)" stroke="var(--ink)" stroke-width="2" rx="2" style="transition: transform 0.5s ease-out;" />
+              <line class="door-seam" x1="125" y1="38" x2="125" y2="196" stroke="var(--ink)" stroke-width="2" />
+            </g>
+          </g>
+
+          <!-- Accordion Gangway Bellows -->
+          <g id="accordion-gangway">
+            <rect x="0" y="36" width="30" height="150" fill="#15171C" stroke="var(--ink)" stroke-width="2" />
+            <line x1="8" y1="36" x2="8" y2="186" stroke="#333" stroke-width="2" />
+            <line x1="15" y1="36" x2="15" y2="186" stroke="#222" stroke-width="2" />
+            <line x1="22" y1="36" x2="22" y2="186" stroke="#333" stroke-width="2" />
+          </g>
+        </defs>
+
+        <!-- Rail Track -->
+        <line x1="0" y1="238" x2="1600" y2="238" stroke="var(--ink)" stroke-width="4" />
+
+        <!-- CAR 1: Lead Nose Car -->
+        <g id="train-car-1" transform="translate(10, 0)">
+          <use href="#metro-car-unit" />
+          <!-- Aerodynamic Cab Nose on left -->
+          <path d="M 0 32 Q -35 80 0 199 Z" fill="var(--surface)" stroke="var(--ink)" stroke-width="3" />
+          <!-- Amber Dot-Matrix Destination Header -->
+          <rect x="40" y="32" width="130" height="16" fill="#111111" rx="2" stroke="var(--ink)" stroke-width="1.5" />
+          <text id="train-cab-dest-text" x="105" y="44" font-family="'IBM Plex Mono', monospace" font-size="9" fill="#FFB000" font-weight="bold" text-anchor="middle">ST-02 GHUMIFY</text>
+          <!-- Flat Headlights -->
+          <circle cx="-16" cy="150" r="8" fill="#FFC933" stroke="var(--ink)" stroke-width="2" />
+          <circle cx="-16" cy="150" r="4" fill="#ffffff" />
+        </g>
+
+        <!-- Gangway 1-2 -->
+        <use href="#accordion-gangway" x="370" y="0" />
+
+        <!-- CAR 2: Centre Passenger Car (Aligns with Centre of Viewport!) -->
+        <g id="train-car-2" transform="translate(400, 0)">
+          <use href="#metro-car-unit" />
+          <!-- Car 2 Centre Badge -->
+          <rect x="160" y="172" width="40" height="14" fill="var(--paper)" stroke="var(--ink)" stroke-width="1.5" />
+          <text x="180" y="183" font-family="'IBM Plex Mono', monospace" font-size="9" fill="var(--ink)" font-weight="bold" text-anchor="middle">CAR 02</text>
+        </g>
+
+        <!-- Gangway 2-3 -->
+        <use href="#accordion-gangway" x="760" y="0" />
+
+        <!-- CAR 3: Passenger Car -->
+        <g id="train-car-3" transform="translate(790, 0)">
+          <use href="#metro-car-unit" />
+        </g>
+
+        <!-- Gangway 3-4 -->
+        <use href="#accordion-gangway" x="1150" y="0" />
+
+        <!-- CAR 4: Trailing Tail Car -->
+        <g id="train-car-4" transform="translate(1180, 0)">
+          <use href="#metro-car-unit" />
+          <!-- Tail Lights -->
+          <circle cx="365" cy="150" r="6" fill="#D8362B" stroke="var(--ink)" stroke-width="2" />
+        </g>
+      </svg>
+    </div>
+
+    <!-- Centred "Board the metro →" Button (Mounted over Car 2 Centre Doors) -->
+    <div
+      id="metro-board-btn-container"
+      class="absolute left-1/2 -translate-x-1/2 bottom-8 z-30 opacity-0 pointer-events-none transition-all duration-300 flex flex-col items-center gap-2"
+    >
+      <button
+        type="button"
+        id="board-the-metro-btn"
+        class="btn-stub btn-stub--primary !min-h-[64px] !px-8 text-lg sm:text-xl font-black justify-center shadow-[6px_6px_0_var(--ink)] animate-pulse"
+        aria-label="Board the metro"
+      >
+        <span>Board the metro →</span>
+      </button>
+
+      <!-- 6s Idle Hint -->
+      <span id="board-idle-hint" class="font-mono text-xs text-ink-soft bg-paper/90 px-3 py-1 border border-ink hidden">
+        Press to board.
+      </span>
+    </div>
+  </div>
+
+  <!-- LAYER 3: PLATFORM FLOOR (In front of train wheels, Horizon 70%) -->
+  <div
+    id="layer-platform-floor"
+    class="absolute inset-x-0 bottom-0 z-25 transition-transform duration-700 ease-out border-t-4 border-ink"
+    style="height: 28%; background-color: var(--surface);"
+  >
+    <!-- Tactile Yellow Safety Line with Tactile Dots -->
+    <div class="w-full h-8 bg-line-hardware border-b-2 border-ink flex items-center justify-around px-4">
+      {Array.from({ length: 24 }).map(() => (
+        <span class="w-2.5 h-2.5 rounded-full bg-ink inline-block opacity-80"></span>
+      ))}
+    </div>
+
+    <!-- Amber LED Station Ticker Board -->
+    <div class="max-w-md mx-auto mt-4 px-4 py-2 bg-[#111111] border-2 border-ink flex items-center justify-between font-mono text-xs text-[#FFB000]">
+      <span class="animate-pulse">● SERVICE 01</span>
+      <span id="metro-platform-ticker" class="font-bold tracking-widest uppercase">TRAIN APPROACHING</span>
+      <span>PLATFORM 1</span>
+    </div>
+
+    <!-- Floor Paver Seams -->
+    <div
+      class="w-full h-full opacity-15"
+      style="background-image: linear-gradient(to right, var(--ink) 1px, transparent 1px); background-size: 160px 100%;"
+    ></div>
+  </div>
+
+  <!-- REDUCED-MOTION CALM CARD (Section 3.8) -->
+  <div
+    id="metro-reduced-card"
+    class="hidden absolute inset-0 z-40 bg-paper p-6 sm:p-12 flex-col items-center justify-center text-center"
+  >
+    <div class="ticket p-8 max-w-lg w-full bg-surface border-2 border-ink shadow-[8px_8px_0_var(--ink)]">
+      <div class="font-mono text-xs text-ink-soft uppercase tracking-wider mb-2">
+        // SERVICE READY //
+      </div>
+      <h2 id="reduced-card-title" class="font-archivo text-3xl font-black text-ink uppercase mb-2">
+        Your train is here.
+      </h2>
+      <p id="reduced-card-desc" class="font-manrope text-base text-ink-soft mb-6">
+        Doors are open on Platform 1.
+      </p>
+      <button
+        type="button"
+        id="reduced-board-btn"
+        class="btn-stub btn-stub--primary w-full justify-center shadow-[4px_4px_0_var(--ink)]"
+      >
+        <span>Board the metro →</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { metroSound } from '../scripts/sound/metroSound';
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const stage = document.getElementById('metro-cinematic-stage');
+    const trainWrapper = document.getElementById('metro-train-wrapper');
+    const streaks = document.getElementById('metro-speed-streaks');
+    const boardContainer = document.getElementById('metro-board-btn-container');
+    const boardBtn = document.getElementById('board-the-metro-btn');
+    const idleHint = document.getElementById('board-idle-hint');
+    const ticker = document.getElementById('metro-platform-ticker');
+    const skipBtn = document.getElementById('metro-stage-skip-btn');
+    const soundToggle = document.getElementById('metro-stage-sound-toggle');
+    const soundLabel = document.getElementById('metro-stage-sound-label');
+
+    const reducedCard = document.getElementById('metro-reduced-card');
+    const reducedBoardBtn = document.getElementById('reduced-board-btn');
+
+    let currentDestination = 'station-02';
+    let isBoarding = false;
+    let idleTimer: any = null;
+
+    const isReduced = () =>
+      document.documentElement.classList.contains('reduce-motion') ||
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // Update sound toggle label
+    const updateSoundLabel = () => {
+      if (soundLabel) {
+        soundLabel.textContent = metroSound.isEnabled() ? 'Sound: On' : 'Sound: Off';
+      }
+    };
+    updateSoundLabel();
+
+    if (soundToggle) {
+      soundToggle.addEventListener('click', () => {
+        metroSound.setEnabled(!metroSound.isEnabled());
+        updateSoundLabel();
+        const mainSoundStatus = document.getElementById('sound-status');
+        if (mainSoundStatus) {
+          mainSoundStatus.textContent = metroSound.isEnabled() ? 'Sound: On' : 'Sound: Off';
+        }
+      });
+    }
+
+    // Main Cinematic Execution Function
+    const launchMetro = (destinationId: string) => {
+      currentDestination = destinationId;
+      isBoarding = false;
+      if (!stage) return;
+
+      // 1. Lock page scroll and make background inert (Section 3.1)
+      stage.style.display = 'block';
+      document.body.style.overflow = 'hidden';
+      const main = document.getElementById('main-content');
+      if (main) (main as any).inert = true;
+
+      // Check reduced motion
+      if (isReduced()) {
+        if (reducedCard) reducedCard.style.display = 'flex';
+        metroSound.playDoorOpenChime();
+        return;
+      }
+
+      // Reset positions & streaks
+      if (streaks) streaks.style.opacity = '1';
+      if (ticker) ticker.textContent = 'TRAIN APPROACHING';
+      if (boardContainer) {
+        boardContainer.style.opacity = '0';
+        boardContainer.classList.add('pointer-events-none');
+      }
+      if (idleHint) idleHint.classList.add('hidden');
+
+      // Start approach sound
+      metroSound.playArrivalSequence();
+
+      // Train enters and decelerates to stop (Section 3.2: 0.3s - 2.3s)
+      if (trainWrapper) {
+        trainWrapper.style.transition = 'none';
+        trainWrapper.style.transform = 'translate3d(-100vw, 0, 0)';
+
+        requestAnimationFrame(() => {
+          trainWrapper.style.transition = 'transform 2.0s cubic-bezier(0.08, 0.7, 0.2, 1)';
+          // Align car 2 center door with center of viewport:
+          // SVG width 1600. Car 2 center is at 400 + 180 = 580px.
+          trainWrapper.style.transform = 'translate3d(0, 0, 0)';
+        });
+      }
+
+      // Doors slide open at 2.3s
+      setTimeout(() => {
+        if (streaks) streaks.style.opacity = '0';
+        if (ticker) ticker.textContent = 'NOW BOARDING';
+
+        // Open doors
+        document.querySelectorAll('.door-leaf-left').forEach((leaf) => {
+          (leaf as HTMLElement).style.transform = 'translateX(-22px)';
+        });
+        document.querySelectorAll('.door-leaf-right').forEach((leaf) => {
+          (leaf as HTMLElement).style.transform = 'translateX(22px)';
+        });
+
+        // Ding-dong chime
+        metroSound.playDoorOpenChime();
+
+        // Reveal Board the metro button over center doors
+        if (boardContainer) {
+          boardContainer.style.opacity = '1';
+          boardContainer.classList.remove('pointer-events-none');
+          if (boardBtn) boardBtn.focus();
+        }
+
+        // 6s idle hint
+        idleTimer = setTimeout(() => {
+          if (idleHint && !isBoarding) idleHint.classList.remove('hidden');
+        }, 6000);
+      }, 2300);
+    };
+
+    // Boarding Trigger
+    const executeBoarding = async () => {
+      if (isBoarding) return;
+      isBoarding = true;
+      clearTimeout(idleTimer);
+
+      if (boardBtn) {
+        boardBtn.textContent = 'Doors closing...';
+        boardBtn.classList.remove('animate-pulse');
+      }
+      if (ticker) ticker.textContent = 'DOORS CLOSING';
+
+      // Play 3 beeps & door thump
+      await metroSound.playDoorClosingSequence();
+
+      // Close doors
+      document.querySelectorAll('.door-leaf-left').forEach((leaf) => {
+        (leaf as HTMLElement).style.transform = 'translateX(0)';
+      });
+      document.querySelectorAll('.door-leaf-right').forEach((leaf) => {
+        (leaf as HTMLElement).style.transform = 'translateX(0)';
+      });
+
+      // Departure sequence after 0.25s hold
+      setTimeout(() => {
+        if (boardContainer) boardContainer.style.opacity = '0';
+        if (streaks) streaks.style.opacity = '1';
+        if (ticker) ticker.textContent = 'DEPARTING';
+
+        // Play departure audio (motor whine + accelerating clatter panning right)
+        metroSound.playDepartureSequence();
+
+        // Train accelerates off to the right
+        if (trainWrapper) {
+          trainWrapper.style.transition = 'transform 1.4s cubic-bezier(0.55, 0, 0.9, 0.5)';
+          trainWrapper.style.transform = 'translate3d(120vw, 0, 0)';
+        }
+
+        // Slide pillars and wall in opposite direction
+        const wall = document.getElementById('layer-far-wall');
+        const pillars = document.getElementById('layer-mid-pillars');
+        if (wall) wall.style.transform = 'translateX(-15%)';
+        if (pillars) pillars.style.transform = 'translateX(-30%)';
+
+        // Reveal stop underneath at ~0.9s into departure (Section 3.6)
+        setTimeout(() => {
+          completeArrival();
+        }, 900);
+      }, 250);
+    };
+
+    const completeArrival = () => {
+      // 1. Hide overlay
+      if (stage) {
+        stage.style.opacity = '0';
+        stage.style.transition = 'opacity 0.25s ease';
+        setTimeout(() => {
+          stage.style.display = 'none';
+          stage.style.opacity = '1';
+        }, 250);
+      }
+
+      // 2. Unlock scroll & remove inert
+      document.body.style.overflow = '';
+      const main = document.getElementById('main-content');
+      if (main) (main as any).inert = false;
+
+      // 3. Move to destination station in state machine
+      if ((window as any).__yugline) {
+        (window as any).__yugline.arriveAtStation(currentDestination);
+      }
+    };
+
+    if (boardBtn) {
+      boardBtn.addEventListener('click', executeBoarding);
+    }
+    if (reducedBoardBtn) {
+      reducedBoardBtn.addEventListener('click', completeArrival);
+    }
+
+    // Skip animation instant jump
+    if (skipBtn) {
+      skipBtn.addEventListener('click', () => {
+        clearTimeout(idleTimer);
+        completeArrival();
+      });
+    }
+
+    // Register globally on window for state machine
+    (window as any).__launchMetroCinematic = launchMetro;
+  });
+</script>
