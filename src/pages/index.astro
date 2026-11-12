@@ -50,8 +50,18 @@ const moreProjects = PROJECTS.filter((p) => !p.featured);
         <a href="#station-07" class="hover:text-ink font-bold">07:TERMINUS</a>
       </nav>
 
-      <!-- Theme Toggle & Resume Action -->
-      <div class="flex items-center gap-3">
+      <!-- Theme, Motion Toggle & Resume Action -->
+      <div class="flex items-center gap-2 sm:gap-3">
+        <button
+          type="button"
+          id="motion-toggle"
+          class="hidden sm:inline-block p-1.5 border border-rule bg-surface font-mono text-xs text-ink hover:border-ink"
+          aria-label="Toggle Reduced Motion"
+          title="Toggle Reduced Motion"
+        >
+          <span id="motion-status">MOTION: ON</span>
+        </button>
+
         <button
           type="button"
           id="theme-toggle"
@@ -379,7 +389,39 @@ const moreProjects = PROJECTS.filter((p) => !p.featured);
   <!-- Interactive Scripts (Client-side interactivity) -->
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-      // 1. Theme toggle
+      // 1. Reduced Motion Toggle
+      const motionBtn = document.getElementById('motion-toggle');
+      const motionStatus = document.getElementById('motion-status');
+      
+      const updateMotionUI = (isReduced: boolean) => {
+        if (isReduced) {
+          document.documentElement.classList.add('reduce-motion');
+          if (motionStatus) motionStatus.textContent = 'MOTION: OFF';
+        } else {
+          document.documentElement.classList.remove('reduce-motion');
+          if (motionStatus) motionStatus.textContent = 'MOTION: ON';
+        }
+      };
+
+      try {
+        const savedMotion = localStorage.getItem('yugline_reduce_motion');
+        if (savedMotion === 'true' || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+          updateMotionUI(true);
+        }
+      } catch (e) {}
+
+      if (motionBtn) {
+        motionBtn.addEventListener('click', () => {
+          const currentlyReduced = document.documentElement.classList.contains('reduce-motion');
+          const nextState = !currentlyReduced;
+          updateMotionUI(nextState);
+          try {
+            localStorage.setItem('yugline_reduce_motion', String(nextState));
+          } catch (e) {}
+        });
+      }
+
+      // 2. Theme toggle
       const toggleBtn = document.getElementById('theme-toggle');
       if (toggleBtn) {
         toggleBtn.addEventListener('click', () => {
