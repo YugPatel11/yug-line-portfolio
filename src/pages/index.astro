@@ -1,7 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import StationHeader from '../components/StationHeader.astro';
-import OverviewMap from '../components/OverviewMap.astro';
 import DeparturesBoard from '../components/DeparturesBoard.astro';
 import InterchangeGhumify from '../components/InterchangeGhumify.astro';
 import ProjectStop from '../components/ProjectStop.astro';
@@ -10,11 +9,14 @@ import TechLegend from '../components/TechLegend.astro';
 import EducationTicket from '../components/EducationTicket.astro';
 import TerminusContact from '../components/TerminusContact.astro';
 import Pictograms from '../components/Pictograms.astro';
+
+import WelcomeScreen from '../components/WelcomeScreen.astro';
+import MetroCinematic from '../components/MetroCinematic.astro';
+import AllStopsSheet from '../components/AllStopsSheet.astro';
+import ChooseStop from '../components/ChooseStop.astro';
+import TicketScreen from '../components/TicketScreen.astro';
+import GateScreen from '../components/GateScreen.astro';
 import JourneyControls from '../components/JourneyControls.astro';
-import TicketWindow from '../components/TicketWindow.astro';
-import FareGate from '../components/FareGate.astro';
-import JourneyScenes from '../components/JourneyScenes.astro';
-import TravelCardModal from '../components/TravelCardModal.astro';
 
 import { PROFILE, PROJECTS } from '../data/portfolio';
 
@@ -23,8 +25,17 @@ const moreProjects = PROJECTS.filter((p) => !p.featured);
 ---
 
 <BaseLayout>
-  <!-- Journey Mode Animated Scenes (Welcome & Ride Overlays, Phase P4) -->
-  <JourneyScenes />
+  <!-- Full-Screen Entry Welcome Screen (Step 0) -->
+  <WelcomeScreen />
+
+  <!-- Full-Screen Cinematic Metro Stage (Step 4) -->
+  <MetroCinematic />
+
+  <!-- All Stops Sheet Modal (Tap & Go Navigation) -->
+  <AllStopsSheet />
+
+  <!-- Fixed Bottom Decision Bar & Live Announcer -->
+  <JourneyControls />
 
   <!-- Accessible Skip Link -->
   <a
@@ -187,97 +198,87 @@ const moreProjects = PROJECTS.filter((p) => !p.featured);
   <main id="main-content" role="main" class="max-w-site mx-auto px-4 sm:px-6 pt-24 pb-32 relative">
     
     <!-- ========================================================
-         STATION 00: DEPARTURE (HERO)
+         STATION 00: DEPARTURE & JOURNEY STEPS
          ======================================================== -->
-    <section id="station-00" aria-labelledby="heading-st-00" class="pt-8 pb-20 relative">
-      <StationHeader
-        code="ST-00"
-        name="CENTRAL DEPARTURE"
-        category="ORIGIN & IDENTITY"
-        lineVariant="frontend"
-        id="heading-st-00"
-      />
+    <section id="station-00" aria-labelledby="heading-st-00" class="pt-4 pb-12 relative">
+      <!-- Step 1 of 3: Choose a Stop -->
+      <ChooseStop />
 
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-        
-        <!-- Large Origin Ticket -->
-        <div class="lg:col-span-7">
-          <div class="ticket ticket-notched p-6 sm:p-10 bg-surface border-2 border-ink shadow-[8px_8px_0_var(--ink)]">
-            <!-- Ticket Routing Header -->
-            <div class="flex flex-wrap items-center justify-between gap-4 border-b-2 border-ink pb-4 mb-6">
-              <div>
-                <span class="mono-label block">FROM STATION</span>
-                <span class="font-mono text-sm sm:text-base font-bold text-ink split-flap-target">BACKEND LOGIC</span>
-              </div>
-              <div class="font-mono text-xl text-line-frontend font-black" aria-hidden="true">➔➔➔</div>
-              <div class="text-right">
-                <span class="mono-label block">TO DESTINATION</span>
-                <span class="font-mono text-sm sm:text-base font-bold text-ink split-flap-target">SMOOTH UIs</span>
-              </div>
+      <!-- Step 2 of 3: Your Ticket -->
+      <TicketScreen />
+
+      <!-- Step 3 of 3: Scan Your Ticket -->
+      <GateScreen />
+
+      <!-- Express Mode Long-Page Hero Content -->
+      <div id="express-hero-content" class="hidden mt-8">
+        <StationHeader
+          code="ST-00"
+          name="Central Departure"
+          category="Origin & Identity"
+          lineVariant="frontend"
+          id="heading-st-00"
+        />
+
+        <div class="ticket ticket-notched p-6 sm:p-10 bg-surface border-2 border-ink shadow-[8px_8px_0_var(--ink)]">
+          <div class="flex flex-wrap items-center justify-between gap-4 border-b-2 border-ink pb-4 mb-6">
+            <div>
+              <span class="mono-label block">FROM STATION</span>
+              <span class="font-mono text-sm sm:text-base font-bold text-ink">BACKEND LOGIC</span>
             </div>
-
-            <!-- Name and Title (Huge Archivo per A5.2 & A7) -->
-            <div class="mb-6">
-              <span class="mono-label block mb-1">PASSENGER / ARCHITECT</span>
-              <h1 class="font-archivo text-4xl sm:text-6xl lg:text-7xl font-black text-ink tracking-tight uppercase leading-[0.95] split-flap-target">
-                {PROFILE.name}
-              </h1>
-              <p class="font-mono text-base sm:text-lg text-ink-soft mt-3 font-semibold">
-                // {PROFILE.role}
-              </p>
-              <p class="font-manrope text-base sm:text-lg text-ink mt-3 leading-relaxed">
-                "{PROFILE.tagline}"
-              </p>
-            </div>
-
-            <!-- Status & Highlight Chips -->
-            <div class="flex flex-wrap gap-2 mb-8">
-              <span class="px-3 py-1 bg-paper border border-ink font-mono text-xs text-ink font-bold inline-flex items-center gap-1.5">
-                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                {PROFILE.status}
-              </span>
-              <span class="px-3 py-1 bg-paper border border-rule font-mono text-xs text-ink">
-                Exp: {PROFILE.experienceYears}
-              </span>
-              <span class="px-3 py-1 bg-paper border border-rule font-mono text-xs text-ink">
-                Grants: {PROFILE.grantTotal}
-              </span>
-              <span class="px-3 py-1 bg-paper border border-rule font-mono text-xs text-ink">
-                {PROFILE.leadershipRole}
-              </span>
-            </div>
-
-            <!-- Ticket Stubs (Buttons) -->
-            <div class="ticket-perforation pt-6 flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
-              <a href="#station-01" class="btn-stub justify-center">
-                <span>Ride the line</span>
-                <span class="font-bold">➔</span>
-              </a>
-
-              <a
-                href={PROFILE.contacts.resumeUrl}
-                download
-                class="btn-stub !bg-surface !text-ink hover:!bg-paper justify-center"
-              >
-                <span>Download Résumé</span>
-                <Pictograms name="arrow-up-right" size={14} />
-              </a>
+            <div class="font-mono text-xl text-line-frontend font-black" aria-hidden="true">➔➔➔</div>
+            <div class="text-right">
+              <span class="mono-label block">TO DESTINATION</span>
+              <span class="font-mono text-sm sm:text-base font-bold text-ink">SMOOTH UIs</span>
             </div>
           </div>
-        </div>
 
-        <!-- Overview Transit Map -->
-        <div class="lg:col-span-5">
-          <OverviewMap />
-        </div>
+          <div class="mb-6">
+            <span class="mono-label block mb-1">PASSENGER / ARCHITECT</span>
+            <h1 class="font-archivo text-4xl sm:text-6xl lg:text-7xl font-black text-ink tracking-tight uppercase leading-[0.95]">
+              {PROFILE.name}
+            </h1>
+            <p class="font-mono text-base sm:text-lg text-ink-soft mt-3 font-semibold">
+              // {PROFILE.role}
+            </p>
+            <p class="font-manrope text-base sm:text-lg text-ink mt-3 leading-relaxed">
+              "{PROFILE.tagline}"
+            </p>
+          </div>
 
+          <div class="flex flex-wrap gap-2 mb-8 font-mono text-xs">
+            <span class="px-3 py-1 bg-paper border border-ink text-ink font-bold inline-flex items-center gap-1.5">
+              <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+              {PROFILE.status}
+            </span>
+            <span class="px-3 py-1 bg-paper border border-rule text-ink">
+              Exp: {PROFILE.experienceYears}
+            </span>
+            <span class="px-3 py-1 bg-paper border border-rule text-ink">
+              Grants: {PROFILE.grantTotal}
+            </span>
+            <span class="px-3 py-1 bg-paper border border-rule text-ink">
+              {PROFILE.leadershipRole}
+            </span>
+          </div>
+
+          <div class="ticket-perforation pt-6 flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
+            <a href="#station-01" class="btn-stub justify-center">
+              <span>View all stops below</span>
+              <span class="font-bold">↓</span>
+            </a>
+
+            <a
+              href={PROFILE.contacts.resumeUrl}
+              download
+              class="btn-stub !bg-surface !text-ink hover:!bg-paper justify-center"
+            >
+              <span>Download Résumé</span>
+              <Pictograms name="arrow-up-right" size={14} />
+            </a>
+          </div>
+        </div>
       </div>
-
-      <!-- Ticket Booking Office & Boarding Pass Generator (Phase P2) -->
-      <TicketWindow />
-
-      <!-- Fare Gate & Barrier Validation Machine (Phase P3) -->
-      <FareGate />
     </section>
 
     <!-- Rail Divider Line -->
@@ -286,13 +287,13 @@ const moreProjects = PROJECTS.filter((p) => !p.featured);
     </div>
 
     <!-- ========================================================
-         STATION 01: DEPARTURES BOARD (ACHIEVEMENTS)
+         STATION 01: ACHIEVEMENTS
          ======================================================== -->
     <section id="station-01" aria-labelledby="heading-st-01" class="py-12 relative">
       <StationHeader
         code="ST-01"
-        name="DEPARTURES BOARD"
-        category="TRACK RECORD & AWARDS"
+        name="Achievements"
+        category="Track record & awards"
         lineVariant="hardware"
         id="heading-st-01"
       />
@@ -306,13 +307,13 @@ const moreProjects = PROJECTS.filter((p) => !p.featured);
     </div>
 
     <!-- ========================================================
-         STATION 02: INTERCHANGE GHUMIFY (FLAGSHIP)
+         STATION 02: GHUMIFY (FLAGSHIP)
          ======================================================== -->
     <section id="station-02" aria-labelledby="heading-st-02" class="py-12 relative">
       <StationHeader
         code="ST-02"
-        name="GHUMIFY INTERCHANGE"
-        category="FLAGSHIP AI CONVERGENCE"
+        name="Ghumify — my flagship project"
+        category="AI travel companion & ground reality router"
         lineVariant="ai"
         id="heading-st-02"
       />
@@ -326,13 +327,16 @@ const moreProjects = PROJECTS.filter((p) => !p.featured);
     </div>
 
     <!-- ========================================================
-         STATION 03: LINE STOPS (PROJECTS)
+         STATION 03: ALL PROJECTS
          ======================================================== -->
     <section id="station-03" aria-labelledby="heading-st-03" class="py-12 relative">
       <StationHeader
         code="ST-03"
-        name="LINE STOPS"
-        category="CURATED PROJECTS & SYSTEMS"
+        name="All projects"
+        category="Curated production systems across 4 lines"
+        lineVariant="frontend"
+        id="heading-st-03"
+      />
         lineVariant="frontend"
         id="heading-st-03"
       />
@@ -415,13 +419,13 @@ const moreProjects = PROJECTS.filter((p) => !p.featured);
     </div>
 
     <!-- ========================================================
-         STATION 04: CREW AND SERVICE RECORD (EXPERIENCE)
+         STATION 04: EXPERIENCE
          ======================================================== -->
     <section id="station-04" aria-labelledby="heading-st-04" class="py-12 relative">
       <StationHeader
         code="ST-04"
-        name="CREW & SERVICE RECORD"
-        category="PROFESSIONAL EXPERIENCE"
+        name="Experience"
+        category="Work history & leadership"
         lineVariant="backend"
         id="heading-st-04"
       />
@@ -435,13 +439,13 @@ const moreProjects = PROJECTS.filter((p) => !p.featured);
     </div>
 
     <!-- ========================================================
-         STATION 05: LINE LEGEND (TECH ARSENAL)
+         STATION 05: SKILLS AND TOOLS
          ======================================================== -->
     <section id="station-05" aria-labelledby="heading-st-05" class="py-12 relative">
       <StationHeader
         code="ST-05"
-        name="LINE LEGEND"
-        category="TECHNICAL CAPABILITIES"
+        name="Skills and tools"
+        category="Technical capabilities"
         lineVariant="hardware"
         id="heading-st-05"
       />
@@ -455,13 +459,13 @@ const moreProjects = PROJECTS.filter((p) => !p.featured);
     </div>
 
     <!-- ========================================================
-         STATION 06: ACADEMIC STOP (EDUCATION)
+         STATION 06: EDUCATION
          ======================================================== -->
     <section id="station-06" aria-labelledby="heading-st-06" class="py-12 relative">
       <StationHeader
         code="ST-06"
-        name="ACADEMIC JUNCTION"
-        category="DEGREE & FOUNDATION"
+        name="Education"
+        category="Degree & foundation"
         lineVariant="ai"
         id="heading-st-06"
       />
@@ -475,13 +479,13 @@ const moreProjects = PROJECTS.filter((p) => !p.featured);
     </div>
 
     <!-- ========================================================
-         STATION 07: TERMINUS & CONTACT
+         STATION 07: CONTACT ME
          ======================================================== -->
     <section id="station-07" aria-labelledby="heading-st-07" class="py-12 relative">
       <StationHeader
         code="ST-07"
-        name="TERMINUS"
-        category="DISPATCH & CONNECT"
+        name="Contact me"
+        category="Get in touch"
         lineVariant="default"
         id="heading-st-07"
       />
@@ -491,32 +495,29 @@ const moreProjects = PROJECTS.filter((p) => !p.featured);
 
   </main>
 
-  <!-- Journey Controls & Live Region (Section 6 & 10) -->
-  <JourneyControls />
-
-  <!-- Travel Card Passport Modal (Phase P5, Section 6.4) -->
-  <TravelCardModal />
-
   <!-- Interactive Scripts (Client-side interactivity) -->
   <script>
     import { JourneyStateMachine } from '../scripts/journey/machine';
     import { initInteractions } from '../scripts/interactions';
-    import { sound } from '../scripts/sound';
+    import { metroSound } from '../scripts/sound/metroSound';
 
     document.addEventListener('DOMContentLoaded', () => {
       // Expose sound engine
-      (window as any).__yugsound = sound;
+      (window as any).__yugsound = metroSound;
 
       // Sound Toggle Handler
       const soundBtn = document.getElementById('sound-toggle');
       const soundStatus = document.getElementById('sound-status');
       if (soundBtn && soundStatus) {
-        if (sound.isEnabled()) {
-          soundStatus.textContent = 'SOUND: ON';
+        if (metroSound.isEnabled()) {
+          soundStatus.textContent = 'Sound: On';
         }
         soundBtn.addEventListener('click', () => {
-          const on = sound.toggle();
-          soundStatus.textContent = on ? 'SOUND: ON' : 'SOUND: OFF';
+          const nextState = !metroSound.isEnabled();
+          metroSound.setEnabled(nextState);
+          soundStatus.textContent = nextState ? 'Sound: On' : 'Sound: Off';
+          const stageLabel = document.getElementById('metro-stage-sound-label');
+          if (stageLabel) stageLabel.textContent = nextState ? 'Sound: On' : 'Sound: Off';
         });
       }
 

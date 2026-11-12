@@ -13,7 +13,7 @@ const isDev = import.meta.env.DEV;
 ---
 
 <div
-  class="ticket p-5 md:p-6 bg-surface border-2 border-ink shadow-[4px_4px_0_var(--ink)] flex flex-col justify-between project-card transition-all"
+  class="ticket p-6 sm:p-8 bg-surface border-2 border-ink shadow-[4px_4px_0_var(--ink)] flex flex-col justify-between project-card transition-all"
   data-lines={project.lines.join(' ')}
 >
   <div>
@@ -51,18 +51,23 @@ const isDev = import.meta.env.DEV;
       <p class="font-mono text-xs text-ink-soft uppercase tracking-wider mb-2">
         {project.tagline}
       </p>
-      <p class="font-manrope text-sm text-ink leading-relaxed">
+      <p class="font-manrope text-sm sm:text-base text-ink leading-relaxed max-w-[65ch]">
         {project.description}
       </p>
     </div>
 
-    <!-- Tech Stack Chips -->
+    <!-- Tech Stack Chips (Limited to max 3 per card, Section 5.2) -->
     <div class="flex flex-wrap gap-1.5 mb-4">
-      {project.techStack.map((tech) => (
-        <span class="font-mono text-[11px] uppercase tracking-wider px-2 py-0.5 bg-paper border border-rule text-ink">
+      {project.techStack.slice(0, 3).map((tech) => (
+        <span class="font-mono text-xs uppercase tracking-wider px-2.5 py-1 bg-paper border border-rule text-ink">
           {tech}
         </span>
       ))}
+      {project.techStack.length > 3 && (
+        <span class="font-mono text-xs uppercase tracking-wider px-2 py-1 bg-surface border border-rule text-ink-soft">
+          +{project.techStack.length - 3}
+        </span>
+      )}
     </div>
   </div>
 

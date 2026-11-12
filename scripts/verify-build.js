@@ -55,6 +55,15 @@ checkFile(
     'id="travel-card-btn"',
     'id="motion-toggle"',
     'id="sound-toggle"',
+    'id="scene-welcome"',
+    'id="metro-cinematic-stage"',
+    'id="all-stops-sheet"',
+    'id="journey-step-choose"',
+    'id="journey-step-ticket"',
+    'id="journey-step-gate"',
+    'id="swipe-rail-track"',
+    'id="board-the-metro-btn"',
+    'Skip the metro · see everything',
   ],
   ['backdrop-blur', 'sample.html', 'TODO-USER']
 );

@@ -131,6 +131,10 @@ export function initInteractions() {
       const cardBtn = document.getElementById('travel-card-btn');
       if (cardBtn) cardBtn.click();
     } else if (e.key === 'Escape') {
+      const sheet = document.getElementById('all-stops-sheet');
+      if (sheet && sheet.style.display !== 'none') {
+        sheet.style.display = 'none';
+      }
       const modal = document.getElementById('travel-card-modal');
       if (modal && !modal.classList.contains('hidden')) {
         const closeBtn = document.getElementById('travel-card-close');

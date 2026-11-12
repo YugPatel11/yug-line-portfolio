@@ -1,15 +1,16 @@
-import type { JourneyMode, JourneyState, StationCode, TicketData } from './types';
+import type { JourneyMode, SimplifiedStep, StationCode, TicketData } from './types';
 import { STATIONS, HASH_TO_STATION, STATION_ORDER } from './constants';
+import { metroSound } from '../sound/metroSound';
 
 export class JourneyStateMachine {
-  private mode: JourneyMode = 'express';
-  private state: JourneyState = 'concourse';
-  private currentStation: StationCode = 'station-00';
+  private mode: JourneyMode = 'journey';
+  private step: SimplifiedStep = 'choose';
+  private selectedStation: StationCode = 'station-02';
+  private currentStop: StationCode = 'station-00';
   private visited: Set<StationCode> = new Set(['station-00']);
-  private hasTravelCard: boolean = false;
-  private currentTicket: TicketData | null = null;
   private announcerEl: HTMLElement | null = null;
   private decisionBarEl: HTMLElement | null = null;
+  private stopIndicatorBar: HTMLElement | null = null;
   private stationSections: HTMLElement[] = [];
 
   constructor() {
@@ -19,21 +20,19 @@ export class JourneyStateMachine {
   private init() {
     this.announcerEl = document.getElementById('journey-announcer');
     this.decisionBarEl = document.getElementById('journey-decision-bar');
+    this.stopIndicatorBar = document.getElementById('journey-stop-indicator-bar');
     this.stationSections = Array.from(document.querySelectorAll('section[id^="station-"]'));
 
-    // Check stored Travel Card status
+    // Restore visited stops
     try {
-      if (localStorage.getItem('yugline_travel_card') === 'true') {
-        this.hasTravelCard = true;
-      }
-      const visitedJson = localStorage.getItem('yugline_visited');
-      if (visitedJson) {
-        const arr = JSON.parse(visitedJson) as StationCode[];
+      const stored = localStorage.getItem('yugline_visited');
+      if (stored) {
+        const arr = JSON.parse(stored) as StationCode[];
         arr.forEach((s) => this.visited.add(s));
       }
     } catch (e) {}
 
-    // Check preferred mode
+    // Check mode preference
     let initialMode: JourneyMode = 'journey';
     try {
       const storedMode = sessionStorage.getItem('yugline_mode');
@@ -42,40 +41,36 @@ export class JourneyStateMachine {
       }
     } catch (e) {}
 
-    // Check URL hash
+    // Check hash for direct deep links (Section 1.3: deep links open directly with no ticket)
     const hash = window.location.hash.toLowerCase();
-    if (hash && HASH_TO_STATION[hash]) {
-      this.currentStation = HASH_TO_STATION[hash];
-      this.visited.add(this.currentStation);
+    if (hash && HASH_TO_STATION[hash] && HASH_TO_STATION[hash] !== 'station-00') {
+      this.currentStop = HASH_TO_STATION[hash];
+      this.visited.add(this.currentStop);
+      this.mode = 'journey';
+      this.step = 'stop';
+      this.setMode('journey');
+      this.showStopScreen(this.currentStop, false);
+    } else {
+      this.setMode(initialMode);
+      if (initialMode === 'journey') {
+        this.setStep('choose');
+      }
     }
 
-    this.setMode(initialMode);
-
-    // Initial Welcome Scene (Section 6.1)
-    try {
-      const welcomeSeen = sessionStorage.getItem('yugline_welcome_seen');
-      const welcomeScene = document.getElementById('scene-welcome');
-      if (!welcomeSeen && welcomeScene && initialMode === 'journey' && !hash) {
-        welcomeScene.style.display = 'flex';
-        const enterBtn = document.getElementById('enter-station-btn');
-        const dismiss = () => {
-          welcomeScene.style.display = 'none';
-          sessionStorage.setItem('yugline_welcome_seen', 'true');
-        };
-        if (enterBtn) enterBtn.addEventListener('click', dismiss);
-        window.addEventListener('keydown', dismiss, { once: true });
-      }
-    } catch (e) {}
-
-    // Bind hash change listener
+    // Bind hash changes
     window.addEventListener('hashchange', () => {
       const newHash = window.location.hash.toLowerCase();
       if (newHash && HASH_TO_STATION[newHash]) {
-        this.navigateToStation(HASH_TO_STATION[newHash], false);
+        const target = HASH_TO_STATION[newHash];
+        if (target === 'station-00') {
+          this.backToStart();
+        } else {
+          this.navigateToStation(target, false);
+        }
       }
     });
 
-    this.bindControls();
+    this.bindDOMEvents();
   }
 
   public setMode(newMode: JourneyMode) {
@@ -86,136 +81,183 @@ export class JourneyStateMachine {
       sessionStorage.setItem('yugline_mode', newMode);
     } catch (e) {}
 
+    const dayPassBtns = document.querySelectorAll('.day-pass-toggle-btn');
+
     if (newMode === 'express') {
-      this.enableExpressMode();
+      // Express Mode: show all stations, remove inert
+      this.stationSections.forEach((sec) => {
+        sec.style.display = 'block';
+        (sec as any).inert = false;
+      });
+
+      // Hide journey step panels & decision bars
+      this.hideElement('journey-step-choose');
+      this.hideElement('journey-step-ticket');
+      this.hideElement('journey-step-gate');
+      if (this.decisionBarEl) this.decisionBarEl.style.display = 'none';
+      if (this.stopIndicatorBar) this.stopIndicatorBar.style.display = 'none';
+
+      dayPassBtns.forEach((btn) => {
+        btn.textContent = 'Switch to Journey Mode ➔';
+        btn.setAttribute('aria-label', 'Switch to interactive Journey Mode');
+      });
+
+      this.announce('Express Mode active. All stops are visible in order.');
     } else {
-      this.enableJourneyMode();
+      dayPassBtns.forEach((btn) => {
+        btn.textContent = 'Skip the metro · see everything';
+        btn.setAttribute('aria-label', 'Skip the metro · see everything');
+      });
+
+      if (this.step === 'stop') {
+        this.showStopScreen(this.currentStop, false);
+      } else {
+        this.setStep(this.step);
+      }
     }
   }
 
-  private enableExpressMode() {
-    // Show all stations, remove inert
-    this.stationSections.forEach((sec) => {
-      sec.style.display = '';
-      (sec as any).inert = false;
-    });
+  public setStep(step: SimplifiedStep) {
+    this.step = step;
 
-    if (this.decisionBarEl) {
-      this.decisionBarEl.style.display = 'none';
+    // In journey mode, hide all station sections during steps 1-3
+    if (step !== 'stop') {
+      this.stationSections.forEach((sec) => {
+        sec.style.display = 'none';
+        (sec as any).inert = true;
+      });
+      if (this.decisionBarEl) this.decisionBarEl.style.display = 'none';
+      if (this.stopIndicatorBar) this.stopIndicatorBar.style.display = 'none';
     }
 
-    const dayPassBtns = document.querySelectorAll('.day-pass-toggle-btn');
-    dayPassBtns.forEach((btn) => {
-      btn.textContent = 'Switch to Journey Mode ➔';
-      btn.setAttribute('aria-label', 'Switch to interactive Journey Mode');
-    });
-
-    this.announce('Express Mode active. All stations are visible in order.');
+    if (step === 'choose') {
+      this.showElement('journey-step-choose');
+      this.hideElement('journey-step-ticket');
+      this.hideElement('journey-step-gate');
+      this.announce('Step 1 of 3: Choose a stop.');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      const h = document.getElementById('choose-stop-heading');
+      if (h) h.focus();
+    } else if (step === 'ticket') {
+      this.hideElement('journey-step-choose');
+      this.showElement('journey-step-ticket');
+      this.hideElement('journey-step-gate');
+      this.populateTicketCard();
+      this.announce('Step 2 of 3: Your ticket. Ready to proceed to gate.');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      const h = document.getElementById('ticket-step-heading');
+      if (h) h.focus();
+    } else if (step === 'gate') {
+      this.hideElement('journey-step-choose');
+      this.hideElement('journey-step-ticket');
+      this.showElement('journey-step-gate');
+      this.announce('Step 3 of 3: Scan your ticket to open the platform barrier.');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      const h = document.getElementById('gate-step-heading');
+      if (h) h.focus();
+    }
   }
 
-  private enableJourneyMode() {
-    this.renderCurrentStation();
+  // Station Choice Handler (Step 1 -> Step 2)
+  public selectDestination(stationId: StationCode) {
+    this.selectedStation = stationId;
 
-    const dayPassBtns = document.querySelectorAll('.day-pass-toggle-btn');
-    dayPassBtns.forEach((btn) => {
-      btn.textContent = 'Day Pass — skip booking';
-      btn.setAttribute('aria-label', 'Day Pass — Switch to full scrolling page');
-    });
+    // Audio printer click
+    metroSound.printer();
 
-    if (this.decisionBarEl) {
-      this.decisionBarEl.style.display = 'flex';
+    // Check if repeat trip with Tap & Go (already visited)
+    if (this.visited.has(stationId) && stationId !== 'station-00') {
+      // Tap & Go direct jump to cinematic metro
+      this.launchCinematicMetro(stationId);
+      return;
     }
 
-    this.updateDecisionBar();
+    this.setStep('ticket');
   }
 
-  public navigateToStation(stationId: StationCode, updateHash: boolean = true) {
-    this.currentStation = stationId;
+  // Populate Ticket Card
+  private async populateTicketCard() {
+    const meta = STATIONS[this.selectedStation];
+    if (!meta) return;
+
+    const titleEl = document.getElementById('ticket-destination-title');
+    const codeEl = document.getElementById('ticket-destination-code');
+    const pnrEl = document.getElementById('ticket-pnr-val');
+    const dateEl = document.getElementById('ticket-date-val');
+    const bandEl = document.getElementById('ticket-line-band');
+    const qrCanvas = document.getElementById('ticket-qr-code') as HTMLCanvasElement | null;
+
+    if (titleEl) titleEl.textContent = meta.name.toUpperCase();
+    if (codeEl) codeEl.textContent = meta.code;
+    const pnr = Math.floor(1000000000 + Math.random() * 9000000000).toString();
+    if (pnrEl) pnrEl.textContent = pnr;
+
+    const now = new Date();
+    const dateStr = now.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }).toUpperCase();
+    if (dateEl) dateEl.textContent = dateStr;
+
+    if (bandEl) {
+      const color = meta.line === 'ai' ? 'var(--line-ai)' :
+                    meta.line === 'frontend' ? 'var(--line-frontend)' :
+                    meta.line === 'backend' ? 'var(--line-backend)' :
+                    meta.line === 'hardware' ? 'var(--line-hardware)' : 'var(--ink)';
+      bandEl.style.backgroundColor = color;
+    }
+
+    // Lazy load QR code library
+    if (qrCanvas) {
+      try {
+        const QRCode = await import('qrcode');
+        const deepLink = `${window.location.origin}/#${meta.alias}`;
+        await QRCode.toCanvas(qrCanvas, deepLink, {
+          width: 56,
+          margin: 1,
+          color: { dark: '#111111', light: '#F4F1EA' },
+        });
+      } catch (e) {}
+    }
+  }
+
+  // Launch Full-Screen Cinematic Metro (Step 4)
+  public launchCinematicMetro(targetId?: StationCode) {
+    const stationId = targetId || this.selectedStation;
+    if ((window as any).__launchMetroCinematic) {
+      (window as any).__launchMetroCinematic(stationId);
+    } else {
+      this.arriveAtStation(stationId);
+    }
+  }
+
+  // Arrival at Station (Step 5)
+  public arriveAtStation(stationId: StationCode) {
+    this.currentStop = stationId;
     this.visited.add(stationId);
 
     try {
       localStorage.setItem('yugline_visited', JSON.stringify(Array.from(this.visited)));
-      if (this.visited.size > 1) {
-        localStorage.setItem('yugline_travel_card', 'true');
-        this.hasTravelCard = true;
-      }
     } catch (e) {}
 
     const meta = STATIONS[stationId];
-    if (updateHash && meta) {
+    if (meta) {
       history.pushState(null, '', `#${meta.alias}`);
+      document.title = meta.pageTitle;
     }
 
-    document.title = meta ? meta.pageTitle : 'The Yug Line';
-
-    if (this.mode === 'journey') {
-      const isReduced = document.documentElement.classList.contains('reduce-motion') ||
-                        window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-      const rideScene = document.getElementById('scene-transit-ride');
-      if (rideScene && !isReduced && stationId !== 'station-00') {
-        this.showRideScene(meta, () => {
-          this.completeArrival(stationId, meta);
-        });
-      } else {
-        this.completeArrival(stationId, meta);
-      }
-    } else {
-      // In express mode, scroll to station
-      const el = document.getElementById(stationId);
-      if (el) {
-        el.scrollIntoView({ behavior: 'smooth' });
-        this.focusStationHeading(stationId);
-      }
-    }
-
-    this.updateDecisionBar();
+    this.showStopScreen(stationId, true);
   }
 
-  private showRideScene(meta: any, onArrival: () => void) {
-    const scene = document.getElementById('scene-transit-ride');
-    if (!scene) {
-      onArrival();
-      return;
-    }
+  // Render Stop Content with Top Indicator and Bottom Decision Bar
+  private showStopScreen(stationId: StationCode, announceArrival: boolean = true) {
+    this.step = 'stop';
 
-    const led = document.getElementById('transit-led-announcement');
-    const label = document.getElementById('transit-dest-label');
-    const speech = document.getElementById('transit-speech-caption');
-    const skipBtn = document.getElementById('skip-ride-btn');
+    // Hide journey step panels
+    this.hideElement('journey-step-choose');
+    this.hideElement('journey-step-ticket');
+    this.hideElement('journey-step-gate');
 
-    if (led) led.textContent = `NOW ARRIVING · ${meta.code} · ${meta.name.toUpperCase()}`;
-    if (label) label.textContent = meta.code;
-    if (speech) speech.textContent = `"Next station: ${meta.name}. ${meta.teaser}."`;
-
-    scene.style.display = 'flex';
-    this.announce(`Now riding transit to Station ${meta.code}, ${meta.name}`);
-
-    let finished = false;
-    const finish = () => {
-      if (finished) return;
-      finished = true;
-      scene.style.display = 'none';
-      onArrival();
-    };
-
-    if (skipBtn) {
-      skipBtn.onclick = finish;
-    }
-
-    setTimeout(finish, 1800);
-  }
-
-  private completeArrival(stationId: StationCode, meta: any) {
-    this.renderCurrentStation();
-    this.announce(`Arrived at Station ${meta?.code || stationId}, ${meta?.name || ''}`);
-    this.focusStationHeading(stationId);
-    window.scrollTo({ top: 0, behavior: 'instant' as any });
-  }
-
-  private renderCurrentStation() {
+    // Show only active station
     this.stationSections.forEach((sec) => {
-      if (sec.id === this.currentStation) {
+      if (sec.id === stationId) {
         sec.style.display = 'block';
         (sec as any).inert = false;
       } else {
@@ -223,61 +265,106 @@ export class JourneyStateMachine {
         (sec as any).inert = true;
       }
     });
-  }
 
-  private focusStationHeading(stationId: StationCode) {
+    const meta = STATIONS[stationId];
+    const currentIndex = STATION_ORDER.indexOf(stationId);
+    const stopNumber = Math.max(1, currentIndex);
+
+    // Slim top bar
+    if (this.stopIndicatorBar) {
+      this.stopIndicatorBar.style.display = 'flex';
+      const label = document.getElementById('journey-stop-location-label');
+      if (label && meta) {
+        label.textContent = `You are at: ${meta.name} · Stop ${stopNumber} of 7`;
+      }
+    }
+
+    // Fixed bottom decision bar
+    if (this.decisionBarEl) {
+      this.decisionBarEl.style.display = 'flex';
+      this.updateDecisionBar();
+    }
+
+    if (announceArrival && meta) {
+      this.announce(`Arrived at ${meta.name}. Stop ${stopNumber} of 7.`);
+    }
+
+    // Scroll to top and focus heading
+    window.scrollTo({ top: 0, behavior: 'instant' as any });
     setTimeout(() => {
       const heading = document.getElementById(`heading-${stationId.replace('station-', 'st-')}`);
       if (heading) {
         heading.setAttribute('tabindex', '-1');
         heading.focus();
       }
-    }, 100);
+    }, 120);
   }
 
+  // Update Decision Bar Labels (Section 5.4: Next: X →, Back to start, All stops)
   private updateDecisionBar() {
-    if (!this.decisionBarEl) return;
+    const currentIndex = STATION_ORDER.indexOf(this.currentStop);
+    const nextIndex = (currentIndex + 1) % STATION_ORDER.length;
+    // Skip base station 00 for next stop
+    const effectiveNext = nextIndex === 0 ? STATION_ORDER[1] : STATION_ORDER[nextIndex];
+    const nextMeta = STATIONS[effectiveNext];
 
-    const currentIndex = STATION_ORDER.indexOf(this.currentStation);
-    const nextStation = STATION_ORDER[(currentIndex + 1) % STATION_ORDER.length];
-    const nextMeta = STATIONS[nextStation];
-
+    const nextLabel = document.getElementById('decision-next-label');
+    const restartBtn = document.getElementById('decision-restart-btn');
     const nextBtn = document.getElementById('decision-next-btn');
-    if (nextBtn && nextMeta) {
-      if (this.currentStation === 'station-07') {
-        nextBtn.innerHTML = `<span>Restart Journey (00)</span> <span>➔</span>`;
-        nextBtn.setAttribute('data-target', 'station-00');
-      } else {
-        nextBtn.innerHTML = `<span>Next Station: ${nextMeta.code} · ${nextMeta.name}</span> <span>➔</span>`;
-        nextBtn.setAttribute('data-target', nextStation);
-      }
-    }
 
-    // Ghumify "Change Line" button visibility
-    const changeLineBtn = document.getElementById('decision-change-line-btn');
-    if (changeLineBtn) {
-      if (this.currentStation === 'station-02') {
-        changeLineBtn.classList.remove('hidden');
-      } else {
-        changeLineBtn.classList.add('hidden');
+    if (this.currentStop === 'station-07') {
+      // Last station: show Back to start and Restart
+      if (nextBtn) nextBtn.style.display = 'none';
+      if (restartBtn) restartBtn.classList.remove('hidden');
+    } else {
+      if (nextBtn) nextBtn.style.display = 'inline-flex';
+      if (restartBtn) restartBtn.classList.add('hidden');
+      if (nextLabel && nextMeta) {
+        nextLabel.textContent = `Next: ${nextMeta.name.split('—')[0].trim()} →`;
       }
-    }
-
-    // Travel card progress indicator
-    const cardChip = document.getElementById('travel-card-chip');
-    if (cardChip) {
-      cardChip.textContent = `${this.visited.size} / 8 Stops`;
     }
   }
 
-  public announce(message: string) {
+  // Next Station Action
+  public nextStation() {
+    const currentIndex = STATION_ORDER.indexOf(this.currentStop);
+    const nextIndex = (currentIndex + 1) % STATION_ORDER.length;
+    const nextId = nextIndex === 0 ? STATION_ORDER[1] : STATION_ORDER[nextIndex];
+    this.selectedStation = nextId;
+    this.launchCinematicMetro(nextId);
+  }
+
+  // Back to start (Returns to Step 1 Choose a stop)
+  public backToStart() {
+    history.pushState(null, '', '#base');
+    document.title = 'The Yug Line — Transit Map Portfolio';
+    this.setStep('choose');
+  }
+
+  public navigateToStation(stationId: StationCode, updateHash: boolean = true) {
+    this.selectedStation = stationId;
+    this.launchCinematicMetro(stationId);
+  }
+
+  public announce(msg: string) {
     if (this.announcerEl) {
-      this.announcerEl.textContent = message;
+      this.announcerEl.textContent = msg;
     }
   }
 
-  private bindControls() {
-    // Day Pass toggles
+  private showElement(id: string) {
+    const el = document.getElementById(id);
+    if (el) el.style.display = 'block';
+  }
+
+  private hideElement(id: string) {
+    const el = document.getElementById(id);
+    if (el) el.style.display = 'none';
+  }
+
+  // Bind DOM Event Listeners
+  private bindDOMEvents() {
+    // 1. Day Pass Toggle (Skip the metro · see everything)
     document.querySelectorAll('.day-pass-toggle-btn').forEach((btn) => {
       btn.addEventListener('click', () => {
         const nextMode = this.mode === 'journey' ? 'express' : 'journey';
@@ -285,31 +372,49 @@ export class JourneyStateMachine {
       });
     });
 
-    // Next Station button in decision bar
+    // 2. Destination Buttons (Step 1)
+    document.querySelectorAll('.destination-choice-btn').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const id = btn.getAttribute('data-station-id') as StationCode;
+        if (id) this.selectDestination(id);
+      });
+    });
+
+    // 3. Ticket Screen Buttons (Step 2)
+    const proceedGateBtn = document.getElementById('ticket-proceed-gate-btn');
+    const changeStopBtn = document.getElementById('ticket-change-stop-btn');
+
+    if (proceedGateBtn) {
+      proceedGateBtn.addEventListener('click', () => {
+        this.setStep('gate');
+      });
+    }
+    if (changeStopBtn) {
+      changeStopBtn.addEventListener('click', () => {
+        this.setStep('choose');
+      });
+    }
+
+    // 4. Decision Bar Buttons (Step 5)
+    const backBtn = document.getElementById('decision-base-btn');
     const nextBtn = document.getElementById('decision-next-btn');
+    const restartBtn = document.getElementById('decision-restart-btn');
+
+    if (backBtn) {
+      backBtn.addEventListener('click', () => this.backToStart());
+    }
     if (nextBtn) {
-      nextBtn.addEventListener('click', () => {
-        const target = nextBtn.getAttribute('data-target') as StationCode;
-        if (target) {
-          this.navigateToStation(target);
-        }
-      });
+      nextBtn.addEventListener('click', () => this.nextStation());
     }
-
-    // Back to Base button
-    const baseBtn = document.getElementById('decision-base-btn');
-    if (baseBtn) {
-      baseBtn.addEventListener('click', () => {
-        this.navigateToStation('station-00');
-      });
-    }
-
-    // Ghumify "Change Line" action
-    const changeLineBtn = document.getElementById('decision-change-line-btn');
-    if (changeLineBtn) {
-      changeLineBtn.addEventListener('click', () => {
-        this.navigateToStation('station-03');
-      });
+    if (restartBtn) {
+      restartBtn.addEventListener('click', () => this.backToStart());
     }
   }
+}
+
+// Global initialization
+if (typeof window !== 'undefined') {
+  document.addEventListener('DOMContentLoaded', () => {
+    (window as any).__yugline = new JourneyStateMachine();
+  });
 }
