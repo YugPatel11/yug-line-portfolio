@@ -87,4 +87,61 @@ export function initInteractions() {
       }
     };
   }
+
+  // 4. Keyboard Shortcuts Navigation (Section 6 & 11)
+  const stationHashes = [
+    '#base',
+    '#board',
+    '#ghumify',
+    '#projects',
+    '#crew',
+    '#legend',
+    '#education',
+    '#contact',
+  ];
+
+  window.addEventListener('keydown', (e: KeyboardEvent) => {
+    // Ignore keystrokes when focus is in an input or editable field
+    const active = document.activeElement;
+    if (
+      active &&
+      (active.tagName === 'INPUT' ||
+        active.tagName === 'TEXTAREA' ||
+        active.tagName === 'SELECT' ||
+        active.isContentEditable)
+    ) {
+      return;
+    }
+
+    // Ignore if Ctrl, Alt or Meta is held
+    if (e.ctrlKey || e.altKey || e.metaKey) return;
+
+    if (e.key === 'd' || e.key === 'D') {
+      const dayPassBtn =
+        document.getElementById('day-pass-btn') ||
+        document.getElementById('day-pass-header-btn');
+      if (dayPassBtn) dayPassBtn.click();
+    } else if (e.key === 'm' || e.key === 'M') {
+      const motionBtn = document.getElementById('motion-toggle');
+      if (motionBtn) motionBtn.click();
+    } else if (e.key === 's' || e.key === 'S') {
+      const soundBtn = document.getElementById('sound-toggle');
+      if (soundBtn) soundBtn.click();
+    } else if (e.key === 't' || e.key === 'T') {
+      const cardBtn = document.getElementById('travel-card-btn');
+      if (cardBtn) cardBtn.click();
+    } else if (e.key === 'Escape') {
+      const modal = document.getElementById('travel-card-modal');
+      if (modal && !modal.classList.contains('hidden')) {
+        const closeBtn = document.getElementById('travel-card-close');
+        if (closeBtn) closeBtn.click();
+      }
+    } else if (e.key >= '1' && e.key <= '8') {
+      const idx = parseInt(e.key, 10) - 1;
+      const hash = stationHashes[idx];
+      if (hash) {
+        window.location.hash = hash;
+      }
+    }
+  });
 }
