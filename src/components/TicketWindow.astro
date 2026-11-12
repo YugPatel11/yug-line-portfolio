@@ -1,0 +1,350 @@
+---
+import { STATIONS, STATION_ORDER } from '../scripts/journey/constants';
+import Pictograms from './Pictograms.astro';
+
+const destinationStations = STATION_ORDER.filter((id) => id !== 'station-00');
+---
+
+<div class="ticket p-6 md:p-8 bg-surface border-2 border-ink shadow-[6px_6px_0_var(--ink)] mt-8" id="ticket-booking-office">
+  <!-- Booking Office Header -->
+  <div class="flex items-center justify-between border-b-2 border-ink pb-4 mb-6">
+    <div class="flex items-center gap-3">
+      <div class="w-8 h-8 bg-paper border border-ink flex items-center justify-center text-ink font-bold font-mono text-xs">
+        ST
+      </div>
+      <div>
+        <h3 class="font-archivo text-xl md:text-2xl font-black text-ink uppercase tracking-tight">
+          TICKET COUNTER // BOOKING OFFICE
+        </h3>
+        <p class="font-mono text-xs text-ink-soft">WINDOW NO. 1 • DISPATCH READY</p>
+      </div>
+    </div>
+    <span class="font-mono text-xs font-bold uppercase tracking-wider bg-line-frontend text-paper px-2.5 py-1">
+      FARE: ₹0 · FREE PASS
+    </span>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+    <!-- Destination Board (Stations 01 - 07) -->
+    <div class="lg:col-span-6 space-y-2">
+      <div class="font-mono text-xs text-ink-soft uppercase tracking-wider mb-2">
+        // SELECT DESTINATION STATION:
+      </div>
+      <div class="divide-y divide-rule border border-rule bg-paper">
+        {destinationStations.map((id) => {
+          const st = STATIONS[id];
+          return (
+            <button
+              type="button"
+              class="ticket-station-choice w-full p-3 text-left flex items-center justify-between gap-3 hover:bg-surface transition-colors focus-visible:outline-2 focus-visible:outline-ink group"
+              data-station-id={st.id}
+              data-station-name={st.name}
+              data-station-code={st.code}
+              data-station-line={st.line}
+              data-station-teaser={st.teaser}
+            >
+              <div class="flex items-center gap-3">
+                <span class="font-mono text-xs font-bold px-1.5 py-0.5 bg-surface border border-rule text-ink group-hover:border-ink">
+                  {st.code}
+                </span>
+                <div>
+                  <div class="font-archivo font-bold text-sm text-ink group-hover:text-line-frontend transition-colors">
+                    {st.name}
+                  </div>
+                  <div class="font-mono text-[10px] text-ink-soft">
+                    {st.teaser}
+                  </div>
+                </div>
+              </div>
+              <span class="font-mono text-xs text-ink-soft group-hover:text-ink font-bold">
+                SELECT ➔
+              </span>
+            </button>
+          );
+        })}
+      </div>
+    </div>
+
+    <!-- Booking Confirmation & Generated Ticket Slot -->
+    <div class="lg:col-span-6 flex flex-col justify-between">
+      <!-- Active Selection Journey Panel -->
+      <div class="bg-paper border-2 border-ink p-4 mb-4" id="journey-preview-panel">
+        <div class="font-mono text-xs text-ink-soft uppercase tracking-wider border-b border-rule pb-2 mb-3">
+          // ROUTE ITINERARY PREVIEW
+        </div>
+        <div class="space-y-2 font-mono text-xs text-ink">
+          <div class="flex items-center justify-between">
+            <span class="text-ink-soft">FROM:</span>
+            <span class="font-bold">CENTRAL DEPARTURE (ST-00)</span>
+          </div>
+          <div class="flex items-center justify-between">
+            <span class="text-ink-soft">DESTINATION:</span>
+            <span class="font-bold text-line-frontend" id="preview-dest-name">GHUMIFY INTERCHANGE (ST-02)</span>
+          </div>
+          <div class="flex items-center justify-between">
+            <span class="text-ink-soft">ESTIMATED READ:</span>
+            <span>~30s INSPECTION</span>
+          </div>
+          <div class="flex items-center justify-between">
+            <span class="text-ink-soft">LINE ACCESS:</span>
+            <span class="uppercase font-bold" id="preview-dest-line">AI / ML TRANSIT</span>
+          </div>
+        </div>
+
+        <div class="mt-4 pt-3 border-t border-rule flex items-center justify-between">
+          <button
+            type="button"
+            id="issue-ticket-btn"
+            class="btn-stub w-full justify-center"
+          >
+            <span>Issue Boarding Ticket</span>
+            <Pictograms name="arrow-up-right" size={14} />
+          </button>
+        </div>
+      </div>
+
+      <!-- Ticket Slot & Ticket Output Container -->
+      <div id="ticket-slot-container" class="hidden">
+        <div class="font-mono text-xs text-ink uppercase tracking-wider mb-2 flex items-center justify-between">
+          <span>// DISPATCHED BOARDING PASS:</span>
+          <span class="text-line-hardware font-bold animate-pulse">● TICKET IN HAND</span>
+        </div>
+
+        <!-- Rendered Physical Ticket (2:1 aspect ratio, notched sides, top band) -->
+        <div
+          id="rendered-boarding-pass"
+          class="ticket ticket-notched p-4 sm:p-5 bg-surface border-2 border-ink shadow-[6px_6px_0_var(--ink)] relative"
+        >
+          <!-- Top Line Band -->
+          <div id="ticket-top-band" class="h-2 w-full bg-line-frontend mb-3"></div>
+
+          <div class="flex items-start justify-between gap-4 border-b border-rule pb-3 mb-3">
+            <div>
+              <div class="font-mono text-[10px] text-ink-soft uppercase tracking-wider">THE YUG LINE // TRANSIT AUTHORITY</div>
+              <div class="font-archivo text-lg sm:text-xl font-black text-ink uppercase" id="ticket-dest-display">
+                GHUMIFY INTERCHANGE
+              </div>
+            </div>
+            <div class="text-right font-mono">
+              <div class="text-[9px] text-ink-soft uppercase">PNR RECORD</div>
+              <div class="text-xs font-bold text-ink" id="ticket-pnr-display">9482019482</div>
+            </div>
+          </div>
+
+          <!-- Ticket Grid Meta -->
+          <div class="grid grid-cols-3 gap-2 font-mono text-[11px] mb-3 pb-3 border-b border-rule">
+            <div>
+              <span class="text-[9px] text-ink-soft block uppercase">FROM</span>
+              <span class="font-bold text-ink">CENTRAL</span>
+            </div>
+            <div>
+              <span class="text-[9px] text-ink-soft block uppercase">COACH / SEAT</span>
+              <span class="font-bold text-ink">01 / A4</span>
+            </div>
+            <div class="text-right">
+              <span class="text-[9px] text-ink-soft block uppercase">FARE</span>
+              <span class="font-bold text-ink">₹0 FREE</span>
+            </div>
+            <div>
+              <span class="text-[9px] text-ink-soft block uppercase">DATE</span>
+              <span class="text-ink" id="ticket-date-display">12 NOV 2026</span>
+            </div>
+            <div>
+              <span class="text-[9px] text-ink-soft block uppercase">TIME</span>
+              <span class="text-ink" id="ticket-time-display">17:45 IST</span>
+            </div>
+            <div class="text-right">
+              <span class="text-[9px] text-ink-soft block uppercase">VALIDITY</span>
+              <span class="font-bold text-emerald-600">VALID PASS</span>
+            </div>
+          </div>
+
+          <!-- QR Code Canvas & Save Button -->
+          <div class="flex items-center justify-between gap-3 pt-1">
+            <div class="flex items-center gap-3">
+              <canvas id="ticket-qr-canvas" width="60" height="60" class="border border-rule bg-paper"></canvas>
+              <div class="font-mono text-[10px] text-ink-soft">
+                <div>SCAN FOR DEEP LINK</div>
+                <div class="font-bold text-ink">SECURE BOARDING</div>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-2">
+              <button
+                type="button"
+                id="save-ticket-btn"
+                class="px-2.5 py-1.5 bg-paper border border-rule hover:border-ink font-mono text-xs text-ink font-bold uppercase transition-colors"
+                title="Save ticket as PNG image"
+              >
+                💾 Save
+              </button>
+
+              <button
+                type="button"
+                id="board-train-action-btn"
+                class="px-3 py-1.5 bg-ink text-paper font-mono text-xs font-bold uppercase tracking-wider hover:opacity-90 transition-opacity flex items-center gap-1.5"
+              >
+                <span>Travel Now</span>
+                <span>➔</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  import type { StationCode } from '../scripts/journey/types';
+  import { STATIONS } from '../scripts/journey/constants';
+
+  let selectedStation: StationCode = 'station-02';
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const stationBtns = document.querySelectorAll('.ticket-station-choice');
+    const previewDestName = document.getElementById('preview-dest-name');
+    const previewDestLine = document.getElementById('preview-dest-line');
+    const issueBtn = document.getElementById('issue-ticket-btn');
+    const slotContainer = document.getElementById('ticket-slot-container');
+
+    const destDisplay = document.getElementById('ticket-dest-display');
+    const pnrDisplay = document.getElementById('ticket-pnr-display');
+    const dateDisplay = document.getElementById('ticket-date-display');
+    const timeDisplay = document.getElementById('ticket-time-display');
+    const topBand = document.getElementById('ticket-top-band');
+    const qrCanvas = document.getElementById('ticket-qr-canvas') as HTMLCanvasElement | null;
+    const saveBtn = document.getElementById('save-ticket-btn');
+    const travelBtn = document.getElementById('board-train-action-btn');
+
+    // Handle station choice click
+    stationBtns.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const id = btn.getAttribute('data-station-id') as StationCode;
+        if (!id) return;
+        selectedStation = id;
+        const st = STATIONS[id];
+
+        if (previewDestName) previewDestName.textContent = `${st.name} (${st.code})`;
+        if (previewDestLine) previewDestLine.textContent = `${st.line.toUpperCase()} TRANSIT`;
+
+        stationBtns.forEach((b) => b.classList.remove('bg-surface', 'border-ink'));
+        btn.classList.add('bg-surface', 'border-ink');
+      });
+    });
+
+    // Handle "Issue Ticket"
+    if (issueBtn) {
+      issueBtn.addEventListener('click', async () => {
+        const st = STATIONS[selectedStation];
+        const pnr = Math.floor(1000000000 + Math.random() * 9000000000).toString();
+        const now = new Date();
+        const dateStr = now.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }).toUpperCase();
+        const timeStr = now.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }) + ' IST';
+
+        if (destDisplay) destDisplay.textContent = `${st.name} (${st.code})`;
+        if (pnrDisplay) pnrDisplay.textContent = pnr;
+        if (dateDisplay) dateDisplay.textContent = dateStr;
+        if (timeDisplay) timeDisplay.textContent = timeStr;
+
+        if (topBand) {
+          const lineColor = st.line === 'ai' ? 'var(--line-ai)' :
+                           st.line === 'frontend' ? 'var(--line-frontend)' :
+                           st.line === 'backend' ? 'var(--line-backend)' :
+                           'var(--line-hardware)';
+          topBand.style.backgroundColor = lineColor;
+        }
+
+        // Lazy load qrcode library (Rule 10 & Section 6.2)
+        if (qrCanvas) {
+          try {
+            const QRCode = await import('qrcode');
+            const canonicalUrl = `${window.location.origin}/#${st.alias}`;
+            await QRCode.toCanvas(qrCanvas, canonicalUrl, {
+              width: 60,
+              margin: 1,
+              color: {
+                dark: '#111111',
+                light: '#F4F1EA',
+              },
+            });
+          } catch (e) {
+            console.warn('QR code generation failed:', e);
+          }
+        }
+
+        if (slotContainer) {
+          slotContainer.classList.remove('hidden');
+          slotContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        // Announce ticket issued
+        if ((window as any).__yugline) {
+          (window as any).__yugline.announce(`Ticket issued for ${st.name}. Platform 1.`);
+        }
+      });
+    }
+
+    // Handle Direct "Travel Now" from ticket
+    if (travelBtn) {
+      travelBtn.addEventListener('click', () => {
+        if ((window as any).__yugline) {
+          (window as any).__yugline.navigateToStation(selectedStation);
+        }
+      });
+    }
+
+    // Handle "Save Ticket" PNG download (drawn on Canvas directly without html2canvas per Section 6.2)
+    if (saveBtn) {
+      saveBtn.addEventListener('click', () => {
+        const st = STATIONS[selectedStation];
+        const canvas = document.createElement('canvas');
+        canvas.width = 600;
+        canvas.height = 300;
+        const ctx = canvas.getContext('2d');
+        if (!ctx) return;
+
+        // Background
+        ctx.fillStyle = '#FBF9F4';
+        ctx.fillRect(0, 0, 600, 300);
+
+        // Border
+        ctx.strokeStyle = '#111111';
+        ctx.lineWidth = 4;
+        ctx.strokeRect(4, 4, 592, 292);
+
+        // Header band
+        ctx.fillStyle = st.line === 'ai' ? '#1B3A8A' :
+                        st.line === 'frontend' ? '#E4572E' :
+                        st.line === 'backend' ? '#0B6E4F' : '#F2B705';
+        ctx.fillRect(4, 4, 592, 16);
+
+        // Text
+        ctx.fillStyle = '#111111';
+        ctx.font = 'bold 24px "Archivo", sans-serif';
+        ctx.fillText(st.name.toUpperCase(), 30, 60);
+
+        ctx.font = '14px "IBM Plex Mono", monospace';
+        ctx.fillStyle = '#4A4741';
+        ctx.fillText(`FROM: CENTRAL DEPARTURE  |  CODE: ${st.code}`, 30, 95);
+        ctx.fillText(`PNR: ${pnrDisplay?.textContent || '9482019482'}  |  FARE: ₹0 FREE PASS`, 30, 125);
+        ctx.fillText(`DATE: ${dateDisplay?.textContent || '12 NOV 2026'}  |  TIME: ${timeDisplay?.textContent || '17:45 IST'}`, 30, 155);
+
+        ctx.fillStyle = '#111111';
+        ctx.font = 'bold 16px "IBM Plex Mono", monospace';
+        ctx.fillText('STATUS: VALID BOARDING PASS // THE YUG LINE', 30, 220);
+
+        // Copy QR from qrCanvas if present
+        if (qrCanvas) {
+          ctx.drawImage(qrCanvas, 480, 50, 90, 90);
+        }
+
+        // Export PNG
+        const link = document.createElement('a');
+        link.download = `ticket-${st.alias}.png`;
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+      });
+    }
+  });
+</script>

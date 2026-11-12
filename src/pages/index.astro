@@ -11,6 +11,7 @@ import EducationTicket from '../components/EducationTicket.astro';
 import TerminusContact from '../components/TerminusContact.astro';
 import Pictograms from '../components/Pictograms.astro';
 import JourneyControls from '../components/JourneyControls.astro';
+import TicketWindow from '../components/TicketWindow.astro';
 
 import { PROFILE, PROJECTS } from '../data/portfolio';
 
@@ -183,6 +184,9 @@ const moreProjects = PROJECTS.filter((p) => !p.featured);
         </div>
 
       </div>
+
+      <!-- Ticket Booking Office & Boarding Pass Generator (Phase P2) -->
+      <TicketWindow />
     </section>
 
     <!-- Rail Divider Line -->
