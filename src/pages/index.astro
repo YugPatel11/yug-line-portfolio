@@ -12,6 +12,7 @@ import TerminusContact from '../components/TerminusContact.astro';
 import Pictograms from '../components/Pictograms.astro';
 import JourneyControls from '../components/JourneyControls.astro';
 import TicketWindow from '../components/TicketWindow.astro';
+import FareGate from '../components/FareGate.astro';
 
 import { PROFILE, PROJECTS } from '../data/portfolio';
 
@@ -187,6 +188,9 @@ const moreProjects = PROJECTS.filter((p) => !p.featured);
 
       <!-- Ticket Booking Office & Boarding Pass Generator (Phase P2) -->
       <TicketWindow />
+
+      <!-- Fare Gate & Barrier Validation Machine (Phase P3) -->
+      <FareGate />
     </section>
 
     <!-- Rail Divider Line -->
