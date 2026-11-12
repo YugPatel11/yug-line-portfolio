@@ -57,3 +57,4 @@
 - Add slim station top bar ("You are at: Projects · Stop 3 of 7") and fixed bottom bar (`Next: X →`, `Back to start`, `All stops`).
 - Polish Express Mode (long page) with clear hierarchy and sticky stops navigation.
 - Run Lighthouse audits, contrast checks, keyboard navigation verification, and automated build tests.
+

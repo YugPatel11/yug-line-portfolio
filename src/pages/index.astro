@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import StationHeader from '../components/StationHeader.astro';
+import OverviewMap from '../components/OverviewMap.astro';
 import DeparturesBoard from '../components/DeparturesBoard.astro';
 import InterchangeGhumify from '../components/InterchangeGhumify.astro';
 import ProjectStop from '../components/ProjectStop.astro';
@@ -198,9 +199,10 @@ const moreProjects = PROJECTS.filter((p) => !p.featured);
   <main id="main-content" role="main" class="max-w-site mx-auto px-4 sm:px-6 pt-24 pb-32 relative">
     
     <!-- ========================================================
-         STATION 00: DEPARTURE & JOURNEY STEPS
+         JOURNEY MODE FLOW (Steps 1, 2, 3)
+         Visible in Journey Mode during booking flow
          ======================================================== -->
-    <section id="station-00" aria-labelledby="heading-st-00" class="pt-4 pb-12 relative">
+    <div id="journey-flow-wrapper" class="w-full">
       <!-- Step 1 of 3: Choose a Stop -->
       <ChooseStop />
 
@@ -209,74 +211,95 @@ const moreProjects = PROJECTS.filter((p) => !p.featured);
 
       <!-- Step 3 of 3: Scan Your Ticket -->
       <GateScreen />
+    </div>
 
-      <!-- Express Mode Long-Page Hero Content -->
-      <div id="express-hero-content" class="hidden mt-8">
-        <StationHeader
-          code="ST-00"
-          name="Central Departure"
-          category="Origin & Identity"
-          lineVariant="frontend"
-          id="heading-st-00"
-        />
+    <!-- ========================================================
+         STATION 00: CENTRAL DEPARTURE (ORIGIN & IDENTITY)
+         Visible in Express Mode and when visiting Station 00
+         ======================================================== -->
+    <section id="station-00" aria-labelledby="heading-st-00" class="pt-4 pb-16 relative">
+      <StationHeader
+        code="ST-00"
+        name="Central Departure"
+        category="Origin & Identity"
+        lineVariant="frontend"
+        id="heading-st-00"
+      />
 
-        <div class="ticket ticket-notched p-6 sm:p-10 bg-surface border-2 border-ink shadow-[8px_8px_0_var(--ink)]">
-          <div class="flex flex-wrap items-center justify-between gap-4 border-b-2 border-ink pb-4 mb-6">
-            <div>
-              <span class="mono-label block">FROM STATION</span>
-              <span class="font-mono text-sm sm:text-base font-bold text-ink">BACKEND LOGIC</span>
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        <!-- Large Origin Ticket -->
+        <div class="lg:col-span-7">
+          <div class="ticket ticket-notched p-6 sm:p-10 bg-surface border-2 border-ink shadow-[8px_8px_0_var(--ink)]">
+            <!-- Routing Header -->
+            <div class="flex flex-wrap items-center justify-between gap-4 border-b-2 border-ink pb-4 mb-6">
+              <div>
+                <span class="mono-label block">FROM STATION</span>
+                <span class="font-mono text-sm sm:text-base font-bold text-ink">BACKEND LOGIC</span>
+              </div>
+              <div class="font-mono text-xl text-line-frontend font-black" aria-hidden="true">➔➔➔</div>
+              <div class="text-right">
+                <span class="mono-label block">TO DESTINATION</span>
+                <span class="font-mono text-sm sm:text-base font-bold text-ink">SMOOTH UIs</span>
+              </div>
             </div>
-            <div class="font-mono text-xl text-line-frontend font-black" aria-hidden="true">➔➔➔</div>
-            <div class="text-right">
-              <span class="mono-label block">TO DESTINATION</span>
-              <span class="font-mono text-sm sm:text-base font-bold text-ink">SMOOTH UIs</span>
+
+            <!-- Name & Bio -->
+            <div class="mb-6">
+              <span class="mono-label block mb-1">PASSENGER / ARCHITECT</span>
+              <h1 class="font-archivo text-4xl sm:text-6xl lg:text-7xl font-black text-ink tracking-tight uppercase leading-[0.95]">
+                {PROFILE.name}
+              </h1>
+              <p class="font-mono text-base sm:text-lg text-ink-soft mt-3 font-semibold">
+                // {PROFILE.role}
+              </p>
+              <p class="font-manrope text-base sm:text-lg text-ink mt-3 leading-relaxed max-w-[65ch]">
+                "{PROFILE.tagline}"
+              </p>
+            </div>
+
+            <!-- Proof Chips -->
+            <div class="flex flex-wrap gap-2 mb-8 font-mono text-xs">
+              <span class="px-3 py-1 bg-paper border border-ink text-ink font-bold inline-flex items-center gap-1.5">
+                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                {PROFILE.status}
+              </span>
+              <span class="px-3 py-1 bg-paper border border-rule text-ink">
+                Exp: {PROFILE.experienceYears}
+              </span>
+              <span class="px-3 py-1 bg-paper border border-rule text-ink">
+                Grants: {PROFILE.grantTotal}
+              </span>
+              <span class="px-3 py-1 bg-paper border border-rule text-ink">
+                {PROFILE.leadershipRole}
+              </span>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="ticket-perforation pt-6 flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
+              <button
+                type="button"
+                id="hero-choose-stop-btn"
+                class="btn-stub btn-stub--primary justify-center"
+              >
+                <span>Choose a destination stop</span>
+                <span class="font-bold">➔</span>
+              </button>
+
+              <a
+                href={PROFILE.contacts.resumeUrl}
+                download
+                class="btn-stub !bg-surface !text-ink hover:!bg-paper justify-center"
+              >
+                <span>Download Résumé</span>
+                <Pictograms name="arrow-up-right" size={14} />
+              </a>
             </div>
           </div>
+        </div>
 
-          <div class="mb-6">
-            <span class="mono-label block mb-1">PASSENGER / ARCHITECT</span>
-            <h1 class="font-archivo text-4xl sm:text-6xl lg:text-7xl font-black text-ink tracking-tight uppercase leading-[0.95]">
-              {PROFILE.name}
-            </h1>
-            <p class="font-mono text-base sm:text-lg text-ink-soft mt-3 font-semibold">
-              // {PROFILE.role}
-            </p>
-            <p class="font-manrope text-base sm:text-lg text-ink mt-3 leading-relaxed">
-              "{PROFILE.tagline}"
-            </p>
-          </div>
-
-          <div class="flex flex-wrap gap-2 mb-8 font-mono text-xs">
-            <span class="px-3 py-1 bg-paper border border-ink text-ink font-bold inline-flex items-center gap-1.5">
-              <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-              {PROFILE.status}
-            </span>
-            <span class="px-3 py-1 bg-paper border border-rule text-ink">
-              Exp: {PROFILE.experienceYears}
-            </span>
-            <span class="px-3 py-1 bg-paper border border-rule text-ink">
-              Grants: {PROFILE.grantTotal}
-            </span>
-            <span class="px-3 py-1 bg-paper border border-rule text-ink">
-              {PROFILE.leadershipRole}
-            </span>
-          </div>
-
-          <div class="ticket-perforation pt-6 flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
-            <a href="#station-01" class="btn-stub justify-center">
-              <span>View all stops below</span>
-              <span class="font-bold">↓</span>
-            </a>
-
-            <a
-              href={PROFILE.contacts.resumeUrl}
-              download
-              class="btn-stub !bg-surface !text-ink hover:!bg-paper justify-center"
-            >
-              <span>Download Résumé</span>
-              <Pictograms name="arrow-up-right" size={14} />
-            </a>
-          </div>
+        <!-- Transit Route Diagram -->
+        <div class="lg:col-span-5">
+          <OverviewMap />
         </div>
       </div>
     </section>

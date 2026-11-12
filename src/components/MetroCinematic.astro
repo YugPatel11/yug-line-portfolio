@@ -8,12 +8,14 @@ import Pictograms from './Pictograms.astro';
      - 100dvh fixed overlay above everything (z-index 90)
      - 4 layers: Far wall, Mid pillars, Platform floor, 4-car train
      - Horizon line at ~70% of screen height
+     - Dynamic viewport-calculated train motion (zero clipping)
+     - Car 2 center doors align precisely with screen center
      - Train deceleration with pitch settle, speed streaks fading
      - Door open revealing warm interior (#FFD98A)
      - Centred "Board the metro →" button over car 2 centre door
      - Departure rightward with page reveal behind tail (~0.9s)
      - Reduced motion calm card fallback
-     - Zero external libraries, high-performance WAAPI/CSS
+     - Zero external audio/video assets, high-performance WAAPI
      ======================================================== -->
 <div
   id="metro-cinematic-stage"
@@ -61,7 +63,7 @@ import Pictograms from './Pictograms.astro';
     <!-- Repeating Destination Names at Low Contrast (<=10% diff) -->
     <div
       id="metro-wall-watermark"
-      class="absolute top-[18%] left-0 right-0 text-center font-archivo font-black text-6xl sm:text-8xl lg:text-9xl uppercase tracking-tighter opacity-[0.08] text-ink select-none whitespace-nowrap overflow-hidden"
+      class="absolute top-[18%] left-0 right-0 text-center font-archivo font-black text-5xl sm:text-7xl lg:text-9xl uppercase tracking-tighter opacity-[0.08] text-ink select-none whitespace-nowrap overflow-hidden"
     >
       NEXT STOP // THE YUG LINE // TRANSIT
     </div>
@@ -79,7 +81,7 @@ import Pictograms from './Pictograms.astro';
     id="layer-mid-pillars"
     class="absolute inset-0 z-15 pointer-events-none transition-transform duration-700 ease-out"
   >
-    <!-- Architectural Pillars every ~480px -->
+    <!-- Architectural Pillars -->
     <div class="absolute inset-0 flex justify-between px-6 sm:px-16 pointer-events-none">
       <div class="w-8 sm:w-12 h-full bg-surface border-x-2 border-ink shadow-[4px_0_0_rgba(0,0,0,0.1)]"></div>
       <div class="w-8 sm:w-12 h-full bg-surface border-x-2 border-ink shadow-[4px_0_0_rgba(0,0,0,0.1)] hidden md:block"></div>
@@ -112,11 +114,11 @@ import Pictograms from './Pictograms.astro';
       <div class="w-full h-1 bg-ink opacity-30 transform -translate-x-8"></div>
     </div>
 
-    <!-- 4-Car Custom SVG Metro Train Container (Animated with translate3d) -->
+    <!-- 4-Car Custom SVG Metro Train Container (Dynamically positioned via WAAPI) -->
     <div
       id="metro-train-wrapper"
       class="flex items-end select-none will-change-transform"
-      style="transform: translate3d(-100vw, 0, 0);"
+      style="transform: translate3d(-3000px, 0, 0);"
     >
       <svg
         id="metro-four-car-svg"
@@ -126,7 +128,7 @@ import Pictograms from './Pictograms.astro';
         aria-hidden="true"
       >
         <defs>
-          <!-- Middle Car Symbol -->
+          <!-- Middle Car Unit (360 wide, center door at x=180) -->
           <g id="metro-car-unit">
             <!-- Car Body -->
             <rect x="0" y="24" width="360" height="175" rx="8" fill="var(--surface)" stroke="var(--ink)" stroke-width="3" />
@@ -155,37 +157,44 @@ import Pictograms from './Pictograms.astro';
             <circle cx="290" cy="222" r="8" fill="var(--paper)" stroke="var(--ink)" stroke-width="2" />
             <line x1="220" y1="222" x2="310" y2="222" stroke="var(--ink)" stroke-width="5" />
 
-            <!-- Windows (Black glass with diagonal reflection bars) -->
-            <g>
-              <rect x="25" y="44" width="70" height="60" rx="4" fill="#111111" />
-              <line x1="38" y1="48" x2="52" y2="98" stroke="#ffffff" stroke-width="2.5" opacity="0.3" />
-              <line x1="48" y1="48" x2="62" y2="98" stroke="#ffffff" stroke-width="1.5" opacity="0.2" />
+            <!-- Left Passenger Window (x=24, width=105) -->
+            <rect x="24" y="48" width="105" height="55" rx="4" fill="#111111" />
+            <line x1="42" y1="52" x2="62" y2="98" stroke="#ffffff" stroke-width="2" opacity="0.3" />
+            <line x1="56" y1="52" x2="76" y2="98" stroke="#ffffff" stroke-width="1.2" opacity="0.2" />
 
-              <rect x="145" y="44" width="70" height="60" rx="4" fill="#111111" />
-              <line x1="158" y1="48" x2="172" y2="98" stroke="#ffffff" stroke-width="2.5" opacity="0.3" />
-              <line x1="168" y1="48" x2="182" y2="98" stroke="#ffffff" stroke-width="1.5" opacity="0.2" />
+            <!-- Right Passenger Window (x=231, width=105) -->
+            <rect x="231" y="48" width="105" height="55" rx="4" fill="#111111" />
+            <line x1="249" y1="52" x2="269" y2="98" stroke="#ffffff" stroke-width="2" opacity="0.3" />
+            <line x1="263" y1="52" x2="283" y2="98" stroke="#ffffff" stroke-width="1.2" opacity="0.2" />
 
-              <rect x="265" y="44" width="70" height="60" rx="4" fill="#111111" />
-              <line x1="278" y1="48" x2="292" y2="98" stroke="#ffffff" stroke-width="2.5" opacity="0.3" />
-              <line x1="288" y1="48" x2="302" y2="98" stroke="#ffffff" stroke-width="1.5" opacity="0.2" />
+            <!-- Warm Interior Light Slot at Car Center (x=150 to x=210, width=60) -->
+            <g class="door-interior-slot">
+              <rect x="150" y="38" width="60" height="160" fill="#FFD98A" stroke="var(--ink)" stroke-width="1" />
+              <!-- Handrail Grab Pole -->
+              <line x1="180" y1="38" x2="180" y2="198" stroke="var(--ink)" stroke-width="2.5" />
+              <!-- Commuter Silhouettes Inside -->
+              <circle cx="168" cy="80" r="8" fill="var(--ink)" opacity="0.8" />
+              <rect x="162" y="92" width="12" height="40" rx="3" fill="var(--ink)" opacity="0.8" />
+              <circle cx="192" cy="76" r="8" fill="var(--ink)" opacity="0.8" />
+              <rect x="186" y="88" width="12" height="44" rx="3" fill="var(--ink)" opacity="0.8" />
             </g>
 
-            <!-- Warm Interior Light Behind Doors (#FFD98A) with Silhouettes -->
-            <g class="door-interior-slot" transform="translate(100, 40)">
-              <rect x="0" y="0" width="50" height="154" fill="#FFD98A" />
-              <!-- Handrail & Passenger Silhouette -->
-              <line x1="25" y1="0" x2="25" y2="154" stroke="var(--ink)" stroke-width="2" />
-              <circle cx="25" cy="50" r="10" fill="var(--ink)" opacity="0.8" />
-              <rect x="15" y="65" width="20" height="50" rx="4" fill="var(--ink)" opacity="0.8" />
-            </g>
-
-            <!-- Sliding Doors (Left & Right leaves) -->
+            <!-- Sliding Double Doors at Car Center (x=150 to x=210) -->
             <g class="sliding-door-leaves">
-              <!-- Left Leaf -->
-              <rect class="door-leaf-left" x="98" y="38" width="27" height="158" fill="var(--surface)" stroke="var(--ink)" stroke-width="2" rx="2" style="transition: transform 0.5s ease-out;" />
-              <!-- Right Leaf -->
-              <rect class="door-leaf-right" x="125" y="38" width="27" height="158" fill="var(--surface)" stroke="var(--ink)" stroke-width="2" rx="2" style="transition: transform 0.5s ease-out;" />
-              <line class="door-seam" x1="125" y1="38" x2="125" y2="196" stroke="var(--ink)" stroke-width="2" />
+              <!-- Left Door Leaf (x=150, width=30) -->
+              <g class="door-leaf-left" style="will-change: transform;">
+                <rect x="150" y="38" width="30" height="160" fill="var(--surface)" stroke="var(--ink)" stroke-width="2" rx="2" />
+                <rect x="156" y="52" width="18" height="40" rx="3" fill="#111111" />
+                <line x1="160" y1="55" x2="170" y2="88" stroke="#ffffff" stroke-width="1.5" opacity="0.3" />
+              </g>
+              <!-- Right Door Leaf (x=180, width=30) -->
+              <g class="door-leaf-right" style="will-change: transform;">
+                <rect x="180" y="38" width="30" height="160" fill="var(--surface)" stroke="var(--ink)" stroke-width="2" rx="2" />
+                <rect x="186" y="52" width="18" height="40" rx="3" fill="#111111" />
+                <line x1="190" y1="55" x2="200" y2="88" stroke="#ffffff" stroke-width="1.5" opacity="0.3" />
+              </g>
+              <!-- Center Seam Line -->
+              <line class="door-seam" x1="180" y1="38" x2="180" y2="198" stroke="var(--ink)" stroke-width="2" />
             </g>
           </g>
 
@@ -201,68 +210,48 @@ import Pictograms from './Pictograms.astro';
         <!-- Rail Track -->
         <line x1="0" y1="238" x2="1600" y2="238" stroke="var(--ink)" stroke-width="4" />
 
-        <!-- CAR 1: Lead Nose Car -->
+        <!-- CAR 1: Lead Nose Car (0-370) -->
         <g id="train-car-1" transform="translate(10, 0)">
           <use href="#metro-car-unit" />
           <!-- Aerodynamic Cab Nose on left -->
           <path d="M 0 32 Q -35 80 0 199 Z" fill="var(--surface)" stroke="var(--ink)" stroke-width="3" />
           <!-- Amber Dot-Matrix Destination Header -->
-          <rect x="40" y="32" width="130" height="16" fill="#111111" rx="2" stroke="var(--ink)" stroke-width="1.5" />
-          <text id="train-cab-dest-text" x="105" y="44" font-family="'IBM Plex Mono', monospace" font-size="9" fill="#FFB000" font-weight="bold" text-anchor="middle">ST-02 GHUMIFY</text>
+          <rect x="35" y="32" width="140" height="16" fill="#111111" rx="2" stroke="var(--ink)" stroke-width="1.5" />
+          <text id="train-cab-dest-text" x="105" y="44" font-family="'IBM Plex Mono', monospace" font-size="8.5" fill="#FFB000" font-weight="bold" text-anchor="middle">ST-02 GHUMIFY</text>
           <!-- Flat Headlights -->
           <circle cx="-16" cy="150" r="8" fill="#FFC933" stroke="var(--ink)" stroke-width="2" />
           <circle cx="-16" cy="150" r="4" fill="#ffffff" />
         </g>
 
-        <!-- Gangway 1-2 -->
+        <!-- Gangway 1-2 (370-400) -->
         <use href="#accordion-gangway" x="370" y="0" />
 
-        <!-- CAR 2: Centre Passenger Car (Aligns with Centre of Viewport!) -->
+        <!-- CAR 2: Centre Passenger Car (400-760, center door at x = 400 + 180 = 580) -->
         <g id="train-car-2" transform="translate(400, 0)">
           <use href="#metro-car-unit" />
-          <!-- Car 2 Centre Badge -->
+          <!-- Car 2 Identification Badge -->
           <rect x="160" y="172" width="40" height="14" fill="var(--paper)" stroke="var(--ink)" stroke-width="1.5" />
           <text x="180" y="183" font-family="'IBM Plex Mono', monospace" font-size="9" fill="var(--ink)" font-weight="bold" text-anchor="middle">CAR 02</text>
         </g>
 
-        <!-- Gangway 2-3 -->
+        <!-- Gangway 2-3 (760-790) -->
         <use href="#accordion-gangway" x="760" y="0" />
 
-        <!-- CAR 3: Passenger Car -->
+        <!-- CAR 3: Passenger Car (790-1150) -->
         <g id="train-car-3" transform="translate(790, 0)">
           <use href="#metro-car-unit" />
         </g>
 
-        <!-- Gangway 3-4 -->
+        <!-- Gangway 3-4 (1150-1180) -->
         <use href="#accordion-gangway" x="1150" y="0" />
 
-        <!-- CAR 4: Trailing Tail Car -->
+        <!-- CAR 4: Trailing Tail Car (1180-1540) -->
         <g id="train-car-4" transform="translate(1180, 0)">
           <use href="#metro-car-unit" />
           <!-- Tail Lights -->
           <circle cx="365" cy="150" r="6" fill="#D8362B" stroke="var(--ink)" stroke-width="2" />
         </g>
       </svg>
-    </div>
-
-    <!-- Centred "Board the metro →" Button (Mounted over Car 2 Centre Doors) -->
-    <div
-      id="metro-board-btn-container"
-      class="absolute left-1/2 -translate-x-1/2 bottom-8 z-30 opacity-0 pointer-events-none transition-all duration-300 flex flex-col items-center gap-2"
-    >
-      <button
-        type="button"
-        id="board-the-metro-btn"
-        class="btn-stub btn-stub--primary !min-h-[64px] !px-8 text-lg sm:text-xl font-black justify-center shadow-[6px_6px_0_var(--ink)] animate-pulse"
-        aria-label="Board the metro"
-      >
-        <span>Board the metro →</span>
-      </button>
-
-      <!-- 6s Idle Hint -->
-      <span id="board-idle-hint" class="font-mono text-xs text-ink-soft bg-paper/90 px-3 py-1 border border-ink hidden">
-        Press to board.
-      </span>
     </div>
   </div>
 
@@ -293,6 +282,27 @@ import Pictograms from './Pictograms.astro';
     ></div>
   </div>
 
+  <!-- Centred "Board the metro →" Button (Mounted over Car 2 Centre Doors at z-35) -->
+  <div
+    id="metro-board-btn-container"
+    class="absolute left-1/2 -translate-x-1/2 z-35 opacity-0 pointer-events-none transition-all duration-300 flex flex-col items-center gap-2"
+    style="bottom: clamp(22%, 29vh, 32%);"
+  >
+    <button
+      type="button"
+      id="board-the-metro-btn"
+      class="btn-stub btn-stub--primary !min-h-[60px] sm:!min-h-[64px] !px-8 text-base sm:text-xl font-black justify-center shadow-[6px_6px_0_var(--ink)] animate-pulse"
+      aria-label="Board the metro"
+    >
+      <span>Board the metro →</span>
+    </button>
+
+    <!-- 6s Idle Hint -->
+    <span id="board-idle-hint" class="font-mono text-xs text-ink-soft bg-paper/95 px-3 py-1 border border-ink hidden">
+      Press to board.
+    </span>
+  </div>
+
   <!-- REDUCED-MOTION CALM CARD (Section 3.8) -->
   <div
     id="metro-reduced-card"
@@ -321,6 +331,8 @@ import Pictograms from './Pictograms.astro';
 
 <script>
   import { metroSound } from '../scripts/sound/metroSound';
+  import { STATIONS } from '../scripts/journey/constants';
+  import type { StationCode } from '../scripts/journey/types';
 
   document.addEventListener('DOMContentLoaded', () => {
     const stage = document.getElementById('metro-cinematic-stage');
@@ -337,9 +349,12 @@ import Pictograms from './Pictograms.astro';
     const reducedCard = document.getElementById('metro-reduced-card');
     const reducedBoardBtn = document.getElementById('reduced-board-btn');
 
-    let currentDestination = 'station-02';
+    let currentDestination: StationCode = 'station-02';
     let isBoarding = false;
     let idleTimer: any = null;
+    let doorsTimer: any = null;
+    let currentAnim: Animation | null = null;
+    let lastStopX = 0;
 
     const isReduced = () =>
       document.documentElement.classList.contains('reduce-motion') ||
@@ -364,23 +379,90 @@ import Pictograms from './Pictograms.astro';
       });
     }
 
+    // Precise Geometric Calculations for Viewport-Fitting Alignment
+    // SVG viewBox: 1600 x 240.
+    // Car 2 center door is at x = 580 in SVG coordinates (Car 2 starts at 400 + 180 center door = 580).
+    const calculatePositions = () => {
+      const svgEl = document.getElementById('metro-four-car-svg');
+      const trackEl = document.getElementById('layer-train-track');
+      const viewportWidth = window.innerWidth;
+
+      let renderedHeight = 240;
+      if (svgEl && svgEl.clientHeight > 0) {
+        renderedHeight = svgEl.clientHeight;
+      } else if (trackEl && trackEl.clientHeight > 0) {
+        renderedHeight = trackEl.clientHeight;
+      }
+
+      const scale = renderedHeight / 240;
+      const totalTrainWidth = 1600 * scale;
+      const car2CenterDoorOffset = 580 * scale;
+
+      // Stop position: Car 2 center door aligns exactly with viewport horizontal center
+      const stopX = Math.round((viewportWidth / 2) - car2CenterDoorOffset);
+
+      // Start position: Train begins fully off-screen left
+      const startX = Math.round(-totalTrainWidth - 120);
+
+      // Depart position: Train exits fully off-screen right
+      const departX = Math.round(viewportWidth + 120);
+
+      return { scale, totalTrainWidth, car2CenterDoorOffset, startX, stopX, departX };
+    };
+
+    // Update signage to match destination
+    const updateSignage = (destId: StationCode) => {
+      const meta = STATIONS[destId];
+      if (!meta) return;
+
+      const codeEl = document.getElementById('blade-sign-code');
+      const titleEl = document.getElementById('blade-sign-title');
+      const bandEl = document.getElementById('blade-sign-band');
+      const cabText = document.getElementById('train-cab-dest-text');
+      const watermark = document.getElementById('metro-wall-watermark');
+
+      const color = meta.line === 'ai' ? 'var(--line-ai)' :
+                    meta.line === 'frontend' ? 'var(--line-frontend)' :
+                    meta.line === 'backend' ? 'var(--line-backend)' :
+                    meta.line === 'hardware' ? 'var(--line-hardware)' : 'var(--ink)';
+
+      if (codeEl) codeEl.textContent = `PLATFORM 1 // ${meta.code}`;
+      if (titleEl) titleEl.textContent = meta.name.toUpperCase();
+      if (bandEl) bandEl.style.backgroundColor = color;
+      if (cabText) cabText.textContent = `${meta.code} ${meta.name.split('—')[0].trim().toUpperCase()}`;
+      if (watermark) watermark.textContent = `NEXT STOP // ${meta.name.toUpperCase()} // THE YUG LINE`;
+
+      document.querySelectorAll('.car-livery-stripe').forEach((stripe) => {
+        (stripe as HTMLElement).setAttribute('fill', color);
+      });
+    };
+
     // Main Cinematic Execution Function
     const launchMetro = (destinationId: string) => {
-      currentDestination = destinationId;
+      currentDestination = destinationId as StationCode;
       isBoarding = false;
+      clearTimeout(idleTimer);
+      clearTimeout(doorsTimer);
+      if (currentAnim) currentAnim.cancel();
+
       if (!stage) return;
+
+      updateSignage(currentDestination);
 
       // 1. Lock page scroll and make background inert (Section 3.1)
       stage.style.display = 'block';
+      stage.style.opacity = '1';
       document.body.style.overflow = 'hidden';
       const main = document.getElementById('main-content');
       if (main) (main as any).inert = true;
 
-      // Check reduced motion
+      // Check reduced motion fallback
       if (isReduced()) {
         if (reducedCard) reducedCard.style.display = 'flex';
         metroSound.playDoorOpenChime();
         return;
+      } else {
+        if (reducedCard) reducedCard.style.display = 'none';
       }
 
       // Reset positions & streaks
@@ -392,33 +474,59 @@ import Pictograms from './Pictograms.astro';
       }
       if (idleHint) idleHint.classList.add('hidden');
 
-      // Start approach sound
+      // Reset doors to closed state
+      document.querySelectorAll('.door-leaf-left').forEach((leaf) => {
+        (leaf as HTMLElement).style.transform = 'translateX(0)';
+      });
+      document.querySelectorAll('.door-leaf-right').forEach((leaf) => {
+        (leaf as HTMLElement).style.transform = 'translateX(0)';
+      });
+
+      // Reset pillars & wall
+      const wall = document.getElementById('layer-far-wall');
+      const pillars = document.getElementById('layer-mid-pillars');
+      if (wall) wall.style.transform = 'translateX(0)';
+      if (pillars) pillars.style.transform = 'translateX(0)';
+
+      const { startX, stopX } = calculatePositions();
+      lastStopX = stopX;
+
+      // Start approach audio sequence (brown noise, flange, brake squeal, pneumatic hiss)
       metroSound.playArrivalSequence();
 
-      // Train enters and decelerates to stop (Section 3.2: 0.3s - 2.3s)
+      // Train enters and decelerates to stop with WAAPI (Section 3.2: 0.3s - 2.3s)
       if (trainWrapper) {
-        trainWrapper.style.transition = 'none';
-        trainWrapper.style.transform = 'translate3d(-100vw, 0, 0)';
-
-        requestAnimationFrame(() => {
-          trainWrapper.style.transition = 'transform 2.0s cubic-bezier(0.08, 0.7, 0.2, 1)';
-          // Align car 2 center door with center of viewport:
-          // SVG width 1600. Car 2 center is at 400 + 180 = 580px.
-          trainWrapper.style.transform = 'translate3d(0, 0, 0)';
-        });
+        currentAnim = trainWrapper.animate(
+          [
+            { transform: `translate3d(${startX}px, 0, 0) rotate(0deg)` },
+            { transform: `translate3d(${stopX}px, 0, 0) rotate(0.4deg)`, offset: 0.88 },
+            { transform: `translate3d(${stopX}px, 0, 0) rotate(0deg)`, offset: 1.0 },
+          ],
+          {
+            duration: 2000,
+            easing: 'cubic-bezier(0.08, 0.7, 0.2, 1)',
+            fill: 'forwards',
+          }
+        );
       }
 
       // Doors slide open at 2.3s
-      setTimeout(() => {
+      doorsTimer = setTimeout(() => {
         if (streaks) streaks.style.opacity = '0';
         if (ticker) ticker.textContent = 'NOW BOARDING';
 
-        // Open doors
+        // Slide open doors
         document.querySelectorAll('.door-leaf-left').forEach((leaf) => {
-          (leaf as HTMLElement).style.transform = 'translateX(-22px)';
+          (leaf as HTMLElement).animate(
+            [{ transform: 'translateX(0)' }, { transform: 'translateX(-26px)' }],
+            { duration: 500, easing: 'ease-out', fill: 'forwards' }
+          );
         });
         document.querySelectorAll('.door-leaf-right').forEach((leaf) => {
-          (leaf as HTMLElement).style.transform = 'translateX(22px)';
+          (leaf as HTMLElement).animate(
+            [{ transform: 'translateX(0)' }, { transform: 'translateX(26px)' }],
+            { duration: 500, easing: 'ease-out', fill: 'forwards' }
+          );
         });
 
         // Ding-dong chime
@@ -428,7 +536,11 @@ import Pictograms from './Pictograms.astro';
         if (boardContainer) {
           boardContainer.style.opacity = '1';
           boardContainer.classList.remove('pointer-events-none');
-          if (boardBtn) boardBtn.focus();
+          if (boardBtn) {
+            boardBtn.innerHTML = '<span>Board the metro →</span>';
+            boardBtn.classList.add('animate-pulse');
+            boardBtn.focus();
+          }
         }
 
         // 6s idle hint
@@ -445,7 +557,7 @@ import Pictograms from './Pictograms.astro';
       clearTimeout(idleTimer);
 
       if (boardBtn) {
-        boardBtn.textContent = 'Doors closing...';
+        boardBtn.innerHTML = '<span>Doors closing...</span>';
         boardBtn.classList.remove('animate-pulse');
       }
       if (ticker) ticker.textContent = 'DOORS CLOSING';
@@ -453,12 +565,18 @@ import Pictograms from './Pictograms.astro';
       // Play 3 beeps & door thump
       await metroSound.playDoorClosingSequence();
 
-      // Close doors
+      // Close doors with WAAPI
       document.querySelectorAll('.door-leaf-left').forEach((leaf) => {
-        (leaf as HTMLElement).style.transform = 'translateX(0)';
+        (leaf as HTMLElement).animate(
+          [{ transform: 'translateX(-26px)' }, { transform: 'translateX(0)' }],
+          { duration: 400, easing: 'ease-in', fill: 'forwards' }
+        );
       });
       document.querySelectorAll('.door-leaf-right').forEach((leaf) => {
-        (leaf as HTMLElement).style.transform = 'translateX(0)';
+        (leaf as HTMLElement).animate(
+          [{ transform: 'translateX(26px)' }, { transform: 'translateX(0)' }],
+          { duration: 400, easing: 'ease-in', fill: 'forwards' }
+        );
       });
 
       // Departure sequence after 0.25s hold
@@ -470,10 +588,22 @@ import Pictograms from './Pictograms.astro';
         // Play departure audio (motor whine + accelerating clatter panning right)
         metroSound.playDepartureSequence();
 
-        // Train accelerates off to the right
+        const { departX } = calculatePositions();
+
+        // Train accelerates off to the right with torque pitch
         if (trainWrapper) {
-          trainWrapper.style.transition = 'transform 1.4s cubic-bezier(0.55, 0, 0.9, 0.5)';
-          trainWrapper.style.transform = 'translate3d(120vw, 0, 0)';
+          currentAnim = trainWrapper.animate(
+            [
+              { transform: `translate3d(${lastStopX}px, 0, 0) rotate(0deg)` },
+              { transform: `translate3d(${lastStopX + 60}px, 0, 0) rotate(-0.3deg)`, offset: 0.15 },
+              { transform: `translate3d(${departX}px, 0, 0) rotate(0deg)`, offset: 1.0 },
+            ],
+            {
+              duration: 1400,
+              easing: 'cubic-bezier(0.55, 0, 0.9, 0.5)',
+              fill: 'forwards',
+            }
+          );
         }
 
         // Slide pillars and wall in opposite direction
@@ -515,6 +645,7 @@ import Pictograms from './Pictograms.astro';
       boardBtn.addEventListener('click', executeBoarding);
     }
     if (reducedBoardBtn) {
+      boardBtn?.classList.remove('animate-pulse');
       reducedBoardBtn.addEventListener('click', completeArrival);
     }
 
@@ -522,9 +653,19 @@ import Pictograms from './Pictograms.astro';
     if (skipBtn) {
       skipBtn.addEventListener('click', () => {
         clearTimeout(idleTimer);
+        clearTimeout(doorsTimer);
         completeArrival();
       });
     }
+
+    // Handle resize while train is at rest
+    window.addEventListener('resize', () => {
+      if (!isBoarding && stage && stage.style.display === 'block' && trainWrapper && !isReduced()) {
+        const { stopX } = calculatePositions();
+        lastStopX = stopX;
+        trainWrapper.style.transform = `translate3d(${stopX}px, 0, 0)`;
+      }
+    });
 
     // Register globally on window for state machine
     (window as any).__launchMetroCinematic = launchMetro;

@@ -91,6 +91,7 @@ export class JourneyStateMachine {
       });
 
       // Hide journey step panels & decision bars
+      this.hideElement('journey-flow-wrapper');
       this.hideElement('journey-step-choose');
       this.hideElement('journey-step-ticket');
       this.hideElement('journey-step-gate');
@@ -110,8 +111,10 @@ export class JourneyStateMachine {
       });
 
       if (this.step === 'stop') {
+        this.hideElement('journey-flow-wrapper');
         this.showStopScreen(this.currentStop, false);
       } else {
+        this.showElement('journey-flow-wrapper');
         this.setStep(this.step);
       }
     }
@@ -122,12 +125,15 @@ export class JourneyStateMachine {
 
     // In journey mode, hide all station sections during steps 1-3
     if (step !== 'stop') {
+      this.showElement('journey-flow-wrapper');
       this.stationSections.forEach((sec) => {
         sec.style.display = 'none';
         (sec as any).inert = true;
       });
       if (this.decisionBarEl) this.decisionBarEl.style.display = 'none';
       if (this.stopIndicatorBar) this.stopIndicatorBar.style.display = 'none';
+    } else {
+      this.hideElement('journey-flow-wrapper');
     }
 
     if (step === 'choose') {
@@ -336,6 +342,13 @@ export class JourneyStateMachine {
 
   // Back to start (Returns to Step 1 Choose a stop)
   public backToStart() {
+    if (this.mode === 'express') {
+      const st00 = document.getElementById('station-00');
+      if (st00) {
+        st00.scrollIntoView({ behavior: 'smooth' });
+        return;
+      }
+    }
     history.pushState(null, '', '#base');
     document.title = 'The Yug Line — Transit Map Portfolio';
     this.setStep('choose');
@@ -371,6 +384,17 @@ export class JourneyStateMachine {
         this.setMode(nextMode);
       });
     });
+
+    // 1b. Hero Origin Choose Stop Button
+    const heroChooseBtn = document.getElementById('hero-choose-stop-btn');
+    if (heroChooseBtn) {
+      heroChooseBtn.addEventListener('click', () => {
+        if (this.mode === 'express') {
+          this.setMode('journey');
+        }
+        this.setStep('choose');
+      });
+    }
 
     // 2. Destination Buttons (Step 1)
     document.querySelectorAll('.destination-choice-btn').forEach((btn) => {
