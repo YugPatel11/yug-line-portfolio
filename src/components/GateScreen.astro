@@ -1,0 +1,291 @@
+---
+import Pictograms from './Pictograms.astro';
+---
+
+<!-- ========================================================
+     STEP 3 OF 3: GATE WITH SWIPE RAIL & SCAN BUTTON
+     Strictly per Section 2, 5.4 & Phase F3:
+     - Header: "Step 3 of 3 · Scan your ticket"
+     - Instruction: "Swipe the ticket through the reader, or press Scan ticket."
+     - Visible horizontal rail with an arrow: ticket on left, reader on right
+     - Drag >80% scans successfully: beep, green light, barrier opens
+     - Release <80% springs back: "Almost! Try again or press Scan ticket."
+     - Primary "Scan ticket" button below rail
+     - Small station collector with 1 speech line
+     ======================================================== -->
+<div id="journey-step-gate" class="w-full max-w-xl mx-auto" style="display: none;">
+  <!-- Progress Header -->
+  <div class="mb-6 p-3 bg-surface border-2 border-ink flex items-center justify-between">
+    <div class="flex items-center gap-2">
+      <span class="w-2.5 h-2.5 rounded-full bg-line-frontend animate-pulse"></span>
+      <span class="font-mono text-xs font-bold uppercase tracking-wider text-ink">
+        Step 3 of 3 · Scan your ticket
+      </span>
+    </div>
+
+    <!-- 7 Route Dots with Step 3 highlighted -->
+    <div class="flex items-center gap-1.5 sm:gap-2" aria-hidden="true">
+      <span class="w-2.5 h-2.5 rounded-full border border-ink bg-line-frontend"></span>
+      <span class="w-2.5 h-2.5 rounded-full border border-ink bg-line-frontend"></span>
+      <span class="w-2.5 h-2.5 rounded-full border border-ink bg-line-frontend"></span>
+      {Array.from({ length: 4 }).map(() => (
+        <span class="w-2.5 h-2.5 rounded-full border border-ink bg-paper"></span>
+      ))}
+    </div>
+  </div>
+
+  <div class="text-center mb-6">
+    <h2 id="gate-step-heading" tabindex="-1" class="font-archivo text-2xl sm:text-3xl font-black text-ink uppercase tracking-tight mb-1 outline-none">
+      Platform Fare Gate
+    </h2>
+    <p id="gate-status-msg" class="font-manrope text-sm text-ink-soft">
+      Swipe the ticket through the reader, or press Scan ticket.
+    </p>
+  </div>
+
+  <!-- Gate Mechanism Box (Reader, Swipe Rail & Barrier Arms) -->
+  <div class="ticket p-6 sm:p-8 bg-surface border-2 border-ink shadow-[6px_6px_0_var(--ink)] mb-8 relative">
+    
+    <!-- Turnstile Barrier Graphic SVG with Pivoting Arms -->
+    <div class="mb-6 flex justify-center">
+      <svg viewBox="0 0 280 120" class="w-full max-w-xs h-28 select-none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <!-- Floor Track -->
+        <line x1="20" y1="110" x2="260" y2="110" stroke="var(--ink)" stroke-width="3" />
+
+        <!-- Left Turnstile Pillar -->
+        <rect x="50" y="25" width="28" height="85" fill="var(--paper)" stroke="var(--ink)" stroke-width="3" rx="3" />
+        <circle id="gate-status-led" cx="64" cy="42" r="5" fill="#D8362B" stroke="var(--ink)" stroke-width="2" />
+
+        <!-- Left Barrier Arm (Rotates Open) -->
+        <g id="gate-arm-left" style="transform-origin: 78px 58px; transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);">
+          <rect x="78" y="55" width="56" height="7" fill="var(--ink)" rx="2" />
+        </g>
+
+        <!-- Right Barrier Arm (Rotates Open) -->
+        <g id="gate-arm-right" style="transform-origin: 202px 58px; transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);">
+          <rect x="146" y="55" width="56" height="7" fill="var(--ink)" rx="2" />
+        </g>
+
+        <!-- Right Turnstile Pillar with Scanner Reader -->
+        <rect x="202" y="25" width="28" height="85" fill="var(--paper)" stroke="var(--ink)" stroke-width="3" rx="3" />
+        <rect id="gate-scanner-slot" x="208" y="45" width="16" height="24" fill="var(--ink)" rx="2" />
+        <text x="216" y="61" font-family="'IBM Plex Mono', monospace" font-size="7" fill="#F1EEE6" font-weight="bold" text-anchor="middle">SCAN</text>
+      </svg>
+    </div>
+
+    <!-- Horizontal Swipe Rail (Section 5.4) -->
+    <div class="mb-6">
+      <div class="flex items-center justify-between font-mono text-[11px] text-ink-soft uppercase mb-2">
+        <span>SWIPE TRACK: DRAG TICKET ➔</span>
+        <span id="swipe-percent-label">0%</span>
+      </div>
+
+      <div
+        id="swipe-rail-track"
+        class="w-full h-16 bg-paper border-2 border-ink relative overflow-hidden flex items-center px-2 select-none touch-none"
+      >
+        <!-- Rail Track Background Arrow Pattern -->
+        <div class="absolute inset-0 flex items-center justify-around opacity-20 pointer-events-none font-mono text-xl font-bold text-ink">
+          <span>➔</span><span>➔</span><span>➔</span><span>➔</span><span>➔</span>
+        </div>
+
+        <!-- Draggable Boarding Pass Stub -->
+        <div
+          id="swipe-ticket-stub"
+          class="cursor-grab active:cursor-grabbing px-3 py-2 bg-surface border-2 border-ink shadow-[2px_2px_0_var(--ink)] font-mono text-xs font-bold text-ink flex items-center gap-2 select-none z-10"
+          style="transform: translate3d(0, 0, 0);"
+          title="Drag me along the rail"
+        >
+          <span class="w-2 h-2 rounded-full bg-line-frontend"></span>
+          <span>PASS [SWIPE]</span>
+        </div>
+
+        <!-- Target Reader Sensor Zone on Right -->
+        <div
+          id="swipe-reader-zone"
+          class="absolute right-2 top-2 bottom-2 w-16 border-2 border-dashed border-ink bg-line-hardware/10 flex flex-col items-center justify-center font-mono text-[9px] font-bold text-ink"
+        >
+          <span>SENSOR</span>
+          <span class="text-[14px]">◉</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Primary Action: Scan Ticket Button -->
+    <div class="space-y-3">
+      <button
+        type="button"
+        id="gate-scan-action-btn"
+        class="btn-stub btn-stub--primary w-full justify-center shadow-[4px_4px_0_var(--ink)]"
+      >
+        <span>Scan ticket</span>
+        <Pictograms name="arrow-up-right" size={20} />
+      </button>
+
+      <button
+        type="button"
+        id="gate-back-ticket-btn"
+        class="btn-stub w-full !bg-surface !text-ink hover:!bg-paper justify-center"
+      >
+        <span>Back to ticket</span>
+      </button>
+    </div>
+
+    <!-- Station Collector Character Speech Line -->
+    <div class="mt-6 pt-4 border-t border-rule flex items-center gap-3">
+      <div class="w-8 h-8 rounded-full border-2 border-ink bg-paper flex items-center justify-center font-mono text-xs font-bold flex-shrink-0">
+        👨‍✈️
+      </div>
+      <p id="collector-speech" class="font-mono text-xs text-ink-soft italic">
+        "Welcome aboard The Yug Line. Have your pass ready."
+      </p>
+    </div>
+  </div>
+
+  <!-- Skip Link -->
+  <div class="text-center">
+    <button
+      type="button"
+      class="day-pass-toggle-btn font-mono text-xs text-ink-soft hover:text-ink underline uppercase tracking-wider"
+    >
+      Skip the metro · see everything
+    </button>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const stub = document.getElementById('swipe-ticket-stub');
+    const track = document.getElementById('swipe-rail-track');
+    const statusMsg = document.getElementById('gate-status-msg');
+    const percentLabel = document.getElementById('swipe-percent-label');
+    const statusLed = document.getElementById('gate-status-led');
+    const armLeft = document.getElementById('gate-arm-left');
+    const armRight = document.getElementById('gate-arm-right');
+    const collector = document.getElementById('collector-speech');
+    const scanBtn = document.getElementById('gate-scan-action-btn');
+    const backBtn = document.getElementById('gate-back-ticket-btn');
+
+    let isScanning = false;
+    let isDragging = false;
+    let startX = 0;
+    let currentX = 0;
+
+    const triggerValidationSuccess = () => {
+      if (isScanning) return;
+      isScanning = true;
+
+      // 1. Audio feedback (Section 4.4)
+      if ((window as any).__yugsound) {
+        (window as any).__yugsound.punch();
+      }
+
+      // 2. Visual Success State: Green LED & open barrier
+      if (statusLed) statusLed.setAttribute('fill', '#1FA35B');
+      if (armLeft) armLeft.style.transform = 'rotate(-65deg)';
+      if (armRight) armRight.style.transform = 'rotate(65deg)';
+
+      if (statusMsg) {
+        statusMsg.textContent = 'Ticket verified! Gate open. Proceeding to train...';
+        statusMsg.classList.add('text-emerald-600', 'font-bold');
+      }
+
+      if (collector) {
+        collector.textContent = '"Valid pass. Mind the gap between backend and UI."';
+      }
+
+      // 3. Move to Step 4 (Full-screen Cinematic Metro Scene) after 0.5s
+      setTimeout(() => {
+        if ((window as any).__yugline) {
+          (window as any).__yugline.launchCinematicMetro();
+        }
+      }, 550);
+    };
+
+    // Button click triggers automatic scan
+    if (scanBtn) {
+      scanBtn.addEventListener('click', () => {
+        if (isScanning) return;
+        // Animate stub across the track
+        if (stub && track) {
+          const maxDist = track.clientWidth - stub.clientWidth - 16;
+          stub.style.transition = 'transform 0.4s ease-out';
+          stub.style.transform = `translate3d(${maxDist}px, 0, 0)`;
+          if (percentLabel) percentLabel.textContent = '100%';
+        }
+        setTimeout(triggerValidationSuccess, 420);
+      });
+    }
+
+    // Pointer-events drag along horizontal rail
+    if (stub && track) {
+      stub.addEventListener('pointerdown', (e: PointerEvent) => {
+        if (isScanning) return;
+        isDragging = true;
+        startX = e.clientX - currentX;
+        stub.setPointerCapture(e.pointerId);
+        stub.style.transition = 'none';
+      });
+
+      stub.addEventListener('pointermove', (e: PointerEvent) => {
+        if (!isDragging || isScanning) return;
+        const maxDist = track.clientWidth - stub.clientWidth - 16;
+        let nextX = e.clientX - startX;
+        if (nextX < 0) nextX = 0;
+        if (nextX > maxDist) nextX = maxDist;
+
+        currentX = nextX;
+        stub.style.transform = `translate3d(${currentX}px, 0, 0)`;
+
+        const percent = Math.min(100, Math.round((currentX / maxDist) * 100));
+        if (percentLabel) percentLabel.textContent = `${percent}%`;
+
+        // Check if passed 80%
+        if (percent >= 80) {
+          stub.classList.add('border-emerald-600');
+        } else {
+          stub.classList.remove('border-emerald-600');
+        }
+      });
+
+      const handlePointerEnd = (e: PointerEvent) => {
+        if (!isDragging || isScanning) return;
+        isDragging = false;
+        try {
+          stub.releasePointerCapture(e.pointerId);
+        } catch (err) {}
+
+        const maxDist = track.clientWidth - stub.clientWidth - 16;
+        const percent = (currentX / maxDist) * 100;
+
+        if (percent >= 80) {
+          // Success! Snap to reader and validate
+          stub.style.transition = 'transform 0.15s ease-out';
+          stub.style.transform = `translate3d(${maxDist}px, 0, 0)`;
+          if (percentLabel) percentLabel.textContent = '100%';
+          triggerValidationSuccess();
+        } else {
+          // Spring back to start
+          stub.style.transition = 'transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1)';
+          stub.style.transform = 'translate3d(0, 0, 0)';
+          currentX = 0;
+          if (percentLabel) percentLabel.textContent = '0%';
+          if (statusMsg) {
+            statusMsg.textContent = 'Almost! Try again or press Scan ticket.';
+          }
+        }
+      };
+
+      stub.addEventListener('pointerup', handlePointerEnd);
+      stub.addEventListener('pointercancel', handlePointerEnd);
+    }
+
+    if (backBtn) {
+      backBtn.addEventListener('click', () => {
+        if ((window as any).__yugline) {
+          (window as any).__yugline.setStep('ticket');
+        }
+      });
+    }
+  });
+</script>
