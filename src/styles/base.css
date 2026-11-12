@@ -147,6 +147,7 @@
   align-items: center;
   gap: var(--sp-2);
   padding: var(--sp-3) var(--sp-6);
+  min-height: 44px;
   background: var(--ink);
   color: var(--paper);
   font-family: 'IBM Plex Mono', monospace;
@@ -158,6 +159,17 @@
   cursor: pointer;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
   text-decoration: none;
+}
+
+/* Touch targets for accessible devices (WCAG 2.5.5 / 2.5.8) */
+@media (pointer: coarse) {
+  button,
+  .btn-stub,
+  a.btn-stub,
+  .project-filter-btn,
+  .transfer-line-btn {
+    min-height: 44px;
+  }
 }
 .btn-stub:hover {
   transform: translateX(var(--button-shift));
