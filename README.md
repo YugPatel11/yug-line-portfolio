@@ -26,6 +26,7 @@ All libraries used are strictly free and open-source:
 | `@fontsource-variable/archivo` | `5.1.1` | OFL-1.1 | Self-hosted display typography |
 | `@fontsource/manrope` | `5.1.1` | OFL-1.1 | Self-hosted body typography |
 | `@fontsource/ibm-plex-mono` | `5.1.1` | OFL-1.1 | Self-hosted transit mono typography |
+| `qrcode` | `1.5.4` | MIT | Client-side dynamic QR code generation for tickets |
 
 *Zero paid fonts, zero tracking scripts, zero paid services.*
 

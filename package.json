@@ -10,17 +10,18 @@
     "astro": "astro"
   },
   "dependencies": {
-    "astro": "5.8.1",
     "@astrojs/tailwind": "6.0.2",
-    "tailwindcss": "3.4.17",
-    "gsap": "3.12.7",
     "@fontsource-variable/archivo": "5.1.1",
+    "@fontsource/ibm-plex-mono": "5.1.1",
     "@fontsource/manrope": "5.1.1",
-    "@fontsource/ibm-plex-mono": "5.1.1"
+    "@types/qrcode": "1.5.5",
+    "astro": "5.8.1",
+    "gsap": "3.12.7",
+    "qrcode": "1.5.4",
+    "tailwindcss": "3.4.17"
   },
   "devDependencies": {
     "prettier": "3.4.2",
     "prettier-plugin-astro": "0.14.1"
   }
 }
-
