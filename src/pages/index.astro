@@ -14,6 +14,7 @@ import JourneyControls from '../components/JourneyControls.astro';
 import TicketWindow from '../components/TicketWindow.astro';
 import FareGate from '../components/FareGate.astro';
 import JourneyScenes from '../components/JourneyScenes.astro';
+import TravelCardModal from '../components/TravelCardModal.astro';
 
 import { PROFILE, PROJECTS } from '../data/portfolio';
 
@@ -410,6 +411,9 @@ const moreProjects = PROJECTS.filter((p) => !p.featured);
 
   <!-- Journey Controls & Live Region (Section 6 & 10) -->
   <JourneyControls />
+
+  <!-- Travel Card Passport Modal (Phase P5, Section 6.4) -->
+  <TravelCardModal />
 
   <!-- Interactive Scripts (Client-side interactivity) -->
   <script>

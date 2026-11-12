@@ -1,0 +1,179 @@
+---
+import { STATIONS, STATION_ORDER } from '../scripts/journey/constants';
+import Pictograms from './Pictograms.astro';
+---
+
+<div
+  id="travel-card-modal"
+  class="fixed inset-0 z-[90] bg-ink/70 flex items-center justify-center p-4 sm:p-6 select-none"
+  style="display: none;"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="travel-card-modal-title"
+>
+  <div class="ticket ticket-notched p-6 sm:p-8 bg-surface border-4 border-ink shadow-[8px_8px_0_var(--ink)] max-w-xl w-full max-h-[90vh] overflow-y-auto">
+    <!-- Header -->
+    <div class="flex items-center justify-between border-b-2 border-ink pb-3 mb-6">
+      <div class="flex items-center gap-2">
+        <span class="w-3 h-3 rounded-full bg-line-hardware"></span>
+        <h3 id="travel-card-modal-title" class="font-archivo text-xl font-black text-ink uppercase tracking-tight">
+          OFFICIAL TRAVEL CARD // PASSPORT
+        </h3>
+      </div>
+      <button
+        type="button"
+        id="close-travel-card-btn"
+        class="w-8 h-8 border-2 border-ink bg-paper text-ink font-mono font-bold text-sm hover:bg-ink hover:text-paper transition-colors"
+        aria-label="Close Travel Card"
+      >
+        ✕
+      </button>
+    </div>
+
+    <!-- Travel Card Details -->
+    <div class="p-4 bg-paper border-2 border-ink mb-6 font-mono text-xs text-ink flex items-center justify-between">
+      <div>
+        <div class="text-[10px] text-ink-soft uppercase">PASSENGER CLASS</div>
+        <div class="font-bold text-sm">VERIFIED EXPLORER</div>
+      </div>
+      <div class="text-right">
+        <div class="text-[10px] text-ink-soft uppercase">NETWORK PROGRESS</div>
+        <div class="font-black text-sm text-line-frontend" id="modal-stops-count">
+          1 / 8 STOPS
+        </div>
+      </div>
+    </div>
+
+    <!-- Station Passport Stamps Grid -->
+    <div class="mb-6">
+      <div class="font-mono text-xs text-ink-soft uppercase tracking-wider mb-3">
+        // STATION VERIFICATION STAMPS:
+      </div>
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3" id="passport-stamps-grid">
+        {STATION_ORDER.map((id) => {
+          const st = STATIONS[id];
+          return (
+            <div
+              class="passport-stamp-cell p-3 bg-paper border border-rule flex flex-col items-center justify-between text-center min-h-[90px] transition-all"
+              data-station-id={st.id}
+            >
+              <span class="font-mono text-[10px] font-bold text-ink uppercase">
+                {st.code}
+              </span>
+              <!-- Stamp Icon -->
+              <div class="stamp-icon-wrap w-8 h-8 rounded-full border border-rule flex items-center justify-center my-1 text-ink-soft">
+                <Pictograms name={st.id === 'station-02' ? 'route' : st.id === 'station-06' ? 'book' : st.id === 'station-04' ? 'briefcase' : 'arrow-up-right'} size={16} />
+              </div>
+              <!-- Status text / Tap & Go Button -->
+              <button
+                type="button"
+                class="stamp-jump-btn font-mono text-[9px] font-bold uppercase tracking-wider text-ink-soft hover:text-line-frontend hover:underline"
+                data-station-target={st.id}
+              >
+                Tap & Go ➔
+              </button>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+
+    <!-- Finale Banner (Shown when all stops visited per Section 6.4) -->
+    <div id="travel-card-finale" class="hidden p-4 bg-paper border-2 border-ink text-center mb-6">
+      <div class="font-archivo text-lg font-black text-ink uppercase mb-1">
+        🎉 JOURNEY COMPLETE! 8 OF 8 STOPS
+      </div>
+      <p class="font-manrope text-xs text-ink-soft mb-3">
+        "Every line explored, from backend logic to smooth UIs. Let's build something together."
+      </p>
+      <a href="#station-07" class="btn-stub justify-center" id="finale-contact-btn">
+        <span>Say Hello at Terminus</span>
+        <Pictograms name="arrow-up-right" size={14} />
+      </a>
+    </div>
+
+    <div class="ticket-perforation pt-3 text-center font-mono text-[11px] text-ink-soft">
+      ALL DATA STORED LOCALLY IN BROWSER • NO EXTERNAL TRACKING
+    </div>
+  </div>
+</div>
+
+<script>
+  import type { StationCode } from '../scripts/journey/types';
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const modal = document.getElementById('travel-card-modal');
+    const closeBtn = document.getElementById('close-travel-card-btn');
+    const chip = document.getElementById('travel-card-chip');
+    const stampsGrid = document.getElementById('passport-stamps-grid');
+    const countDisplay = document.getElementById('modal-stops-count');
+    const finaleBanner = document.getElementById('travel-card-finale');
+
+    const updateStampsUI = () => {
+      let visitedList: string[] = ['station-00'];
+      try {
+        const stored = localStorage.getItem('yugline_visited');
+        if (stored) visitedList = JSON.parse(stored);
+      } catch (e) {}
+
+      if (countDisplay) {
+        countDisplay.textContent = `${visitedList.length} / 8 STOPS`;
+      }
+
+      document.querySelectorAll('.passport-stamp-cell').forEach((cell) => {
+        const id = cell.getAttribute('data-station-id');
+        const iconWrap = cell.querySelector('.stamp-icon-wrap');
+        const jumpBtn = cell.querySelector('.stamp-jump-btn');
+
+        if (id && visitedList.includes(id)) {
+          cell.classList.add('border-ink', 'bg-surface');
+          if (iconWrap) {
+            iconWrap.classList.add('border-ink', 'bg-line-hardware', 'text-ink');
+            iconWrap.classList.remove('border-rule', 'text-ink-soft');
+          }
+          if (jumpBtn) {
+            jumpBtn.textContent = 'STAMPED ✓';
+            (jumpBtn as HTMLElement).style.color = 'var(--line-backend)';
+          }
+        }
+      });
+
+      if (visitedList.length >= 8 && finaleBanner) {
+        finaleBanner.classList.remove('hidden');
+      }
+    };
+
+    if (chip) {
+      chip.classList.add('cursor-pointer', 'hover:border-ink');
+      chip.addEventListener('click', () => {
+        if (modal) {
+          updateStampsUI();
+          modal.style.display = 'flex';
+        }
+      });
+    }
+
+    if (closeBtn && modal) {
+      closeBtn.addEventListener('click', () => {
+        modal.style.display = 'none';
+      });
+    }
+
+    // Tap & Go jump buttons
+    document.querySelectorAll('.stamp-jump-btn').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const target = btn.getAttribute('data-station-target') as StationCode;
+        if (target && (window as any).__yugline) {
+          if (modal) modal.style.display = 'none';
+          (window as any).__yugline.navigateToStation(target);
+        }
+      });
+    });
+
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && modal && modal.style.display === 'flex') {
+        modal.style.display = 'none';
+      }
+    });
+  });
+</script>
