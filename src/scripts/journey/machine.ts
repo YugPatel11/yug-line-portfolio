@@ -51,6 +51,22 @@ export class JourneyStateMachine {
 
     this.setMode(initialMode);
 
+    // Initial Welcome Scene (Section 6.1)
+    try {
+      const welcomeSeen = sessionStorage.getItem('yugline_welcome_seen');
+      const welcomeScene = document.getElementById('scene-welcome');
+      if (!welcomeSeen && welcomeScene && initialMode === 'journey' && !hash) {
+        welcomeScene.style.display = 'flex';
+        const enterBtn = document.getElementById('enter-station-btn');
+        const dismiss = () => {
+          welcomeScene.style.display = 'none';
+          sessionStorage.setItem('yugline_welcome_seen', 'true');
+        };
+        if (enterBtn) enterBtn.addEventListener('click', dismiss);
+        window.addEventListener('keydown', dismiss, { once: true });
+      }
+    } catch (e) {}
+
     // Bind hash change listener
     window.addEventListener('hashchange', () => {
       const newHash = window.location.hash.toLowerCase();
@@ -133,9 +149,17 @@ export class JourneyStateMachine {
     document.title = meta ? meta.pageTitle : 'The Yug Line';
 
     if (this.mode === 'journey') {
-      this.renderCurrentStation();
-      this.announce(`Arrived at Station ${meta?.code || stationId}, ${meta?.name || ''}`);
-      this.focusStationHeading(stationId);
+      const isReduced = document.documentElement.classList.contains('reduce-motion') ||
+                        window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      const rideScene = document.getElementById('scene-transit-ride');
+      if (rideScene && !isReduced && stationId !== 'station-00') {
+        this.showRideScene(meta, () => {
+          this.completeArrival(stationId, meta);
+        });
+      } else {
+        this.completeArrival(stationId, meta);
+      }
     } else {
       // In express mode, scroll to station
       const el = document.getElementById(stationId);
@@ -146,6 +170,47 @@ export class JourneyStateMachine {
     }
 
     this.updateDecisionBar();
+  }
+
+  private showRideScene(meta: any, onArrival: () => void) {
+    const scene = document.getElementById('scene-transit-ride');
+    if (!scene) {
+      onArrival();
+      return;
+    }
+
+    const led = document.getElementById('transit-led-announcement');
+    const label = document.getElementById('transit-dest-label');
+    const speech = document.getElementById('transit-speech-caption');
+    const skipBtn = document.getElementById('skip-ride-btn');
+
+    if (led) led.textContent = `NOW ARRIVING · ${meta.code} · ${meta.name.toUpperCase()}`;
+    if (label) label.textContent = meta.code;
+    if (speech) speech.textContent = `"Next station: ${meta.name}. ${meta.teaser}."`;
+
+    scene.style.display = 'flex';
+    this.announce(`Now riding transit to Station ${meta.code}, ${meta.name}`);
+
+    let finished = false;
+    const finish = () => {
+      if (finished) return;
+      finished = true;
+      scene.style.display = 'none';
+      onArrival();
+    };
+
+    if (skipBtn) {
+      skipBtn.onclick = finish;
+    }
+
+    setTimeout(finish, 1800);
+  }
+
+  private completeArrival(stationId: StationCode, meta: any) {
+    this.renderCurrentStation();
+    this.announce(`Arrived at Station ${meta?.code || stationId}, ${meta?.name || ''}`);
+    this.focusStationHeading(stationId);
+    window.scrollTo({ top: 0, behavior: 'instant' as any });
   }
 
   private renderCurrentStation() {

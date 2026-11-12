@@ -1,0 +1,157 @@
+---
+interface Props {
+  destination?: string;
+  class?: string;
+}
+
+const { destination = 'CENTRAL', class: className = '' } = Astro.props;
+---
+
+<div class={`w-full overflow-hidden ${className}`} role="img" aria-label={`Metro train bound for ${destination}`}>
+  <svg viewBox="0 0 800 160" class="w-full h-auto select-none" xmlns="http://www.w3.org/2000/svg">
+    <!-- ================= CAR 1 (LOCOMOTIVE / CABIN) ================= -->
+    <g id="train-car-1">
+      <!-- Wheels / Bogies -->
+      <circle cx="50" cy="145" r="10" fill="var(--ink)" />
+      <circle cx="90" cy="145" r="10" fill="var(--ink)" />
+      <circle cx="180" cy="145" r="10" fill="var(--ink)" />
+      <circle cx="220" cy="145" r="10" fill="var(--ink)" />
+      <rect x="40" y="140" width="60" height="5" fill="var(--ink-soft)" />
+      <rect x="170" y="140" width="60" height="5" fill="var(--ink-soft)" />
+
+      <!-- Main Body (Rounded nose, surface color, 3px ink stroke) -->
+      <path
+        d="M 25 135 L 245 135 L 245 35 L 60 35 Q 25 35 25 75 Z"
+        fill="var(--surface)"
+        stroke="var(--ink)"
+        stroke-width="3"
+        stroke-linejoin="round"
+      />
+
+      <!-- Lower Body 4-Line Color Stripe -->
+      <rect x="30" y="120" width="50" height="8" fill="var(--line-frontend)" />
+      <rect x="80" y="120" width="50" height="8" fill="var(--line-backend)" />
+      <rect x="130" y="120" width="55" height="8" fill="var(--line-ai)" />
+      <rect x="185" y="120" width="60" height="8" fill="var(--line-hardware)" />
+      <rect x="25" y="128" width="220" height="3" fill="var(--ink)" />
+
+      <!-- Front Driver Windshield -->
+      <path d="M 32 75 L 55 50 L 75 50 L 75 85 L 32 85 Z" fill="var(--ink)" />
+      <!-- Diagonal Reflection bars -->
+      <line x1="45" y1="52" x2="38" y2="82" stroke="var(--paper)" stroke-width="2" />
+      <line x1="55" y1="52" x2="48" y2="82" stroke="var(--paper)" stroke-width="1.5" />
+
+      <!-- Dot-Matrix Destination Board (Amber on black per Section 7) -->
+      <rect x="40" y="38" width="45" height="10" fill="#111111" />
+      <text x="62.5" y="46" font-family="'IBM Plex Mono', monospace" font-size="6" fill="#FFB000" font-weight="bold" text-anchor="middle">
+        {destination.toUpperCase()}
+      </text>
+
+      <!-- Headlight -->
+      <circle cx="26" cy="105" r="5" fill="#FFB000" stroke="var(--ink)" stroke-width="1.5" />
+
+      <!-- Passenger Windows -->
+      <g fill="var(--ink)">
+        <rect x="90" y="55" width="30" height="35" rx="2" />
+        <line x1="100" y1="58" x2="93" y2="86" stroke="var(--paper)" stroke-width="1.5" />
+        <line x1="110" y1="58" x2="103" y2="86" stroke="var(--paper)" stroke-width="1" />
+
+        <rect x="195" y="55" width="35" height="35" rx="2" />
+        <line x1="208" y1="58" x2="200" y2="86" stroke="var(--paper)" stroke-width="1.5" />
+      </g>
+
+      <!-- Double Passenger Doors -->
+      <rect x="135" y="50" width="45" height="85" fill="none" stroke="var(--ink)" stroke-width="2" />
+      <line x1="157.5" y1="50" x2="157.5" y2="135" stroke="var(--ink)" stroke-width="2" />
+      <!-- Door glass -->
+      <rect x="140" y="58" width="14" height="32" fill="var(--ink)" rx="1" />
+      <rect x="162" y="58" width="14" height="32" fill="var(--ink)" rx="1" />
+    </g>
+
+    <!-- Coupling 1-2 -->
+    <rect x="245" y="115" width="15" height="8" fill="var(--ink)" />
+
+    <!-- ================= CAR 2 (PASSENGER MIDDLE CAR) ================= -->
+    <g id="train-car-2">
+      <!-- Wheels / Bogies -->
+      <circle cx="280" cy="145" r="10" fill="var(--ink)" />
+      <circle cx="320" cy="145" r="10" fill="var(--ink)" />
+      <circle cx="450" cy="145" r="10" fill="var(--ink)" />
+      <circle cx="490" cy="145" r="10" fill="var(--ink)" />
+      <rect x="270" y="140" width="60" height="5" fill="var(--ink-soft)" />
+      <rect x="440" y="140" width="60" height="5" fill="var(--ink-soft)" />
+
+      <!-- Main Body -->
+      <rect x="260" y="35" width="250" height="100" fill="var(--surface)" stroke="var(--ink)" stroke-width="3" rx="2" />
+
+      <!-- Lower Stripe -->
+      <rect x="260" y="120" width="60" height="8" fill="var(--line-frontend)" />
+      <rect x="320" y="120" width="65" height="8" fill="var(--line-backend)" />
+      <rect x="385" y="120" width="65" height="8" fill="var(--line-ai)" />
+      <rect x="450" y="120" width="60" height="8" fill="var(--line-hardware)" />
+      <rect x="260" y="128" width="250" height="3" fill="var(--ink)" />
+
+      <!-- Windows & Doors -->
+      <rect x="275" y="50" width="45" height="85" fill="none" stroke="var(--ink)" stroke-width="2" />
+      <line x1="297.5" y1="50" x2="297.5" y2="135" stroke="var(--ink)" stroke-width="2" />
+      <rect x="280" y="58" width="14" height="32" fill="var(--ink)" rx="1" />
+      <rect x="302" y="58" width="14" height="32" fill="var(--ink)" rx="1" />
+
+      <!-- Center Windows -->
+      <rect x="335" y="55" width="45" height="35" fill="var(--ink)" rx="2" />
+      <line x1="350" y1="58" x2="340" y2="86" stroke="var(--paper)" stroke-width="1.5" />
+      <rect x="390" y="55" width="45" height="35" fill="var(--ink)" rx="2" />
+      <line x1="405" y1="58" x2="395" y2="86" stroke="var(--paper)" stroke-width="1.5" />
+
+      <!-- Right Doors -->
+      <rect x="450" y="50" width="45" height="85" fill="none" stroke="var(--ink)" stroke-width="2" />
+      <line x1="472.5" y1="50" x2="472.5" y2="135" stroke="var(--ink)" stroke-width="2" />
+      <rect x="455" y="58" width="14" height="32" fill="var(--ink)" rx="1" />
+      <rect x="477" y="58" width="14" height="32" fill="var(--ink)" rx="1" />
+    </g>
+
+    <!-- Coupling 2-3 -->
+    <rect x="510" y="115" width="15" height="8" fill="var(--ink)" />
+
+    <!-- ================= CAR 3 (REAR CAR) ================= -->
+    <g id="train-car-3">
+      <!-- Wheels / Bogies -->
+      <circle cx="550" cy="145" r="10" fill="var(--ink)" />
+      <circle cx="590" cy="145" r="10" fill="var(--ink)" />
+      <circle cx="710" cy="145" r="10" fill="var(--ink)" />
+      <circle cx="750" cy="145" r="10" fill="var(--ink)" />
+      <rect x="540" y="140" width="60" height="5" fill="var(--ink-soft)" />
+      <rect x="700" y="140" width="60" height="5" fill="var(--ink-soft)" />
+
+      <!-- Main Body -->
+      <path
+        d="M 525 135 L 775 135 Q 775 35 740 35 L 525 35 Z"
+        fill="var(--surface)"
+        stroke="var(--ink)"
+        stroke-width="3"
+        stroke-linejoin="round"
+      />
+
+      <!-- Lower Stripe -->
+      <rect x="525" y="120" width="60" height="8" fill="var(--line-frontend)" />
+      <rect x="585" y="120" width="60" height="8" fill="var(--line-backend)" />
+      <rect x="645" y="120" width="65" height="8" fill="var(--line-ai)" />
+      <rect x="710" y="120" width="60" height="8" fill="var(--line-hardware)" />
+      <rect x="525" y="128" width="245" height="3" fill="var(--ink)" />
+
+      <!-- Windows & Doors -->
+      <rect x="545" y="55" width="35" height="35" fill="var(--ink)" rx="2" />
+      <line x1="560" y1="58" x2="550" y2="86" stroke="var(--paper)" stroke-width="1.5" />
+
+      <!-- Center Doors -->
+      <rect x="595" y="50" width="45" height="85" fill="none" stroke="var(--ink)" stroke-width="2" />
+      <line x1="617.5" y1="50" x2="617.5" y2="135" stroke="var(--ink)" stroke-width="2" />
+      <rect x="600" y="58" width="14" height="32" fill="var(--ink)" rx="1" />
+      <rect x="622" y="58" width="14" height="32" fill="var(--ink)" rx="1" />
+
+      <!-- Rear Window -->
+      <rect x="655" y="55" width="40" height="35" fill="var(--ink)" rx="2" />
+      <line x1="670" y1="58" x2="660" y2="86" stroke="var(--paper)" stroke-width="1.5" />
+    </g>
+  </svg>
+</div>
