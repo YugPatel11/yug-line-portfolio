@@ -52,3 +52,4 @@
 - **Day/Night Contrast Audit:** Verify contrast ratios for all text combinations across Day and Night.
 - **Docs:** Update `CREDITS.md`, `README.md`, and `TODO-USER.md`.
 - **Build & Verification:** Run `npm run build` and `npm test` after each phase.
+

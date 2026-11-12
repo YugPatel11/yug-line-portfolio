@@ -19,3 +19,4 @@ This project strictly uses free, open-source, and CC0/MIT licensed assets, fonts
 - **3D Subway Model Geometry**: Low-poly modular metro car geometry inspired by Kenney Train Kit (Kenney.nl / CC0 1.0 Universal) and Elbolillo Metro (CC0), implemented with custom procedural toon materials and inverted hull outline matching design tokens.
 - **Paper Grain Texture**: Procedural inline SVG `feTurbulence` fractal noise filter at 3% opacity (CC0).
 - **Audio Soundscape Engine**: Procedural Web Audio API sound synthesizer (brown noise, lowpass filters, stereo panners, biquad squeal filters) authored directly in TypeScript (CC0). Zero external audio file dependencies required.
+

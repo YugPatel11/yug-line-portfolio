@@ -17,6 +17,15 @@
   --line-ai: #1B3A8A;
   --line-hardware: #F2B705;
 
+  /* Station Set & Wall Tokens — Day mode (Phase U2) */
+  --wall: #EDE8DB;
+  --wall-frontend: #FBE6DE;
+  --wall-backend: #DCEFE6;
+  --wall-ai: #E1E6F5;
+  --wall-hardware: #FBF1CF;
+  --floor: #CFCBC0;
+  --tunnel: #0F1115;
+
   /* Typography scale (fluid) */
   --text-xs: 0.75rem;     /* 12px */
   --text-sm: 0.875rem;    /* 14px */
@@ -63,5 +72,14 @@
   --line-backend: #2FB584;
   --line-ai: #5B8CFF;
   --line-hardware: #FFC933;
+
+  /* Station Set & Wall Tokens — Night mode (Phase U2) */
+  --wall: #171A20;
+  --wall-frontend: #2A1A16;
+  --wall-backend: #12261F;
+  --wall-ai: #141B33;
+  --wall-hardware: #2B2410;
+  --floor: #0B0D10;
+  --tunnel: #0F1115;
 }
 

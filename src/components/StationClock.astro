@@ -1,0 +1,126 @@
+---
+// StationClock.astro
+// Phase U3: Flat analog station clock (96-120px) ticking live once per second
+---
+
+<div
+  class="station-clock-wrapper ticket p-3 bg-surface border-2 border-ink shadow-[4px_4px_0_var(--ink)] flex flex-col items-center select-none"
+  aria-hidden="true"
+>
+  <div class="font-mono text-[10px] font-bold text-ink-soft uppercase tracking-wider mb-1">
+    STATION TIME
+  </div>
+
+  <svg
+    id="analog-station-clock"
+    viewBox="0 0 100 100"
+    class="w-24 h-24 sm:w-28 sm:h-28"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <!-- Clock Outer Dial Face -->
+    <circle cx="50" cy="50" r="46" fill="var(--paper)" stroke="var(--ink)" stroke-width="3" />
+    <circle cx="50" cy="50" r="43" fill="none" stroke="var(--rule)" stroke-width="1" />
+
+    <!-- 12 Hour Dial Ticks -->
+    {Array.from({ length: 12 }).map((_, i) => {
+      const angle = (i * 30 * Math.PI) / 180;
+      const x1 = 50 + 34 * Math.sin(angle);
+      const y1 = 50 - 34 * Math.cos(angle);
+      const x2 = 50 + 41 * Math.sin(angle);
+      const y2 = 50 - 41 * Math.cos(angle);
+      const isQuarter = i % 3 === 0;
+      return (
+        <line
+          x1={x1}
+          y1={y1}
+          x2={x2}
+          y2={y2}
+          stroke="var(--ink)"
+          stroke-width={isQuarter ? "2.5" : "1.5"}
+        />
+      );
+    })}
+
+    <!-- Hour Hand -->
+    <line
+      id="clock-hour-hand"
+      x1="50"
+      y1="50"
+      x2="50"
+      y2="28"
+      stroke="var(--ink)"
+      stroke-width="3.5"
+      stroke-linecap="round"
+      style="transform-origin: 50px 50px;"
+    />
+
+    <!-- Minute Hand -->
+    <line
+      id="clock-minute-hand"
+      x1="50"
+      y1="50"
+      x2="50"
+      y2="18"
+      stroke="var(--ink)"
+      stroke-width="2.5"
+      stroke-linecap="round"
+      style="transform-origin: 50px 50px;"
+    />
+
+    <!-- Second Hand (Red needle with round counterbalance) -->
+    <line
+      id="clock-second-hand"
+      x1="50"
+      y1="58"
+      x2="50"
+      y2="14"
+      stroke="var(--line-frontend)"
+      stroke-width="1.5"
+      style="transform-origin: 50px 50px;"
+    />
+
+    <!-- Center Boss Cap -->
+    <circle cx="50" cy="50" r="3.5" fill="var(--ink)" />
+    <circle cx="50" cy="50" r="1.5" fill="var(--line-frontend)" />
+  </svg>
+
+  <!-- Digital Time Readout below dial -->
+  <div id="station-clock-digital" class="font-mono text-xs font-bold text-ink mt-1">
+    12:00:00
+  </div>
+</div>
+
+<script>
+  (() => {
+    const hourHand = document.getElementById('clock-hour-hand');
+    const minHand = document.getElementById('clock-minute-hand');
+    const secHand = document.getElementById('clock-second-hand');
+    const digitalReadout = document.getElementById('station-clock-digital');
+
+    const updateClock = () => {
+      // Only compute and update when visible
+      if (document.hidden) return;
+
+      const now = new Date();
+      const secs = now.getSeconds();
+      const mins = now.getMinutes() + secs / 60;
+      const hours = (now.getHours() % 12) + mins / 60;
+
+      const secDeg = secs * 6;
+      const minDeg = mins * 6;
+      const hourDeg = hours * 30;
+
+      if (secHand) secHand.style.transform = `rotate(${secDeg}deg)`;
+      if (minHand) minHand.style.transform = `rotate(${minDeg}deg)`;
+      if (hourHand) hourHand.style.transform = `rotate(${hourDeg}deg)`;
+
+      if (digitalReadout) {
+        digitalReadout.textContent = now.toLocaleTimeString('en-GB');
+      }
+    };
+
+    updateClock();
+    setInterval(updateClock, 1000);
+  })();
+</script>
+

@@ -70,6 +70,39 @@
 }
 
 /* ============================================
+   Phase U2: Subway Tile Wall Pattern & Station Set
+   Brick-offset 48x24px, 1px grout line, 4-6% contrast
+   ============================================ */
+.subway-tile-wall {
+  background-image: 
+    linear-gradient(to right, var(--rule) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--rule) 1px, transparent 1px);
+  background-size: 48px 24px;
+}
+
+.wall-frontend { background-color: var(--wall-frontend); }
+.wall-backend { background-color: var(--wall-backend); }
+.wall-ai { background-color: var(--wall-ai); }
+.wall-hardware { background-color: var(--wall-hardware); }
+.wall-neutral { background-color: var(--wall); }
+
+/* Platform floor strip (bottom of each station) */
+.platform-floor-strip {
+  background-color: var(--floor);
+  border-top: 4px solid var(--ink);
+  position: relative;
+}
+
+.platform-tactile-line {
+  height: 24px;
+  background-color: var(--line-hardware);
+  border-bottom: 2px solid var(--ink);
+  background-image: radial-gradient(var(--ink) 20%, transparent 25%);
+  background-size: 16px 16px;
+  opacity: 0.9;
+}
+
+/* ============================================
    Ticket Card (A5.4)
    --surface bg, 2px ink border, notched edges,
    dashed perforation, hard 6px offset shadow

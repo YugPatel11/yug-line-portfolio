@@ -1,4 +1,6 @@
 ---
+// StationHeader.astro
+// Phase U3: Hanging blade sign section header with suspension rods, line badge & color band
 interface Props {
   code: string;
   name: string;
@@ -15,22 +17,50 @@ const {
   id,
 } = Astro.props;
 
-const dotClass = lineVariant !== 'default' ? `station-dot--${lineVariant}` : '';
+const lineColor = 
+  lineVariant === 'frontend' ? 'var(--line-frontend)' :
+  lineVariant === 'backend' ? 'var(--line-backend)' :
+  lineVariant === 'ai' ? 'var(--line-ai)' :
+  lineVariant === 'hardware' ? 'var(--line-hardware)' : 'var(--ink)';
+
+const stopNumber = code.replace('ST-', '');
 ---
 
-<div class="flex items-start gap-4 mb-8">
-  <div class={`station-dot ${dotClass} mt-2`} aria-hidden="true"></div>
-  <div>
-    <div class="flex items-center gap-3">
-      <span class="font-mono text-xs uppercase tracking-wider text-ink-soft bg-surface border border-rule px-2 py-0.5 rounded">
-        {code}
-      </span>
-      <span class="font-mono text-xs uppercase tracking-widest text-ink-soft">
-        // {category}
-      </span>
+<div class="station-blade-sign-container mb-8 flex flex-col items-center sm:items-start">
+  <!-- Suspension Rods from Ceiling -->
+  <div class="w-full max-w-md flex justify-between px-8 sm:px-12 h-5 pointer-events-none" aria-hidden="true">
+    <div class="w-1 h-full bg-ink"></div>
+    <div class="w-1 h-full bg-ink"></div>
+  </div>
+
+  <!-- Blade Sign Rectangle -->
+  <div class="ticket p-4 sm:p-5 bg-surface border-2 border-ink shadow-[6px_6px_0_var(--ink)] flex items-stretch gap-4 max-w-2xl w-full relative overflow-hidden">
+    <!-- Line Color Band -->
+    <div class="w-3 self-stretch rounded-sm flex-shrink-0" style={`background-color: ${lineColor};`}></div>
+
+    <!-- 48px Circular Line Badge -->
+    <div
+      class="w-12 h-12 rounded-full flex-shrink-0 flex items-center justify-center font-mono font-black text-lg text-paper border-2 border-ink shadow-[2px_2px_0_var(--ink)]"
+      style={`background-color: ${lineColor};`}
+      aria-hidden="true"
+    >
+      {stopNumber}
     </div>
-    <h2 id={id} class="font-archivo font-extrabold text-2xl md:text-4xl text-ink tracking-tight mt-1">
-      {name}
-    </h2>
+
+    <!-- Station Info & Name -->
+    <div class="flex-grow min-w-0">
+      <div class="flex flex-wrap items-center gap-2 mb-1">
+        <span class="font-mono text-xs uppercase tracking-wider text-ink bg-paper border border-rule px-2 py-0.5 font-bold">
+          {code}
+        </span>
+        <span class="font-mono text-xs uppercase tracking-widest text-ink-soft font-semibold">
+          // {category}
+        </span>
+      </div>
+
+      <h2 id={id} class="font-archivo font-black text-2xl sm:text-4xl text-ink uppercase tracking-tight leading-none mt-1">
+        {name}
+      </h2>
+    </div>
   </div>
 </div>
