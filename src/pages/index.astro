@@ -18,11 +18,19 @@ const moreProjects = PROJECTS.filter((p) => !p.featured);
 ---
 
 <BaseLayout>
+  <!-- Accessible Skip Link -->
+  <a
+    href="#main-content"
+    class="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[100] focus:px-4 focus:py-2 focus:bg-ink focus:text-paper focus:font-mono focus:text-xs"
+  >
+    Skip to main content
+  </a>
+
   <!-- Fixed Transit Header Navigation -->
   <header class="fixed top-0 left-0 right-0 z-50 bg-paper border-b-2 border-ink" role="banner">
     <div class="max-w-site mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
       <div class="flex items-center gap-3">
-        <span class="w-3 h-3 rounded-full bg-line-frontend"></span>
+        <span class="w-3 h-3 rounded-full bg-line-frontend" aria-hidden="true"></span>
         <a href="#station-00" class="font-archivo font-extrabold text-lg text-ink tracking-tight hover:opacity-80">
           THE YUG LINE
         </a>
@@ -32,7 +40,7 @@ const moreProjects = PROJECTS.filter((p) => !p.featured);
       </div>
 
       <!-- Quick Stations Jump -->
-      <nav class="hidden md:flex items-center gap-5 font-mono text-xs text-ink-soft">
+      <nav aria-label="Stations transit navigation" class="hidden md:flex items-center gap-5 font-mono text-xs text-ink-soft">
         <a href="#station-01" class="hover:text-ink">01:BOARD</a>
         <a href="#station-02" class="hover:text-ink text-line-frontend font-bold">02:GHUMIFY</a>
         <a href="#station-03" class="hover:text-ink">03:PROJECTS</a>
@@ -66,18 +74,19 @@ const moreProjects = PROJECTS.filter((p) => !p.featured);
     </div>
   </header>
 
-  <!-- Central Railway Guide Rails Container -->
-  <div class="max-w-site mx-auto px-4 sm:px-6 pt-24 pb-32 relative">
+  <!-- Central Railway Guide Rails Container (Main Content) -->
+  <main id="main-content" role="main" class="max-w-site mx-auto px-4 sm:px-6 pt-24 pb-32 relative">
     
     <!-- ========================================================
          STATION 00: DEPARTURE (HERO)
          ======================================================== -->
-    <section id="station-00" class="pt-8 pb-20 relative">
+    <section id="station-00" aria-labelledby="heading-st-00" class="pt-8 pb-20 relative">
       <StationHeader
         code="ST-00"
         name="CENTRAL DEPARTURE"
         category="ORIGIN & IDENTITY"
         lineVariant="frontend"
+        id="heading-st-00"
       />
 
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
@@ -164,58 +173,62 @@ const moreProjects = PROJECTS.filter((p) => !p.featured);
     <!-- ========================================================
          STATION 01: DEPARTURES BOARD (ACHIEVEMENTS)
          ======================================================== -->
-    <section id="station-01" class="py-12 relative">
+    <section id="station-01" aria-labelledby="heading-st-01" class="py-12 relative">
       <StationHeader
         code="ST-01"
         name="DEPARTURES BOARD"
         category="TRACK RECORD & AWARDS"
         lineVariant="hardware"
+        id="heading-st-01"
       />
 
       <DeparturesBoard />
     </section>
 
     <!-- Rail Divider Line -->
-    <div class="w-full h-8 flex items-center justify-center my-6">
+    <div class="w-full h-8 flex items-center justify-center my-6" aria-hidden="true">
       <div class="w-full border-t-2 border-dashed border-rule"></div>
     </div>
 
     <!-- ========================================================
          STATION 02: INTERCHANGE GHUMIFY (FLAGSHIP)
          ======================================================== -->
-    <section id="station-02" class="py-12 relative">
+    <section id="station-02" aria-labelledby="heading-st-02" class="py-12 relative">
       <StationHeader
         code="ST-02"
         name="GHUMIFY INTERCHANGE"
         category="FLAGSHIP AI CONVERGENCE"
         lineVariant="ai"
+        id="heading-st-02"
       />
 
       <InterchangeGhumify />
     </section>
 
     <!-- Rail Divider Line -->
-    <div class="w-full h-8 flex items-center justify-center my-6">
+    <div class="w-full h-8 flex items-center justify-center my-6" aria-hidden="true">
       <div class="w-full border-t-2 border-dashed border-rule"></div>
     </div>
 
     <!-- ========================================================
          STATION 03: LINE STOPS (PROJECTS)
          ======================================================== -->
-    <section id="station-03" class="py-12 relative">
+    <section id="station-03" aria-labelledby="heading-st-03" class="py-12 relative">
       <StationHeader
         code="ST-03"
         name="LINE STOPS"
         category="CURATED PROJECTS & SYSTEMS"
         lineVariant="frontend"
+        id="heading-st-03"
       />
 
       <!-- Filter Controls -->
-      <div class="flex items-center gap-2 overflow-x-auto pb-4 mb-6 font-mono text-xs">
+      <div class="flex items-center gap-2 overflow-x-auto pb-4 mb-6 font-mono text-xs" role="toolbar" aria-label="Project line filters">
         <button
           type="button"
           class="project-filter-btn px-4 py-2 border-2 border-ink bg-ink text-paper font-bold uppercase transition-all"
           data-filter="all"
+          aria-pressed="true"
         >
           All Stops
         </button>
@@ -223,6 +236,7 @@ const moreProjects = PROJECTS.filter((p) => !p.featured);
           type="button"
           class="project-filter-btn px-4 py-2 border-2 border-rule bg-surface text-ink hover:border-ink uppercase transition-all"
           data-filter="frontend"
+          aria-pressed="false"
         >
           Frontend Line
         </button>
@@ -230,6 +244,7 @@ const moreProjects = PROJECTS.filter((p) => !p.featured);
           type="button"
           class="project-filter-btn px-4 py-2 border-2 border-rule bg-surface text-ink hover:border-ink uppercase transition-all"
           data-filter="backend"
+          aria-pressed="false"
         >
           Backend Line
         </button>
@@ -237,6 +252,7 @@ const moreProjects = PROJECTS.filter((p) => !p.featured);
           type="button"
           class="project-filter-btn px-4 py-2 border-2 border-rule bg-surface text-ink hover:border-ink uppercase transition-all"
           data-filter="ai"
+          aria-pressed="false"
         >
           AI / ML Line
         </button>
@@ -244,6 +260,7 @@ const moreProjects = PROJECTS.filter((p) => !p.featured);
           type="button"
           class="project-filter-btn px-4 py-2 border-2 border-rule bg-surface text-ink hover:border-ink uppercase transition-all"
           data-filter="hardware"
+          aria-pressed="false"
         >
           Hardware Line
         </button>
@@ -262,9 +279,11 @@ const moreProjects = PROJECTS.filter((p) => !p.featured);
           type="button"
           id="toggle-more-stops"
           class="w-full p-4 border-2 border-dashed border-ink bg-surface font-mono text-xs sm:text-sm font-bold uppercase tracking-wider text-ink hover:bg-paper transition-colors flex items-center justify-center gap-2"
+          aria-expanded="false"
+          aria-controls="more-stops-container"
         >
           <span>Show More Stops ({moreProjects.length} Additional Projects: Cricktraker, Clinic, EMS)</span>
-          <span id="more-stops-icon">▼</span>
+          <span id="more-stops-icon" aria-hidden="true">▼</span>
         </button>
 
         <div id="more-stops-container" class="hidden grid-cols-1 md:grid-cols-2 gap-6 mt-6">
@@ -276,82 +295,86 @@ const moreProjects = PROJECTS.filter((p) => !p.featured);
     </section>
 
     <!-- Rail Divider Line -->
-    <div class="w-full h-8 flex items-center justify-center my-6">
+    <div class="w-full h-8 flex items-center justify-center my-6" aria-hidden="true">
       <div class="w-full border-t-2 border-dashed border-rule"></div>
     </div>
 
     <!-- ========================================================
          STATION 04: CREW AND SERVICE RECORD (EXPERIENCE)
          ======================================================== -->
-    <section id="station-04" class="py-12 relative">
+    <section id="station-04" aria-labelledby="heading-st-04" class="py-12 relative">
       <StationHeader
         code="ST-04"
         name="CREW & SERVICE RECORD"
         category="PROFESSIONAL EXPERIENCE"
         lineVariant="backend"
+        id="heading-st-04"
       />
 
       <ExperienceTicket />
     </section>
 
     <!-- Rail Divider Line -->
-    <div class="w-full h-8 flex items-center justify-center my-6">
+    <div class="w-full h-8 flex items-center justify-center my-6" aria-hidden="true">
       <div class="w-full border-t-2 border-dashed border-rule"></div>
     </div>
 
     <!-- ========================================================
          STATION 05: LINE LEGEND (TECH ARSENAL)
          ======================================================== -->
-    <section id="station-05" class="py-12 relative">
+    <section id="station-05" aria-labelledby="heading-st-05" class="py-12 relative">
       <StationHeader
         code="ST-05"
         name="LINE LEGEND"
         category="TECHNICAL CAPABILITIES"
         lineVariant="hardware"
+        id="heading-st-05"
       />
 
       <TechLegend />
     </section>
 
     <!-- Rail Divider Line -->
-    <div class="w-full h-8 flex items-center justify-center my-6">
+    <div class="w-full h-8 flex items-center justify-center my-6" aria-hidden="true">
       <div class="w-full border-t-2 border-dashed border-rule"></div>
     </div>
 
     <!-- ========================================================
          STATION 06: ACADEMIC STOP (EDUCATION)
          ======================================================== -->
-    <section id="station-06" class="py-12 relative">
+    <section id="station-06" aria-labelledby="heading-st-06" class="py-12 relative">
       <StationHeader
         code="ST-06"
         name="ACADEMIC JUNCTION"
         category="DEGREE & FOUNDATION"
         lineVariant="ai"
+        id="heading-st-06"
       />
 
       <EducationTicket />
     </section>
 
     <!-- Rail Divider Line -->
-    <div class="w-full h-8 flex items-center justify-center my-6">
+    <div class="w-full h-8 flex items-center justify-center my-6" aria-hidden="true">
       <div class="w-full border-t-2 border-dashed border-rule"></div>
     </div>
 
     <!-- ========================================================
          STATION 07: TERMINUS & CONTACT
          ======================================================== -->
-    <section id="station-07" class="py-12 relative">
+    <section id="station-07" aria-labelledby="heading-st-07" class="py-12 relative">
       <StationHeader
         code="ST-07"
         name="TERMINUS"
         category="DISPATCH & CONNECT"
         lineVariant="default"
+        id="heading-st-07"
       />
 
       <TerminusContact />
     </section>
 
-  </div>
+  </main>
 
   <!-- Interactive Scripts (Client-side interactivity) -->
   <script>
@@ -376,9 +399,11 @@ const moreProjects = PROJECTS.filter((p) => !p.featured);
           filterBtns.forEach((b) => {
             b.classList.remove('bg-ink', 'text-paper', 'border-ink');
             b.classList.add('bg-surface', 'text-ink', 'border-rule');
+            b.setAttribute('aria-pressed', 'false');
           });
           btn.classList.add('bg-ink', 'text-paper', 'border-ink');
           btn.classList.remove('bg-surface', 'text-ink', 'border-rule');
+          btn.setAttribute('aria-pressed', 'true');
 
           // Filter cards
           cards.forEach((card) => {
@@ -403,10 +428,12 @@ const moreProjects = PROJECTS.filter((p) => !p.featured);
           if (isHidden) {
             moreContainer.classList.remove('hidden');
             moreContainer.classList.add('grid');
+            moreBtn.setAttribute('aria-expanded', 'true');
             if (moreIcon) moreIcon.textContent = '▲';
           } else {
             moreContainer.classList.add('hidden');
             moreContainer.classList.remove('grid');
+            moreBtn.setAttribute('aria-expanded', 'false');
             if (moreIcon) moreIcon.textContent = '▼';
           }
         });
