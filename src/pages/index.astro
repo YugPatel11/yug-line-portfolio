@@ -12,6 +12,7 @@ import TerminusContact from '../components/TerminusContact.astro';
 import Pictograms from '../components/Pictograms.astro';
 
 import WelcomeScreen from '../components/WelcomeScreen.astro';
+import StationEntranceLoader from '../components/StationEntranceLoader.astro';
 import MetroCinematic from '../components/MetroCinematic.astro';
 import AllStopsSheet from '../components/AllStopsSheet.astro';
 import ChooseStop from '../components/ChooseStop.astro';
@@ -26,6 +27,9 @@ const moreProjects = PROJECTS.filter((p) => !p.featured);
 ---
 
 <BaseLayout>
+  <!-- Full-Screen Station Entrance Loader (Phase U1) -->
+  <StationEntranceLoader />
+
   <!-- Full-Screen Entry Welcome Screen (Step 0) -->
   <WelcomeScreen />
 

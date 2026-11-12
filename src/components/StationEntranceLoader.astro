@@ -1,0 +1,397 @@
+---
+// StationEntranceLoader.astro
+// Phase U1: Atmospheric "Station Entrance" loader playing on every entry/reload
+---
+
+<!-- Critical Loader Styles (Under 4KB, zero layout shift, smooth performance) -->
+<style>
+  #station-loader {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 100;
+    background-color: #0F1115;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    user-select: none;
+    perspective: 1000px;
+  }
+
+  /* Tunnel Wall Grid */
+  .loader-tunnel-wall {
+    position: absolute;
+    inset: 0;
+    opacity: 0.15;
+    background-image: 
+      linear-gradient(to right, #2B2F38 1px, transparent 1px),
+      linear-gradient(to bottom, #2B2F38 1px, transparent 1px);
+    background-size: 60px 60px;
+  }
+
+  /* 4 Receding Arch Outlines */
+  .tunnel-arch {
+    position: absolute;
+    border: 2px solid #2B2F38;
+    border-radius: 120px 120px 0 0;
+    border-bottom: none;
+    pointer-events: none;
+    animation: archPulse 2.4s ease-out infinite;
+  }
+  .tunnel-arch:nth-child(1) { width: 320px; height: 380px; opacity: 0.8; animation-delay: 0s; }
+  .tunnel-arch:nth-child(2) { width: 540px; height: 580px; opacity: 0.5; animation-delay: 0.4s; }
+  .tunnel-arch:nth-child(3) { width: 800px; height: 800px; opacity: 0.3; animation-delay: 0.8s; }
+  .tunnel-arch:nth-child(4) { width: 1100px; height: 1050px; opacity: 0.15; animation-delay: 1.2s; }
+
+  @keyframes archPulse {
+    0% { transform: scale(0.85); }
+    50% { transform: scale(1.02); }
+    100% { transform: scale(0.85); }
+  }
+
+  /* Headlights approaching in distance */
+  .loader-headlights {
+    position: absolute;
+    top: 52%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    gap: 120px;
+    pointer-events: none;
+    animation: headlightsApproach 1.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  .headlight-beam {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background-color: #FFE9A8;
+    border: 3px solid #F1EEE6;
+    box-shadow: 0 0 0 4px #0F1115;
+  }
+
+  @keyframes headlightsApproach {
+    0% { transform: translate(-50%, -50%) scale(0.1); opacity: 0; }
+    30% { opacity: 1; }
+    80% { transform: translate(-50%, -50%) scale(1.4); opacity: 0.9; }
+    100% { transform: translate(-50%, -50%) scale(2.0); opacity: 0; }
+  }
+
+  /* Split Flap Word Flip */
+  .split-flap-word {
+    display: inline-block;
+    transform-origin: center bottom;
+    animation: flipWord 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
+  }
+
+  @keyframes flipWord {
+    0% { transform: perspective(400px) rotateX(90deg); opacity: 0; }
+    60% { transform: perspective(400px) rotateX(-12deg); opacity: 1; }
+    100% { transform: perspective(400px) rotateX(0deg); opacity: 1; }
+  }
+
+  /* Split Door Panels for Final Reveal */
+  .loader-door-left, .loader-door-right {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 50%;
+    background-color: #0F1115;
+    z-index: 50;
+    transition: transform 0.7s cubic-bezier(0.77, 0, 0.175, 1);
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+  }
+  .loader-door-left {
+    left: 0;
+    border-right: 2px solid #2B2F38;
+    justify-content: flex-end;
+  }
+  .loader-door-right {
+    right: 0;
+    border-left: 2px solid #2B2F38;
+    justify-content: flex-start;
+  }
+
+  .loader-doors-open .loader-door-left {
+    transform: translateX(-100%);
+  }
+  .loader-doors-open .loader-door-right {
+    transform: translateX(100%);
+  }
+
+  /* Reduced Motion */
+  @media (prefers-reduced-motion: reduce) {
+    .tunnel-arch, .loader-headlights, .split-flap-word {
+      animation: none !important;
+    }
+    .loader-door-left, .loader-door-right {
+      transition: opacity 0.2s ease !important;
+    }
+    .loader-doors-open .loader-door-left,
+    .loader-doors-open .loader-door-right {
+      transform: none !important;
+      opacity: 0 !important;
+    }
+  }
+</style>
+
+<!-- Noscript fallback: Immediately hide loader if JS is disabled per Rule 3 -->
+<noscript>
+  <style>
+    #station-loader { display: none !important; }
+  </style>
+</noscript>
+
+<div
+  id="station-loader"
+  role="status"
+  aria-live="polite"
+  aria-label="Station Entrance loading screen"
+>
+  <!-- Screen Reader Announcements -->
+  <span id="loader-live-announcer" class="sr-only">Loading The Yug Line</span>
+
+  <!-- Left and Right Sliding Door Panels -->
+  <div class="loader-door-left" aria-hidden="true">
+    <!-- Center Door Handle Indent -->
+    <div class="w-2.5 h-36 bg-[#171A20] border-y-2 border-l-2 border-[#2B2F38] mr-2"></div>
+  </div>
+  <div class="loader-door-right" aria-hidden="true">
+    <!-- Center Door Handle Indent -->
+    <div class="w-2.5 h-36 bg-[#171A20] border-y-2 border-r-2 border-[#2B2F38] ml-2"></div>
+  </div>
+
+  <!-- Tunnel Background Scene -->
+  <div class="absolute inset-0 pointer-events-none overflow-hidden flex items-center justify-center">
+    <div class="loader-tunnel-wall"></div>
+    <div class="tunnel-arch"></div>
+    <div class="tunnel-arch"></div>
+    <div class="tunnel-arch"></div>
+    <div class="tunnel-arch"></div>
+    <div class="loader-headlights">
+      <div class="headlight-beam"></div>
+      <div class="headlight-beam"></div>
+    </div>
+  </div>
+
+  <!-- Center Suspended Blade Sign -->
+  <div
+    id="loader-center-content"
+    class="relative z-30 max-w-xl w-[92%] mx-auto flex flex-col items-center pointer-events-auto"
+  >
+    <!-- Suspension Rods from Ceiling -->
+    <div class="w-full flex justify-around px-16 h-10 pointer-events-none" aria-hidden="true">
+      <div class="w-1.5 h-full bg-[#F1EEE6] border-x border-[#111111]"></div>
+      <div class="w-1.5 h-full bg-[#F1EEE6] border-x border-[#111111]"></div>
+    </div>
+
+    <!-- The Blade Sign -->
+    <div
+      class="w-full bg-[#F4F1EA] border-4 border-[#111111] p-6 sm:p-8 rounded-lg shadow-[8px_8px_0_#111111] text-center relative overflow-hidden"
+    >
+      <!-- 4-Line Brand Color Top Band -->
+      <div class="absolute top-0 left-0 right-0 h-3 flex" aria-hidden="true">
+        <div class="w-1/4 h-full bg-[#E4572E]"></div>
+        <div class="w-1/4 h-full bg-[#0B6E4F]"></div>
+        <div class="w-1/4 h-full bg-[#1B3A8A]"></div>
+        <div class="w-1/4 h-full bg-[#F2B705]"></div>
+      </div>
+
+      <!-- Station Monogram & Code -->
+      <div class="font-mono text-xs uppercase tracking-widest text-[#4A4741] font-bold mt-2 mb-2">
+        // STATION ENTRANCE · CONCOURSE //
+      </div>
+
+      <!-- Split Flap Signboard Title: "Welcome to The Yug Line" -->
+      <h1 class="font-archivo text-3xl sm:text-5xl font-black text-[#111111] uppercase tracking-tight leading-tight mb-4">
+        <span class="split-flap-word" style="animation-delay: 0.15s;">WELCOME</span>
+        <span class="split-flap-word" style="animation-delay: 0.30s;">TO</span>
+        <span class="split-flap-word" style="animation-delay: 0.45s;">THE</span>
+        <span class="split-flap-word text-[#E4572E]" style="animation-delay: 0.60s;">YUG</span>
+        <span class="split-flap-word" style="animation-delay: 0.75s;">LINE</span>
+      </h1>
+
+      <!-- Route Progress Strip with 7 Dots and Moving Train Glyph -->
+      <div class="w-full bg-[#FBF9F4] border-2 border-[#111111] p-3 rounded mb-4">
+        <div class="flex items-center justify-between text-xs font-mono text-[#111111] font-bold mb-2">
+          <span id="loader-status-text">INITIALIZING TRACKS...</span>
+          <span id="loader-pct-text">0%</span>
+        </div>
+
+        <!-- 7-Dot Metro Line with moving train glyph -->
+        <div class="relative w-full h-3 flex items-center justify-between px-1">
+          <!-- Background rail line -->
+          <div class="absolute left-2 right-2 h-1 bg-[#D9D3C5] -z-0"></div>
+          <!-- Active fill line -->
+          <div id="loader-progress-fill" class="absolute left-2 h-1 bg-[#111111] transition-all duration-300" style="width: 0%;"></div>
+
+          <!-- 7 Station Dots -->
+          {['#E4572E', '#0B6E4F', '#1B3A8A', '#F2B705', '#E4572E', '#0B6E4F', '#111111'].map((color, i) => (
+            <span
+              class="loader-station-dot relative z-10 w-3 h-3 rounded-full border-2 border-[#111111] bg-[#F4F1EA] transition-colors duration-300"
+              data-dot-index={i}
+            ></span>
+          ))}
+        </div>
+      </div>
+
+      <!-- Action Footer: Skip Button (appears after 0.5s) -->
+      <div class="flex items-center justify-between pt-1">
+        <span class="font-mono text-[11px] text-[#4A4741] uppercase">
+          ONE WHO CODES 2026
+        </span>
+        <button
+          type="button"
+          id="loader-skip-btn"
+          class="font-mono text-xs font-bold text-[#111111] uppercase px-3 py-1 bg-[#FBF9F4] border-2 border-[#111111] shadow-[2px_2px_0_#111111] hover:bg-[#111111] hover:text-[#F4F1EA] transition-all opacity-0 pointer-events-none"
+          aria-label="Skip station entrance intro"
+        >
+          Skip Intro ➔
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  (() => {
+    const loader = document.getElementById('station-loader');
+    const liveAnnouncer = document.getElementById('loader-live-announcer');
+    const statusText = document.getElementById('loader-status-text');
+    const pctText = document.getElementById('loader-pct-text');
+    const progressFill = document.getElementById('loader-progress-fill');
+    const skipBtn = document.getElementById('loader-skip-btn');
+    const dots = document.querySelectorAll('.loader-station-dot');
+
+    if (!loader) return;
+
+    // Check if returning visitor or deep link
+    let isReturning = false;
+    try {
+      isReturning = sessionStorage.getItem('yugline_visited_session') === 'true';
+      sessionStorage.setItem('yugline_visited_session', 'true');
+    } catch (e) {}
+
+    const isDeepLink = window.location.hash.length > 1;
+    const isReduced = 
+      document.documentElement.classList.contains('reduce-motion') ||
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // Durations: Deep link 0.6s, returning 0.9s, first visit ~2.2s (max 3.5s)
+    const targetDurationMs = isDeepLink ? 600 : isReturning ? 900 : 2200;
+
+    // Show skip button after 500ms
+    setTimeout(() => {
+      if (skipBtn) {
+        skipBtn.style.opacity = '1';
+        skipBtn.classList.remove('pointer-events-none');
+      }
+    }, 500);
+
+    let currentProgress = 0;
+    let targetProgress = 15;
+    let isDone = false;
+
+    const dotColors = ['#E4572E', '#0B6E4F', '#1B3A8A', '#F2B705', '#E4572E', '#0B6E4F', '#111111'];
+
+    const updateDisplay = (val: number) => {
+      const rounded = Math.min(100, Math.max(0, Math.round(val)));
+      if (pctText) pctText.textContent = `${rounded}%`;
+      if (progressFill) progressFill.style.width = `${rounded}%`;
+
+      // Update dots as progress reaches each station (7 stations = ~14.2% each)
+      dots.forEach((dot, idx) => {
+        const threshold = ((idx + 1) / 7) * 100;
+        if (rounded >= threshold - 5) {
+          (dot as HTMLElement).style.backgroundColor = dotColors[idx] || '#111111';
+        }
+      });
+
+      if (statusText) {
+        if (rounded < 35) statusText.textContent = 'CHECKING TRACKS...';
+        else if (rounded < 75) statusText.textContent = 'POWERING THIRD RAIL...';
+        else if (rounded < 100) statusText.textContent = 'TRAIN IN BOUND...';
+        else statusText.textContent = 'DOORS OPENING...';
+      }
+    };
+
+    // Smooth progress tick
+    const startTime = performance.now();
+    const progressTimer = setInterval(() => {
+      const elapsed = performance.now() - startTime;
+      const timeFraction = Math.min(1, elapsed / targetDurationMs);
+      
+      // Interpolate progress towards target with smooth ease
+      currentProgress += (targetProgress - currentProgress) * 0.2;
+      currentProgress = Math.max(currentProgress, timeFraction * 95);
+
+      updateDisplay(currentProgress);
+
+      if (timeFraction >= 1 && targetProgress >= 100 && !isDone) {
+        finishLoading();
+      }
+    }, 50);
+
+    // Milestones
+    document.addEventListener('DOMContentLoaded', () => {
+      targetProgress = Math.max(targetProgress, 40);
+    });
+
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(() => {
+        targetProgress = Math.max(targetProgress, 75);
+      });
+    }
+
+    window.addEventListener('load', () => {
+      targetProgress = 100;
+    });
+
+    // Guaranteed fallback timeout (3.5s max)
+    const maxSafetyTimeout = setTimeout(() => {
+      targetProgress = 100;
+      finishLoading();
+    }, 3500);
+
+    const finishLoading = () => {
+      if (isDone) return;
+      isDone = true;
+      clearInterval(progressTimer);
+      clearTimeout(maxSafetyTimeout);
+
+      updateDisplay(100);
+      if (liveAnnouncer) liveAnnouncer.textContent = 'Ready. Station concourse open.';
+
+      // Split open doors
+      setTimeout(() => {
+        loader.classList.add('loader-doors-open');
+        const center = document.getElementById('loader-center-content');
+        if (center) center.style.opacity = '0';
+
+        // Remove from DOM after doors slide open
+        setTimeout(() => {
+          if (loader.parentNode) {
+            loader.parentNode.removeChild(loader);
+          }
+          // Focus main heading
+          const mainHeading = document.getElementById('heading-st-00') || document.querySelector('h1');
+          if (mainHeading) {
+            mainHeading.setAttribute('tabindex', '-1');
+            mainHeading.focus();
+          }
+        }, isReduced ? 200 : 750);
+      }, isReduced ? 100 : 350);
+    };
+
+    // Skip Button Handler
+    if (skipBtn) {
+      skipBtn.addEventListener('click', () => {
+        finishLoading();
+      });
+    }
+  })();
+</script>
