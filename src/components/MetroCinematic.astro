@@ -699,19 +699,28 @@ import Pictograms from './Pictograms.astro';
 
         try {
           window.speechSynthesis.cancel();
-          const meta = STATIONS[currentDestination];
-          const stationName = meta ? meta.name : 'Next Station';
-          const msg = new SpeechSynthesisUtterance(`Ticket validated. Next station: ${stationName}.`);
-          msg.rate = 1.0;
+          const cleanNames: Record<string, string> = {
+            'station-00': 'Base',
+            'station-01': 'Achievements',
+            'station-02': 'Projects',
+            'station-03': 'Experience',
+            'station-04': 'Skills',
+            'station-05': 'Education',
+            'station-06': 'Contact',
+          };
+          const stationName = cleanNames[currentDestination] || (STATIONS[currentDestination] ? STATIONS[currentDestination].name.replace(/^All\s+/i, '') : 'Next Station');
+          const announcement = `Your ticket is verified. Next station is ${stationName}.`;
+          const msg = new SpeechSynthesisUtterance(announcement);
+          msg.rate = 1.05;
           msg.pitch = 1.0;
           msg.volume = 1.0;
           msg.lang = 'en-US';
 
-          const safetyTimer = setTimeout(resolve, 3500);
+          const safetyTimer = setTimeout(resolve, 3000);
 
           msg.onend = () => {
             clearTimeout(safetyTimer);
-            setTimeout(resolve, 150);
+            setTimeout(resolve, 100);
           };
 
           msg.onerror = () => {
