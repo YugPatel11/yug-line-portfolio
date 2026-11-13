@@ -23,7 +23,12 @@ export class Welcome3DScene {
   private previousMouseX: number = 0;
   private targetRotationY: number = -0.65; // Dynamic 3/4 isometric transit angle (~37°)
   private currentRotationY: number = -0.65;
-  private autoRotateSpeed: number = 0.0025;
+  private autoRotateSpeed: number = 0.0022;
+  private rollInProgress: number = 0;
+  private mouseParallaxX: number = 0;
+  private mouseParallaxY: number = 0;
+  private targetMouseParallaxX: number = 0;
+  private targetMouseParallaxY: number = 0;
 
   constructor(containerId: string, canvasId: string) {
     this.container = document.getElementById(containerId) as HTMLElement;
@@ -355,6 +360,12 @@ export class Welcome3DScene {
       const deltaX = e.clientX - this.previousMouseX;
       this.targetRotationY += deltaX * 0.009;
       this.previousMouseX = e.clientX;
+    } else {
+      // Subtle cursor parallax depth
+      const nx = (e.clientX / window.innerWidth) - 0.5;
+      const ny = (e.clientY / window.innerHeight) - 0.5;
+      this.targetMouseParallaxX = nx * 0.18;
+      this.targetMouseParallaxY = ny * 0.08;
     }
   };
 
@@ -384,18 +395,32 @@ export class Welcome3DScene {
   private animate = () => {
     if (this.isDestroyed) return;
 
-    // Gentle Auto-Turntable when idle
+    // 1. Entrance Roll-In Glide along track
+    if (this.rollInProgress < 1) {
+      this.rollInProgress += (1 - this.rollInProgress) * 0.04;
+      const rollOffset = (1 - this.rollInProgress) * -3.8;
+      this.trainGroup.position.z = rollOffset;
+    } else {
+      this.trainGroup.position.z = 0;
+    }
+
+    // 2. Gentle Auto-Turntable when idle
     if (!this.isDragging) {
       this.targetRotationY += this.autoRotateSpeed;
     }
 
-    // Smooth inertia interpolation
+    // 3. Smooth inertia & cursor parallax interpolation
     this.currentRotationY += (this.targetRotationY - this.currentRotationY) * 0.08;
-    this.rootGroup.rotation.y = this.currentRotationY;
+    this.mouseParallaxX += (this.targetMouseParallaxX - this.mouseParallaxX) * 0.05;
+    this.mouseParallaxY += (this.targetMouseParallaxY - this.mouseParallaxY) * 0.05;
 
-    // Natural subtle track vibration
-    const time = Date.now() * 0.003;
-    this.trainGroup.position.y = Math.sin(time) * 0.012;
+    this.rootGroup.rotation.y = this.currentRotationY + this.mouseParallaxX;
+    this.rootGroup.rotation.x = this.mouseParallaxY;
+
+    // 4. Natural subtle track suspension & floating idle motion
+    const time = Date.now() * 0.0024;
+    this.trainGroup.position.y = Math.sin(time) * 0.016;
+    this.trainGroup.rotation.z = Math.cos(time * 0.7) * 0.006;
 
     if (this.renderer) {
       this.renderer.render(this.scene, this.camera);
