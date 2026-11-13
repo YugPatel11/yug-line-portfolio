@@ -824,7 +824,7 @@ const DESTINATIONS = [
   // Station Master Speech Synthesizer
   const speakClerk = (rawText: string, onEnd?: () => void) => {
     if (!('speechSynthesis' in window)) {
-      if (onEnd) onEnd();
+      if (onEnd) setTimeout(onEnd, 1000);
       return;
     }
 
@@ -832,7 +832,7 @@ const DESTINATIONS = [
     try {
       const soundPref = localStorage.getItem('yugline_sound');
       if (soundPref === 'off') {
-        if (onEnd) onEnd();
+        if (onEnd) setTimeout(onEnd, 1000);
         return;
       }
     } catch (e) {}
@@ -846,7 +846,7 @@ const DESTINATIONS = [
       }
 
       const utterance = new SpeechSynthesisUtterance(clean);
-      utterance.rate = 0.98;
+      utterance.rate = 1.0;
       utterance.pitch = 1.05;
       utterance.volume = 1.0;
 
@@ -867,22 +867,30 @@ const DESTINATIONS = [
         }
       };
 
+      let hasFinished = false;
       const finishSpeaking = () => {
+        if (hasFinished) return;
+        hasFinished = true;
+        clearTimeout(safetyTimer);
         if (clerkMouth) clerkMouth.classList.remove('clerk-mouth-talking');
         if (speechBubble) speechBubble.classList.remove('ring-4', 'ring-line-hardware');
         if (speechBadge) {
           speechBadge.textContent = 'REPLAY 🔊';
           speechBadge.classList.remove('text-line-frontend');
         }
-        if (onEnd) onEnd();
+        if (onEnd) {
+          setTimeout(onEnd, 200);
+        }
       };
+
+      const safetyTimer = setTimeout(finishSpeaking, 3500);
 
       utterance.onend = finishSpeaking;
       utterance.onerror = finishSpeaking;
 
       window.speechSynthesis.speak(utterance);
     } catch (err) {
-      if (onEnd) onEnd();
+      if (onEnd) setTimeout(onEnd, 800);
     }
   };
 
@@ -959,8 +967,19 @@ const DESTINATIONS = [
   };
   resetIdleTimer();
 
-  // Take ticket and proceed helper
-  const takeTicketAndProceed = () => {
+  const CLEAN_STATION_NAMES: Record<string, string> = {
+    'station-00': 'Base',
+    'station-01': 'Achievements',
+    'station-02': 'Projects',
+    'station-03': 'Experience',
+    'station-04': 'Skills',
+    'station-05': 'Education',
+    'station-06': 'Contact',
+  };
+
+  // Take ticket and launch full-screen cinematic metro
+  const proceedToMetro = (stId?: StationCode) => {
+    const target = stId || selectedStationId || 'station-01';
     sound.punch();
     if (ticketEl) {
       ticketEl.style.transform = 'translateY(60px) scale(0.8)';
@@ -968,15 +987,17 @@ const DESTINATIONS = [
     }
     const machine = (window as any).__yugline || (window as any).__yuglineMachine;
     if (machine) {
-      machine.selectDestination(selectedStationId || 'station-01');
-      machine.setStep('gate');
+      machine.selectDestination(target);
+      machine.launchCinematicMetro(target);
+    } else if ((window as any).__launchMetroCinematic) {
+      (window as any).__launchMetroCinematic(target);
     }
   };
 
   // Allow clicking directly on the extruded ticket in tray
   if (ticketEl) {
     ticketEl.addEventListener('click', () => {
-      takeTicketAndProceed();
+      proceedToMetro();
     });
   }
 
@@ -987,13 +1008,6 @@ const DESTINATIONS = [
       const stId = btn.getAttribute('data-station-id') as StationCode;
       const stCode = btn.getAttribute('data-station-code') || '';
       const stTitle = btn.getAttribute('data-station-title') || '';
-      const dialogue = btn.getAttribute('data-dialogue') || '';
-
-      // If already selected and ticket is ready in tray, clicking again proceeds directly!
-      if (selectedStationId === stId && isReadyForTake) {
-        takeTicketAndProceed();
-        return;
-      }
 
       selectedStationId = stId;
       selectedCode = stCode;
@@ -1013,46 +1027,50 @@ const DESTINATIONS = [
         }, 350);
       }
 
-      // 2. Play soft bell / click
+      // 2. Play soft chime
       sound.doorDing();
 
-      // 3. Update speech bubble & speak station dialogue
+      // 3. Station name & voice line
+      const cleanName = CLEAN_STATION_NAMES[stId] || stTitle.replace(/^All\s+/i, '');
+      const voiceLine = `Here is the transit pass for ${cleanName}.`;
+
+      // Update speech bubble
       if (speechText) {
-        speechText.textContent = `"${dialogue}"`;
+        speechText.textContent = `"${voiceLine}"`;
       }
-      const activeSt = stId;
-      speakClerk(dialogue, () => {
-        if (selectedStationId === activeSt && isReadyForTake) {
-          const passMsg = `"Here is your transit pass for ${selectedCode}! Take it and head to the gate."`;
-          if (speechText) speechText.textContent = passMsg;
-          speakClerk(passMsg);
-        }
-      });
 
       // Update ticket strip preview
       if (stripCode) stripCode.textContent = stCode;
-      if (stripTitle) stripTitle.textContent = stTitle.toUpperCase();
+      if (stripTitle) stripTitle.textContent = cleanName.toUpperCase();
 
-      // 4. Issue and hand over ticket!
-      executeBuyTicket();
+      // 4. Issue and dispense ticket in tray
+      executeBuyTicket(cleanName);
+
+      // 5. Play voice line; once the sound finishes, the metro appears on the screen!
+      const activeSt = stId;
+      speakClerk(voiceLine, () => {
+        if (selectedStationId === activeSt) {
+          proceedToMetro(activeSt);
+        }
+      });
     });
   });
 
   // Execute Ticket Issuance Sequence (Responsive, animated handover)
-  const executeBuyTicket = async () => {
+  const executeBuyTicket = async (cleanName: string) => {
     if (!selectedStationId || isPrinting) return;
     isPrinting = true;
     isReadyForTake = false;
 
     if (primaryBtn) {
       primaryBtn.disabled = true;
-      primaryBtn.innerHTML = `<span>Printing Pass for ${selectedCode}...</span>`;
+      primaryBtn.innerHTML = `<span>Dispensing Pass for ${cleanName}...</span>`;
     }
 
     // Step A: Typing clatter
     if (clerkLeftArm) clerkLeftArm.classList.add('clerk-typing');
     sound.keyboardClick();
-    await new Promise((r) => setTimeout(r, 220));
+    await new Promise((r) => setTimeout(r, 200));
     if (clerkLeftArm) clerkLeftArm.classList.remove('clerk-typing');
 
     // Step B: Printer extrusion
@@ -1062,7 +1080,7 @@ const DESTINATIONS = [
       ticketEl.style.transform = 'translateY(-14px) scale(0.95)';
       ticketEl.style.pointerEvents = 'auto';
     }
-    await new Promise((r) => setTimeout(r, 220));
+    await new Promise((r) => setTimeout(r, 200));
 
     // Step C: Rubber Stamp impact thunk
     if (clerkRightArm) {
@@ -1073,7 +1091,7 @@ const DESTINATIONS = [
       ticketEl.style.opacity = '1';
       ticketEl.style.transform = 'translateY(0) scale(1)';
     }
-    await new Promise((r) => setTimeout(r, 180));
+    await new Promise((r) => setTimeout(r, 160));
     if (clerkRightArm) clerkRightArm.style.transform = 'translateY(0) rotate(0deg)';
 
     // Step D: Slide ticket into tray
@@ -1083,45 +1101,28 @@ const DESTINATIONS = [
     isPrinting = false;
     isReadyForTake = true;
 
-    // If speech synthesis has finished or is not speaking, update speech bubble
-    if (!('speechSynthesis' in window) || !window.speechSynthesis.speaking) {
-      const passMsg = `"Here is your transit pass for ${selectedCode}! Take it and head to the gate."`;
-      if (speechText) speechText.textContent = passMsg;
-      speakClerk(passMsg);
-    }
-
     if (primaryBtn) {
       primaryBtn.disabled = false;
       primaryBtn.classList.add('animate-pulse');
-      primaryBtn.innerHTML = `<span>Take Ticket for ${selectedCode} & Board Metro ➔</span>`;
+      primaryBtn.innerHTML = `<span>Board Metro to ${cleanName} ➔</span>`;
       primaryBtn.focus();
     }
   };
 
-  // Primary Button Click (Handles Take)
+  // Primary Button Click (Handles Instant Boarding)
   if (primaryBtn) {
     primaryBtn.addEventListener('click', () => {
-      if (!isReadyForTake) {
-        executeBuyTicket();
-      } else {
-        takeTicketAndProceed();
-      }
+      proceedToMetro();
     });
   }
 
-  // Quick ticket (Instant ticket handover without clerk wait)
+  // Quick ticket (Instant ticket handover)
   if (quickBtn) {
     quickBtn.addEventListener('click', () => {
       if (!selectedStationId) {
         selectedStationId = 'station-01';
       }
-      sound.printer();
-      sound.stampThunk();
-      const machine = (window as any).__yugline || (window as any).__yuglineMachine;
-      if (machine) {
-        machine.selectDestination(selectedStationId);
-        machine.setStep('gate');
-      }
+      proceedToMetro(selectedStationId);
     });
   }
 
