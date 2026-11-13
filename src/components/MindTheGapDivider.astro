@@ -1,6 +1,6 @@
 ---
 // MindTheGapDivider.astro
-// Phase U3: 56px yellow tactile divider strip between stops in Express view
+// Authentic 32px tactile hazard safety strip between stops
 interface Props {
   nextStopName?: string;
   nextStopCode?: string;
@@ -12,29 +12,29 @@ const {
 } = Astro.props;
 ---
 
-<div class="w-full my-12" role="separator" aria-label={`Mind the gap: proceeding to ${nextStopName}`}>
-  <!-- 56px Yellow Tactile Divider Strip -->
-  <div class="w-full h-14 bg-line-hardware border-y-2 border-ink shadow-[4px_4px_0_var(--ink)] flex items-center justify-between px-4 sm:px-8 relative overflow-hidden select-none">
-    <!-- Tactile dots left -->
-    <div class="hidden sm:flex items-center gap-2 opacity-60" aria-hidden="true">
-      {Array.from({ length: 8 }).map(() => (
-        <span class="w-2.5 h-2.5 rounded-full bg-ink inline-block"></span>
-      ))}
+<div class="w-full my-6 select-none" role="separator" aria-label={`Mind the gap: proceeding to ${nextStopName}`}>
+  <!-- 32px Authentic Platform Hazard & Tactile Divider -->
+  <div class="w-full h-8 bg-line-hardware border-y-2 border-ink shadow-[3px_3px_0_var(--ink)] flex items-center justify-between px-3 sm:px-6 relative overflow-hidden">
+    <!-- Left Hazard Chevrons Pattern -->
+    <div
+      class="w-16 sm:w-28 h-full opacity-35"
+      style="background: repeating-linear-gradient(-45deg, var(--ink), var(--ink) 6px, transparent 6px, transparent 12px);"
+      aria-hidden="true"
+    ></div>
+
+    <!-- Centered Tactile Warning & Wayfinding Label -->
+    <div class="font-mono text-[10px] sm:text-xs font-black text-ink uppercase tracking-widest flex items-center gap-2 mx-auto">
+      <span class="w-2 h-2 rounded-full bg-ink animate-pulse" aria-hidden="true"></span>
+      <span>PLATFORM EDGE // MIND THE GAP · {nextStopCode} ➔ {nextStopName}</span>
+      <span class="w-2 h-2 rounded-full bg-ink animate-pulse" aria-hidden="true"></span>
     </div>
 
-    <!-- Centered Warning & Wayfinding Label -->
-    <div class="font-mono text-xs sm:text-sm font-black text-ink uppercase tracking-widest flex items-center gap-3 mx-auto">
-      <span class="w-3 h-3 rounded-full bg-ink animate-pulse" aria-hidden="true"></span>
-      <span>MIND THE GAP · {nextStopCode} ➔ {nextStopName}</span>
-      <span class="w-3 h-3 rounded-full bg-ink animate-pulse" aria-hidden="true"></span>
-    </div>
-
-    <!-- Tactile dots right -->
-    <div class="hidden sm:flex items-center gap-2 opacity-60" aria-hidden="true">
-      {Array.from({ length: 8 }).map(() => (
-        <span class="w-2.5 h-2.5 rounded-full bg-ink inline-block"></span>
-      ))}
-    </div>
+    <!-- Right Hazard Chevrons Pattern -->
+    <div
+      class="w-16 sm:w-28 h-full opacity-35"
+      style="background: repeating-linear-gradient(45deg, var(--ink), var(--ink) 6px, transparent 6px, transparent 12px);"
+      aria-hidden="true"
+    ></div>
   </div>
 </div>
 

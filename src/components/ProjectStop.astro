@@ -13,12 +13,24 @@ const isDev = import.meta.env.DEV;
 ---
 
 <div
-  class="poster-frame p-6 sm:p-8 bg-surface flex flex-col justify-between project-card transition-all"
+  class="station-plaque p-6 sm:p-8 bg-surface flex flex-col justify-between project-card transition-all"
   data-lines={project.lines.join(' ')}
 >
-  <!-- Railway Poster Framing Tape Stickers -->
-  <span class="poster-tape-top-left" aria-hidden="true"></span>
-  <span class="poster-tape-top-right" aria-hidden="true"></span>
+  <!-- Machined Metallic Corner Rivets -->
+  <span class="plaque-rivet plaque-rivet-tl" aria-hidden="true"></span>
+  <span class="plaque-rivet plaque-rivet-tr" aria-hidden="true"></span>
+  <span class="plaque-rivet plaque-rivet-bl" aria-hidden="true"></span>
+  <span class="plaque-rivet plaque-rivet-br" aria-hidden="true"></span>
+
+  <!-- Plaque Specification Header Bar -->
+  <div class="flex items-center justify-between font-mono text-[10px] text-ink-soft uppercase tracking-widest border-b border-rule pb-2 mb-3">
+    <span class="flex items-center gap-1.5">
+      <span class="w-1.5 h-1.5 rounded-full bg-line-frontend inline-block"></span>
+      SPEC // TRANSIT SYSTEM PLAQUE
+    </span>
+    <span>PROD · CERTIFIED</span>
+  </div>
+
   <div>
     <!-- Ticket Header: Pictogram, Lines & Fare -->
     <div class="flex items-start justify-between gap-3 border-b border-rule pb-3 mb-4">

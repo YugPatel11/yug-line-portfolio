@@ -56,31 +56,56 @@
 }
 
 /* ============================================
-   Paper grain texture (A5.4 Decoration)
-   Tactile SVG noise at ~5.5% opacity (z-index 40)
+   Paper grain texture & Global Transit Grid
    ============================================ */
+.transit-grid-bg {
+  background-color: var(--paper);
+  background-image: 
+    /* 120px major transit engineering grid */
+    linear-gradient(to right, rgba(140, 150, 170, 0.16) 1.5px, transparent 1.5px),
+    linear-gradient(to bottom, rgba(140, 150, 170, 0.16) 1.5px, transparent 1.5px),
+    /* 24px minor blueprint grid */
+    linear-gradient(to right, rgba(140, 150, 170, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(140, 150, 170, 0.05) 1px, transparent 1px);
+  background-size: 120px 120px, 120px 120px, 24px 24px, 24px 24px;
+  background-position: center top;
+}
+
+.dark .transit-grid-bg {
+  background-color: var(--paper);
+  background-image: 
+    /* 120px major transit engineering grid in night mode */
+    linear-gradient(to right, rgba(180, 200, 230, 0.12) 1.5px, transparent 1.5px),
+    linear-gradient(to bottom, rgba(180, 200, 230, 0.12) 1.5px, transparent 1.5px),
+    /* 24px minor blueprint grid in night mode */
+    linear-gradient(to right, rgba(180, 200, 230, 0.035) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(180, 200, 230, 0.035) 1px, transparent 1px);
+  background-size: 120px 120px, 120px 120px, 24px 24px, 24px 24px;
+  background-position: center top;
+}
+
 .paper-grain::before {
   content: '';
   position: fixed;
   inset: 0;
   pointer-events: none;
   z-index: 40;
-  opacity: 0.055;
+  opacity: 0.05;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
 }
 
 /* ============================================
-   Phase U2 & Phase 3: Subway Tile Wall Pattern & Station Set
-   Authentic Running-Bond (Brick-Offset) 64x32px SVG pattern
+   Phase U2 & Phase 3: Beveled Metro Ceramic Subway Tiles
+   Running-Bond (Brick-Offset) 72x36px with 3D Grout & Highlights
    ============================================ */
 .subway-tile-wall {
-  background-image: url("data:image/svg+xml,%3Csvg width='64' height='32' viewBox='0 0 64 32' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0 L64 0 M0 16 L64 16 M0 0 L0 16 M32 0 L32 16 M64 0 L64 16 M16 16 L16 32 M48 16 L48 32 M0 32 L64 32' fill='none' stroke='%23111111' stroke-width='1.5' stroke-opacity='0.08'/%3E%3C/svg%3E");
-  background-size: 64px 32px;
+  background-image: url("data:image/svg+xml,%3Csvg width='72' height='36' viewBox='0 0 72 36' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0 L72 0 M0 18 L72 18 M0 36 L72 36 M0 0 L0 18 M36 0 L36 18 M72 0 L72 18 M18 18 L18 36 M54 18 L54 36' fill='none' stroke='%23111111' stroke-width='1.2' stroke-opacity='0.08'/%3E%3Cpath d='M1 1 L71 1 M1 19 L71 19 M1 1 L1 17 M37 1 L37 17 M19 19 L19 35 M55 19 L55 35' fill='none' stroke='%23FFFFFF' stroke-width='1' stroke-opacity='0.05'/%3E%3C/svg%3E");
+  background-size: 72px 36px;
 }
 
 .dark .subway-tile-wall {
-  background-image: url("data:image/svg+xml,%3Csvg width='64' height='32' viewBox='0 0 64 32' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0 L64 0 M0 16 L64 16 M0 0 L0 16 M32 0 L32 16 M64 0 L64 16 M16 16 L16 32 M48 16 L48 32 M0 32 L64 32' fill='none' stroke='%23F1EEE6' stroke-width='1.5' stroke-opacity='0.10'/%3E%3C/svg%3E");
-  background-size: 64px 32px;
+  background-image: url("data:image/svg+xml,%3Csvg width='72' height='36' viewBox='0 0 72 36' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0 L72 0 M0 18 L72 18 M0 36 L72 36 M0 0 L0 18 M36 0 L36 18 M72 0 L72 18 M18 18 L18 36 M54 18 L54 36' fill='none' stroke='%23000000' stroke-width='1.6' stroke-opacity='0.38'/%3E%3Cpath d='M1 1 L71 1 M1 19 L71 19 M1 1 L1 17 M37 1 L37 17 M19 19 L19 35 M55 19 L55 35' fill='none' stroke='%23FFFFFF' stroke-width='1' stroke-opacity='0.08'/%3E%3C/svg%3E");
+  background-size: 72px 36px;
 }
 
 .wall-frontend { background-color: var(--wall-frontend); }
@@ -151,41 +176,54 @@
   border-bottom: 2px solid var(--ink);
 }
 
-/* Framed Station Wall Poster */
-.poster-frame {
+/* High-Contrast Metro Boarding Action Button */
+.metro-board-action-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 0 36px;
+  min-height: 60px;
+  background-color: #FFC933;
+  color: #111111;
+  font-family: 'Archivo Variable', 'Archivo', sans-serif;
+  font-size: 1.15rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  border: 3px solid #111111;
+  box-shadow: 6px 6px 0 #111111;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.metro-board-action-btn:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 8px 8px 0 #111111;
+}
+.metro-board-action-btn:active {
+  transform: translate(2px, 2px);
+  box-shadow: 4px 4px 0 #111111;
+}
+
+/* Framed Station Wall Plaque */
+.station-plaque {
   position: relative;
   background-color: var(--surface);
   border: 2px solid var(--ink);
   box-shadow: 6px 6px 0 var(--ink);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
-.poster-frame:hover {
+.station-plaque:hover {
   transform: translate(-2px, -2px);
   box-shadow: 8px 8px 0 var(--ink);
 }
-.poster-tape-top-left {
+.plaque-rivet {
   position: absolute;
-  top: -8px;
-  left: 14px;
-  width: 36px;
-  height: 13px;
-  background: var(--paper);
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--paper);
   border: 1.5px solid var(--ink);
-  transform: rotate(-4deg);
-  z-index: 10;
-  box-shadow: 1px 1px 0 var(--ink);
-}
-.poster-tape-top-right {
-  position: absolute;
-  top: -8px;
-  right: 14px;
-  width: 36px;
-  height: 13px;
-  background: var(--paper);
-  border: 1.5px solid var(--ink);
-  transform: rotate(4deg);
-  z-index: 10;
-  box-shadow: 1px 1px 0 var(--ink);
 }
 
 /* ============================================

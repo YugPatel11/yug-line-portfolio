@@ -47,22 +47,42 @@ import Pictograms from './Pictograms.astro';
     </button>
   </div>
 
-  <!-- LAYER 1: FAR WALL (Tile grid & subtle destination signs) -->
+  <!-- LAYER 1: FAR WALL (Tunnel / Station Depth) -->
   <div
     id="layer-far-wall"
-    class="absolute inset-0 pointer-events-none transition-transform duration-700 ease-out bg-paper"
+    class="cinematic-layer layer-far-wall absolute inset-0 pointer-events-none transition-transform duration-700 ease-out bg-[#0D0F14] subway-tile-wall overflow-hidden"
     style="z-index: 10;"
   >
-    <!-- Tile Grid Lines -->
-    <div
-      class="absolute inset-0 opacity-20"
-      style="background-image: linear-gradient(to right, var(--rule) 1px, transparent 1px), linear-gradient(to bottom, var(--rule) 1px, transparent 1px); background-size: 80px 80px;"
-    ></div>
+    <!-- Structural Steel Ceiling I-Beams & Girders -->
+    <div class="absolute top-0 left-0 right-0 h-12 bg-[#12151C] border-b-2 border-ink flex items-center justify-between px-6 opacity-90">
+      <div class="w-full flex items-center justify-around">
+        {Array.from({ length: 16 }).map(() => (
+          <div class="w-2 h-2 rounded-full bg-ink/70 border border-white/20"></div>
+        ))}
+      </div>
+    </div>
 
-    <!-- Repeating Destination Names at Low Contrast (<=10% diff) -->
+    <!-- Industrial Twin Utility Conduit Pipes -->
+    <div class="absolute top-12 left-0 right-0 h-4 flex flex-col justify-between opacity-70 pointer-events-none">
+      <div class="w-full h-1 bg-[#2C3440] border-y border-black"></div>
+      <div class="w-full h-1 bg-[#B48448] border-y border-black"></div>
+    </div>
+
+    <!-- Trackside Signaling Beacon Lamps -->
+    <div class="absolute top-16 inset-x-0 flex justify-around px-8 pointer-events-none opacity-80">
+      {Array.from({ length: 4 }).map(() => (
+        <div class="flex items-center gap-1.5 p-1 bg-[#111111] border border-ink shadow-[2px_2px_0_#000]">
+          <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+          <span class="w-2 h-2 rounded-full bg-line-hardware"></span>
+          <span class="w-2 h-2 rounded-full bg-[#E4572E]/40"></span>
+        </div>
+      ))}
+    </div>
+
+    <!-- Repeating Destination Names at High Wayfinding Contrast -->
     <div
       id="metro-wall-watermark"
-      class="absolute top-[14%] left-0 right-0 text-center font-archivo font-black text-5xl sm:text-7xl lg:text-9xl uppercase tracking-tighter opacity-[0.08] text-ink select-none whitespace-nowrap overflow-hidden"
+      class="absolute top-[16%] left-0 right-0 text-center font-archivo font-black text-4xl sm:text-6xl lg:text-8xl uppercase tracking-tighter opacity-20 text-white select-none whitespace-nowrap overflow-hidden"
     >
       NEXT STOP // THE YUG LINE // TRANSIT
     </div>
@@ -300,21 +320,35 @@ import Pictograms from './Pictograms.astro';
     </div>
   </div>
 
+  <!-- RAILWAY TRACK BED & STEEL RAILS (At 24vh Horizon) -->
+  <div
+    class="absolute inset-x-0 pointer-events-none"
+    style="bottom: 24vh; height: 16px; background-color: #151820; z-index: 18;"
+  >
+    <!-- Heavy Solid Steel Rail Bar -->
+    <div class="w-full h-2 bg-[#8C96AA] border-y border-black"></div>
+    <!-- Concrete Railway Sleepers / Ties Pattern -->
+    <div
+      class="w-full h-2"
+      style="background-image: repeating-linear-gradient(90deg, #252A36 0, #252A36 14px, #0E1015 14px, #0E1015 28px);"
+    ></div>
+  </div>
+
   <!-- LAYER 3: PLATFORM FLOOR (Starts right at horizon 24vh, goes to bottom) -->
   <div
     id="layer-platform-floor"
-    class="absolute inset-x-0 bottom-0 border-t-4 border-ink pointer-events-none"
+    class="absolute inset-x-0 bottom-0 border-t-4 border-ink pointer-events-none platform-floor-strip"
     style="height: 24vh; background-color: var(--surface); z-index: 30;"
   >
     <!-- Tactile Yellow Safety Line with Tactile Dots -->
-    <div class="w-full h-8 bg-line-hardware border-b-2 border-ink flex items-center justify-around px-4">
+    <div class="platform-tactile-line w-full h-8 bg-line-hardware border-b-2 border-ink flex items-center justify-around px-4">
       {Array.from({ length: 24 }).map(() => (
-        <span class="w-2.5 h-2.5 rounded-full bg-ink inline-block opacity-80"></span>
+        <span class="w-2.5 h-2.5 rounded-full bg-ink inline-block opacity-85 shadow-[inset_1px_1px_0_rgba(255,255,255,0.3)]"></span>
       ))}
     </div>
 
     <!-- Amber LED Station Ticker Board -->
-    <div class="max-w-md mx-auto mt-3 px-4 py-2 bg-[#111111] border-2 border-ink flex items-center justify-between font-mono text-xs text-[#FFB000]">
+    <div class="max-w-md mx-auto mt-3 px-4 py-2 bg-[#111111] border-2 border-ink flex items-center justify-between font-mono text-xs text-[#FFB000] shadow-[3px_3px_0_#000]">
       <span class="animate-pulse">● SERVICE 01</span>
       <span id="metro-platform-ticker" class="font-bold tracking-widest uppercase">TRAIN APPROACHING</span>
       <span>PLATFORM 1</span>
@@ -330,20 +364,29 @@ import Pictograms from './Pictograms.astro';
   <!-- Centred "Board the metro →" Button (Mounted over Car 2 Centre Doors at z-50) -->
   <div
     id="metro-board-btn-container"
-    class="absolute left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 pointer-events-auto"
-    style="display: none; bottom: calc(24vh + 16px); z-index: 50;"
+    class="absolute left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 pointer-events-auto select-none"
+    style="display: none; bottom: calc(24vh + clamp(48px, 9vh, 84px)); z-index: 50;"
   >
+    <!-- Live Platform Clearance Status Badge -->
+    <span class="px-3 py-1 bg-[#111111] text-line-hardware border border-line-hardware font-mono text-[11px] font-bold uppercase tracking-wider flex items-center gap-2 shadow-[2px_2px_0_#000]">
+      <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+      PLATFORM 1 · CAR 02 READY
+    </span>
+
     <button
       type="button"
       id="board-the-metro-btn"
-      class="btn-stub btn-stub--primary !min-h-[56px] sm:!min-h-[64px] !px-8 text-base sm:text-xl font-black justify-center shadow-[6px_6px_0_var(--ink)] animate-pulse cursor-pointer"
+      class="metro-board-action-btn outline-none focus-visible:ring-4 focus-visible:ring-line-hardware focus-visible:ring-offset-2 focus-visible:ring-offset-ink animate-pulse"
       aria-label="Board the metro"
     >
-      <span>Board the metro →</span>
+      <span class="flex items-center gap-2">
+        <span>BOARD THE METRO</span>
+        <span class="text-xl font-bold" aria-hidden="true">➔</span>
+      </span>
     </button>
 
     <!-- 6s Idle Hint -->
-    <span id="board-idle-hint" class="font-mono text-xs text-ink-soft bg-paper/95 px-3 py-1 border border-ink hidden">
+    <span id="board-idle-hint" class="font-mono text-xs text-ink-soft bg-paper/95 px-3 py-1 border border-ink shadow-[2px_2px_0_var(--ink)] hidden">
       Press to board.
     </span>
   </div>
@@ -572,7 +615,7 @@ import Pictograms from './Pictograms.astro';
           boardContainer.style.display = 'flex';
           boardContainer.style.opacity = '1';
           if (boardBtn) {
-            boardBtn.innerHTML = '<span>Board the metro →</span>';
+            boardBtn.innerHTML = '<span class="flex items-center gap-2"><span>BOARD THE METRO</span><span class="text-xl font-bold" aria-hidden="true">➔</span></span>';
             boardBtn.classList.add('animate-pulse');
             boardBtn.focus();
           }
@@ -618,7 +661,7 @@ import Pictograms from './Pictograms.astro';
       clearTimeout(idleTimer);
 
       if (boardBtn) {
-        boardBtn.innerHTML = '<span>Doors closing...</span>';
+        boardBtn.innerHTML = '<span class="flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full bg-line-frontend animate-pulse"></span><span>DOORS CLOSING...</span></span>';
         boardBtn.classList.remove('animate-pulse');
       }
       if (ticker) ticker.textContent = 'DOORS CLOSING';
