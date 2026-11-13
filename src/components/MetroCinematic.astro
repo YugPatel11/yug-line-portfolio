@@ -79,14 +79,6 @@ import Pictograms from './Pictograms.astro';
       ))}
     </div>
 
-    <!-- Repeating Destination Names at High Wayfinding Contrast (Positioned cleanly below overhead sign) -->
-    <div
-      id="metro-wall-watermark"
-      class="absolute top-[32%] sm:top-[30%] left-0 right-0 text-center font-archivo font-black text-3xl sm:text-5xl lg:text-7xl uppercase tracking-wider opacity-25 text-white select-none whitespace-nowrap overflow-hidden pointer-events-none"
-    >
-      NEXT STOP // THE YUG LINE // TRANSIT
-    </div>
-
     <!-- Ceiling Lights Row -->
     <div class="absolute top-0 left-0 right-0 h-10 flex items-center justify-around px-8 opacity-40">
       {Array.from({ length: 12 }).map(() => (
@@ -123,6 +115,21 @@ import Pictograms from './Pictograms.astro';
         <div id="blade-sign-code" class="text-[11px] sm:text-xs text-ink-soft uppercase font-bold tracking-wider">PLATFORM 1 // ST-02</div>
         <div id="blade-sign-title" class="font-archivo text-sm sm:text-base font-black text-ink uppercase tracking-tight">GHUMIFY INTERCHANGE</div>
       </div>
+    </div>
+  </div>
+
+  <!-- LAYER 2.5: STATION WAYFINDING FRIEZE (Mounted ON TOP of pillars so pillars never cut text) -->
+  <div
+    id="metro-wall-watermark-container"
+    class="absolute top-[32%] sm:top-[30%] left-0 right-0 pointer-events-none transition-transform duration-700 ease-out"
+    style="z-index: 18;"
+  >
+    <div
+      id="metro-wall-watermark"
+      class="text-center font-archivo font-black text-3xl sm:text-5xl lg:text-7xl uppercase tracking-wider text-white opacity-85 select-none whitespace-nowrap overflow-hidden"
+      style="text-shadow: 0 4px 12px #000000, 0 2px 4px #000000;"
+    >
+      NEXT STOP // THE YUG LINE // TRANSIT
     </div>
   </div>
 
@@ -587,8 +594,10 @@ import Pictograms from './Pictograms.astro';
       // Reset pillars & wall
       const wall = document.getElementById('layer-far-wall');
       const pillars = document.getElementById('layer-mid-pillars');
+      const watermarkContainer = document.getElementById('metro-wall-watermark-container');
       if (wall) wall.style.transform = 'translateX(0)';
       if (pillars) pillars.style.transform = 'translateX(0)';
+      if (watermarkContainer) watermarkContainer.style.transform = 'translateX(0)';
 
       const { startX, stopX } = calculatePositions();
       lastStopX = stopX;
@@ -715,11 +724,13 @@ import Pictograms from './Pictograms.astro';
           );
         }
 
-        // Slide pillars and wall in opposite direction
+        // Slide pillars, wall, and wayfinding frieze in opposite direction
         const wall = document.getElementById('layer-far-wall');
         const pillars = document.getElementById('layer-mid-pillars');
+        const watermarkContainer = document.getElementById('metro-wall-watermark-container');
         if (wall) wall.style.transform = 'translateX(-15%)';
         if (pillars) pillars.style.transform = 'translateX(-30%)';
+        if (watermarkContainer) watermarkContainer.style.transform = 'translateX(-22%)';
 
         // Reveal stop underneath at ~0.9s into departure (Section 3.6)
         setTimeout(() => {
