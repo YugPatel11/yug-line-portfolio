@@ -3,75 +3,68 @@ import Pictograms from './Pictograms.astro';
 ---
 
 <!-- ========================================================
-     WELCOME SCREEN (Step 0: Immersive Cinematic Metro Stage)
-     - Full-screen 100vh / 100dvh spatial viewport (Zero awkward scrolling)
-     - Deep subway tunnel depth, ambient light streaks, glowing platform edge
+     WELCOME SCREEN (Step 0: Immersive Authentic Metro Stage)
+     - Single-screen 100vh / 100dvh spatial viewport (Zero awkward scrolling)
+     - Matches site design: #0B0C0E dark canvas, crisp cream #EDEAE2 text,
+       solid brutalist borders, and authentic 4-color transit line accents
      - 3D Metro Train as the star on an illuminated architectural track plinth
      - Turnstile Gate / Magnetic Transit Pass action buttons with tactile feel
-     - Live animated Solari flip departure telemetry
-     - STRICTLY 100% silent until user clicks "Enter with sound"
+     - Live Solari flip departure telemetry
+     - STRICTLY 100% silent until user clicks "Board with Sound"
      ======================================================== -->
 <div
   id="scene-welcome"
-  class="fixed inset-0 z-[80] bg-[#07090E] text-[#EDEAE2] flex flex-col justify-between overflow-hidden select-none h-screen h-[100dvh] w-screen"
+  class="fixed inset-0 z-[80] bg-[#0B0C0E] text-[#EDEAE2] flex flex-col justify-between overflow-hidden select-none h-screen h-[100dvh] w-screen"
   style="display: none;"
   role="dialog"
   aria-modal="true"
   aria-labelledby="welcome-heading"
 >
   <!-- ========================================================
-       LAYER 0: CINEMATIC DEPTH & TUNNEL AMBIENCE
+       LAYER 0: CONCOURSE ARCHITECTURE & SUBTLE TRANSIT GRID
        ======================================================== -->
-  <!-- Tunnel Vignette & Radial Focus -->
+  <!-- Subtle Transit Grid Floor -->
+  <div
+    class="absolute inset-0 pointer-events-none opacity-20"
+    style="background-image: linear-gradient(to right, rgba(255, 255, 255, 0.06) 1px, transparent 1px), linear-gradient(to bottom, rgba(255, 255, 255, 0.06) 1px, transparent 1px); background-size: 36px 36px;"
+  ></div>
+
+  <!-- Deep Concourse Vignette -->
   <div
     class="absolute inset-0 pointer-events-none"
-    style="background: radial-gradient(ellipse 90% 70% at 65% 50%, rgba(228, 87, 46, 0.12) 0%, rgba(11, 13, 19, 0.85) 60%, #06080D 100%);"
+    style="background: radial-gradient(ellipse 90% 70% at 50% 50%, rgba(15, 17, 21, 0) 40%, rgba(11, 12, 14, 0.85) 100%);"
   ></div>
-
-  <!-- Perspective Tunnel Grid Floor & Ceiling -->
-  <div
-    class="absolute inset-0 pointer-events-none opacity-25"
-    style="background-image: linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px), linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px); background-size: 40px 40px;"
-  ></div>
-
-  <!-- Gliding Subway Light Streaks (Left & Right Flanks) -->
-  <div class="tunnel-speed-streak tunnel-streak-left"></div>
-  <div class="tunnel-speed-streak tunnel-streak-right"></div>
-
-  <!-- Overhead Spotlights casting warm cones -->
-  <div class="absolute -top-12 right-[18%] w-80 h-96 bg-amber-200/10 rounded-full blur-3xl pointer-events-none"></div>
-  <div class="absolute -top-12 left-[20%] w-72 h-80 bg-orange-500/10 rounded-full blur-3xl pointer-events-none"></div>
 
   <!-- ========================================================
        LAYER 1: TOP CONCOURSE MASTHEAD & SOLARI DEPARTURE BAR
        ======================================================== -->
-  <header class="relative z-20 w-full max-w-7xl mx-auto px-4 sm:px-8 pt-3 sm:pt-4 flex items-center justify-between border-b border-[#202738]/80 pb-2.5 sm:pb-3 flex-shrink-0">
+  <header class="relative z-20 w-full max-w-7xl mx-auto px-4 sm:px-8 pt-3 sm:pt-4 flex items-center justify-between border-b border-[#262C38] pb-2.5 sm:pb-3 flex-shrink-0">
     <!-- Left: Transit Authority Monogram -->
     <div class="flex items-center gap-3">
-      <span class="w-3 h-3 rounded-full bg-line-frontend shadow-[0_0_10px_#E4572E] animate-pulse" aria-hidden="true"></span>
+      <span class="w-3 h-3 rounded-full bg-[#E4572E] shadow-[0_0_8px_#E4572E]" aria-hidden="true"></span>
       <div class="flex items-center gap-2">
-        <span class="font-archivo text-xs sm:text-sm font-black uppercase tracking-wider text-white">
+        <span class="font-archivo text-xs sm:text-sm font-black uppercase tracking-wider text-[#EDEAE2]">
           THE YUG LINE
         </span>
-        <span class="font-mono text-[9px] sm:text-[10px] text-[#FFC933] bg-[#121622] px-2 py-0.5 border border-[#2B3548] font-bold">
+        <span class="font-mono text-[9px] sm:text-[10px] text-[#F2B705] bg-[#141720] px-2 py-0.5 border border-[#2B3242] font-bold">
           TERMINAL 00
         </span>
       </div>
     </div>
 
     <!-- Center: Live Flipping Departure Solari Badge -->
-    <div class="hidden md:flex items-center gap-2 px-3 py-1 bg-[#0D1017] border border-[#263044] rounded-sm font-mono text-xs shadow-[inset_0_1px_3px_#000]">
-      <span class="text-emerald-400 text-[10px] animate-pulse">●</span>
-      <span class="text-[#8E9AA8] text-[10px] uppercase font-bold">SOLARI BOARD:</span>
-      <span id="welcome-solari-text" class="text-[#FFB000] font-black tracking-wider text-[11px]">
+    <div class="hidden md:flex items-center gap-2 px-3 py-1 bg-[#12151D] border border-[#262D3D] rounded-xs font-mono text-xs shadow-[inset_0_1px_3px_#000]">
+      <span class="text-[#0B6E4F] text-[10px] animate-pulse">●</span>
+      <span class="text-[#A2AFBF] text-[10px] uppercase font-bold">SOLARI BOARD:</span>
+      <span id="welcome-solari-text" class="text-[#F2B705] font-black tracking-wider text-[11px]">
         SERVICE 01 // ON TIME
       </span>
     </div>
 
     <!-- Right: System Status & Edition -->
     <div class="flex items-center gap-2.5 font-mono text-xs text-[#9CA3AF]">
-      <span class="hidden sm:inline-flex items-center gap-1.5 px-2 py-0.5 bg-[#121622] border border-[#283244] text-emerald-400 text-[10px] uppercase font-bold">
-        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>
+      <span class="hidden sm:inline-flex items-center gap-1.5 px-2 py-0.5 bg-[#141720] border border-[#262D3D] text-[#2FB584] text-[10px] uppercase font-bold">
+        <span class="w-1.5 h-1.5 rounded-full bg-[#2FB584] animate-ping"></span>
         ALL TRACKS CLEAR
       </span>
       <span class="text-[10px] sm:text-[11px] text-[#CBD5E1] tracking-widest font-bold">
@@ -84,116 +77,132 @@ import Pictograms from './Pictograms.astro';
        LAYER 2: MAIN CINEMATIC STAGE (FITS IN ONE SCREEN)
        Two-Column Widescreen Layout on Desktop, Fluid on Mobile
        ======================================================== -->
-  <main class="relative z-20 w-full max-w-7xl mx-auto px-4 sm:px-8 py-2 sm:py-4 my-auto flex-1 flex items-center justify-center">
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-10 items-center w-full">
+  <main class="relative z-20 w-full max-w-7xl mx-auto px-4 sm:px-8 py-2 sm:py-3 my-auto flex-1 flex items-center justify-center">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 lg:gap-8 items-center w-full">
       
       <!-- ====================================================
            LEFT COLUMN: HERO NARRATIVE & TURNSTILE TICKETS (5 cols)
            ==================================================== -->
-      <div class="lg:col-span-5 flex flex-col items-start text-left space-y-3 sm:space-y-4">
+      <div class="lg:col-span-5 flex flex-col items-start text-left space-y-3 sm:space-y-3.5">
         
         <!-- Live Station Dispatch Eyebrow -->
-        <div class="inline-flex items-center gap-2 px-3 py-1 bg-[#10141E] border border-[#2A3448] text-xs font-mono font-bold text-[#FFC933] shadow-[2px_2px_0_#000] rounded-xs animate-fadeIn">
-          <span class="w-2 h-2 rounded-full bg-line-frontend animate-pulse"></span>
+        <div class="inline-flex items-center gap-2 px-3 py-1 bg-[#141720] border border-[#2B3242] text-xs font-mono font-bold text-[#F2B705] shadow-[2px_2px_0_#000] rounded-xs">
+          <span class="w-2 h-2 rounded-full bg-[#E4572E]"></span>
           <span class="tracking-wider uppercase">PORTFOLIO EXPEDITION · CENTRAL DEPARTURE</span>
         </div>
 
-        <!-- Architectural Headline with Luminous Glow -->
+        <!-- Architectural Headline in Crisp Solid Cream #EDEAE2 -->
         <div class="space-y-1">
-          <span class="font-archivo text-2xl sm:text-3xl font-black uppercase text-[#8E9AA8] tracking-wider block">
-            WELCOME TO
+          <span class="font-mono text-xs sm:text-sm font-bold uppercase tracking-widest text-[#B5B1A6] block">
+            STATION 00 // CENTRAL CONCOURSE
           </span>
           <h1
             id="welcome-heading"
-            class="font-archivo text-4xl sm:text-5xl xl:text-6xl font-black uppercase tracking-tight text-white leading-[0.98] drop-shadow-[0_2px_12px_rgba(0,0,0,0.8)]"
+            class="font-archivo text-4xl sm:text-5xl xl:text-6xl font-black uppercase tracking-tight text-[#EDEAE2] leading-[0.98] drop-shadow-[3px_3px_0_#000]"
           >
-            THE <span class="yug-line-glow text-transparent bg-clip-text bg-gradient-to-r from-white via-[#FFC933] to-[#E4572E]">YUG LINE</span>
+            THE YUG LINE
           </h1>
         </div>
 
+        <!-- 4 Transit Line Accent Chips -->
+        <div class="flex flex-wrap items-center gap-1.5 py-0.5">
+          <span class="inline-flex items-center gap-1.5 px-2 py-0.5 bg-[#141720] border border-[#262D3D] text-[10px] font-mono font-bold text-[#EDEAE2]">
+            <span class="w-2 h-2 rounded-xs bg-[#E4572E]"></span> FRONTEND
+          </span>
+          <span class="inline-flex items-center gap-1.5 px-2 py-0.5 bg-[#141720] border border-[#262D3D] text-[10px] font-mono font-bold text-[#EDEAE2]">
+            <span class="w-2 h-2 rounded-xs bg-[#F2B705]"></span> HARDWARE
+          </span>
+          <span class="inline-flex items-center gap-1.5 px-2 py-0.5 bg-[#141720] border border-[#262D3D] text-[10px] font-mono font-bold text-[#EDEAE2]">
+            <span class="w-2 h-2 rounded-xs bg-[#0B6E4F]"></span> BACKEND
+          </span>
+          <span class="inline-flex items-center gap-1.5 px-2 py-0.5 bg-[#141720] border border-[#262D3D] text-[10px] font-mono font-bold text-[#EDEAE2]">
+            <span class="w-2 h-2 rounded-xs bg-[#1B3A8A]"></span> AI SYSTEMS
+          </span>
+        </div>
+
         <!-- Narrative Description -->
-        <p class="font-manrope text-sm sm:text-base text-[#CBD5E1] leading-relaxed max-w-md">
+        <p class="font-manrope text-sm sm:text-base text-[#B5B1A6] leading-relaxed max-w-md">
           Every stop is a piece of my work. Step aboard an interactive metro experience through production systems, full-stack builds, and engineering awards.
         </p>
 
         <!-- Transit Audio Notice Strip -->
-        <div class="w-full max-w-md p-2 bg-[#0E121B] border border-[#222B3B] flex items-center gap-2.5 font-mono text-[11px] text-[#94A3B8] shadow-[inset_0_1px_2px_#000]">
+        <div class="w-full max-w-md p-2.5 bg-[#12151D] border border-[#262D3D] flex items-center gap-2.5 font-mono text-[11px] text-[#A2AFBF] shadow-[inset_0_1px_2px_#000]">
           <span class="text-base flex-shrink-0" aria-hidden="true">🎧</span>
           <span class="leading-tight">
-            <strong class="text-white">Audio Notice:</strong> Features authentic metro rumbles, gate chimes & Station Master announcements. Choose your mode below:
+            <strong class="text-[#EDEAE2]">Audio Notice:</strong> Features authentic metro rumbles, gate chimes & Station Master announcements. Choose your mode below:
           </span>
         </div>
 
         <!-- ====================================================
              TURNSTILE PASSES / PHYSICAL TICKETS
              ==================================================== -->
-        <div class="w-full max-w-md space-y-2.5 pt-1">
+        <div class="w-full max-w-md space-y-2.5 pt-0.5">
           
-          <!-- 1. TICKET 01: BOARD WITH SOUND (Primary Vibrant Transit Pass) -->
+          <!-- 1. TICKET 01: BOARD WITH SOUND (Primary Tactile Transit Pass) -->
           <button
             type="button"
             id="welcome-enter-sound-btn"
-            class="turnstile-ticket ticket-sound-primary w-full p-3 sm:p-3.5 bg-line-frontend hover:bg-[#F06238] border-3 border-black text-white flex items-center justify-between gap-3 shadow-[5px_5px_0_#000] hover:shadow-[7px_7px_0_#000] hover:-translate-y-0.5 active:translate-y-1 active:shadow-[1px_1px_0_#000] transition-all cursor-pointer relative overflow-hidden group"
+            class="turnstile-ticket w-full p-3 sm:p-3.5 bg-[#EDEAE2] hover:bg-white border-2 border-black text-[#0B0C0E] flex items-center justify-between gap-3 shadow-[5px_5px_0_#000] hover:shadow-[7px_7px_0_#000] hover:-translate-y-0.5 active:translate-y-1 active:shadow-[1px_1px_0_#000] transition-all cursor-pointer relative overflow-hidden group"
             aria-label="Enter portfolio with metro sounds enabled"
           >
-            <!-- Left Ticket Notched Cutout Holes -->
-            <span class="absolute -left-2 top-1/2 -translate-y-1/2 w-4 h-4 rounded-full bg-[#07090E] border-2 border-black"></span>
+            <!-- Left Ticket Notched Cutout Hole -->
+            <span class="absolute -left-2 top-1/2 -translate-y-1/2 w-4 h-4 rounded-full bg-[#0B0C0E] border-2 border-black"></span>
             
             <!-- Ticket Barcode Stub (Left) -->
-            <div class="flex items-center gap-2 pl-3 border-r-2 border-black/30 pr-3 flex-shrink-0 font-mono text-[9px] uppercase tracking-wider text-white/90">
-              <span class="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span>
-              <div class="text-left">
+            <div class="flex items-center gap-2 pl-3 border-r-2 border-black/25 pr-3 flex-shrink-0 font-mono text-[9px] uppercase tracking-wider text-black">
+              <span class="w-1.5 h-1.5 rounded-full bg-[#E4572E]"></span>
+              <div class="text-left leading-tight">
                 <span class="block font-black">PASS #01</span>
-                <span class="block text-[8px] opacity-80">AUDIO ON</span>
+                <span class="block text-[8px] font-bold text-[#E4572E]">AUDIO ON</span>
               </div>
             </div>
 
             <!-- Ticket Core Details (Center) -->
             <div class="flex-1 text-left pl-1">
-              <div class="font-archivo text-sm sm:text-base font-black uppercase tracking-wide text-white group-hover:tracking-wider transition-all flex items-center gap-1.5">
+              <div class="font-archivo text-sm sm:text-base font-black uppercase tracking-wide text-black group-hover:tracking-wider transition-all flex items-center gap-1.5">
                 <span>BOARD WITH SOUND</span>
                 <span class="text-lg">➔</span>
               </div>
-              <span class="font-mono text-[10px] text-white/80 block uppercase">
-                RECOMMENDED EXPERIENCE · ₹0 FREE
+              <span class="font-mono text-[10px] text-[#4A4741] block uppercase font-bold">
+                RECOMMENDED EXPERIENCE · ₹0 FREE PASS
               </span>
             </div>
 
             <!-- Right Notch Cutout -->
-            <span class="absolute -right-2 top-1/2 -translate-y-1/2 w-4 h-4 rounded-full bg-[#07090E] border-2 border-black"></span>
+            <span class="absolute -right-2 top-1/2 -translate-y-1/2 w-4 h-4 rounded-full bg-[#0B0C0E] border-2 border-black"></span>
           </button>
 
           <!-- 2. TICKET 02: BOARD SILENT (Secondary Muted Transit Pass) -->
           <button
             type="button"
             id="welcome-enter-mute-btn"
-            class="turnstile-ticket ticket-mute-secondary w-full p-2.5 sm:p-3 bg-[#131722] hover:bg-[#1A2130] border-2 border-[#2C384E] hover:border-[#EDEAE2] text-[#EDEAE2] flex items-center justify-between gap-3 shadow-[4px_4px_0_#000] hover:-translate-y-0.5 active:translate-y-0.5 active:shadow-[1px_1px_0_#000] transition-all cursor-pointer relative overflow-hidden group font-mono"
+            class="turnstile-ticket w-full p-2.5 sm:p-3 bg-[#141720] hover:bg-[#1C212E] border-2 border-[#2B3242] hover:border-[#EDEAE2] text-[#EDEAE2] flex items-center justify-between gap-3 shadow-[4px_4px_0_#000] hover:-translate-y-0.5 active:translate-y-0.5 active:shadow-[1px_1px_0_#000] transition-all cursor-pointer relative overflow-hidden group font-mono"
             aria-label="Enter portfolio silently without audio"
           >
             <!-- Left Notch -->
-            <span class="absolute -left-1.5 top-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-[#07090E] border border-[#2C384E]"></span>
+            <span class="absolute -left-1.5 top-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-[#0B0C0E] border border-[#2B3242]"></span>
 
             <div class="flex items-center gap-2 pl-2">
               <span class="text-sm">🔇</span>
-              <span class="text-xs font-bold uppercase tracking-wider text-[#A2AFBF] group-hover:text-white transition-colors">
+              <span class="text-xs font-bold uppercase tracking-wider text-[#A2AFBF] group-hover:text-[#EDEAE2] transition-colors">
                 BOARD SILENT (NO AUDIO)
               </span>
             </div>
 
-            <span class="text-xs text-[#828F9F] group-hover:text-white pr-2 transition-colors">
+            <span class="text-xs text-[#828F9F] group-hover:text-[#EDEAE2] pr-2 transition-colors">
               ➔
             </span>
 
             <!-- Right Notch -->
-            <span class="absolute -right-1.5 top-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-[#07090E] border border-[#2C384E]"></span>
+            <span class="absolute -right-1.5 top-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-[#0B0C0E] border border-[#2B3242]"></span>
           </button>
 
           <!-- Skip Text Link -->
-          <div class="pt-1">
+          <div class="pt-0.5">
             <button
               type="button"
               id="welcome-skip-link"
-              class="day-pass-toggle-btn font-mono text-xs text-[#8A96A8] hover:text-white underline uppercase tracking-wider transition-colors cursor-pointer"
+              class="font-mono text-xs text-[#8A96A8] hover:text-[#EDEAE2] underline uppercase tracking-wider transition-colors cursor-pointer"
             >
               Skip the metro · Direct Day Pass to all builds ➔
             </button>
@@ -205,34 +214,31 @@ import Pictograms from './Pictograms.astro';
       <!-- ====================================================
            RIGHT COLUMN: 3D METRO TRAIN HERO PLINTH (7 cols)
            The Star of the Welcome Screen: elevated, interactive,
-           illuminated platform edge with glowing safety markings
+           illuminated platform edge with tactile safety markings
            ==================================================== -->
       <div class="lg:col-span-7 flex flex-col items-center justify-center relative w-full">
         
-        <!-- Overhead Station Lamp Cone Cast Light -->
-        <div class="absolute -top-10 inset-x-12 h-20 bg-gradient-to-b from-amber-300/15 to-transparent blur-md pointer-events-none"></div>
-
         <!-- The Floating 3D Showcase Plinth Card -->
         <div
           id="welcome-3d-container"
-          class="w-full relative bg-[#0B0E14] border-3 border-[#2A3448] shadow-[10px_10px_0_#000] rounded-sm overflow-hidden flex flex-col items-center justify-center cursor-grab active:cursor-grabbing group select-none"
+          class="w-full relative bg-[#0E1118] border-2 border-[#262D3D] shadow-[8px_8px_0_#000] rounded-xs overflow-hidden flex flex-col items-center justify-center cursor-grab active:cursor-grabbing group select-none"
         >
           <!-- Plinth Top Status Beam -->
-          <div class="w-full bg-[#131722] border-b-2 border-[#242E40] px-3 sm:px-4 py-2 flex items-center justify-between font-mono text-[10px] select-none">
-            <div class="flex items-center gap-2 text-white font-bold">
-              <span class="w-2 h-2 rounded-full bg-line-frontend animate-pulse"></span>
+          <div class="w-full bg-[#141720] border-b-2 border-[#262D3D] px-3 sm:px-4 py-2 flex items-center justify-between font-mono text-[10px] select-none">
+            <div class="flex items-center gap-2 text-[#EDEAE2] font-bold">
+              <span class="w-2 h-2 rounded-full bg-[#E4572E]"></span>
               <span class="tracking-wider uppercase">CAR NO. YR-01 // ROLLING STOCK 3D INSPECTOR</span>
             </div>
             
             <!-- Live Turntable Drag Indicator Badge -->
-            <div class="flex items-center gap-1.5 text-[#FFC933] bg-[#0A0C10] px-2.5 py-0.5 border border-[#2B3548] rounded-xs font-bold shadow-inner">
+            <div class="flex items-center gap-1.5 text-[#F2B705] bg-[#0E1118] px-2.5 py-0.5 border border-[#2B3242] rounded-xs font-bold shadow-inner">
               <span class="text-xs">↺</span>
               <span class="tracking-widest">DRAG TO ROTATE 360°</span>
             </div>
           </div>
 
           <!-- 3D Canvas Stage -->
-          <div class="relative w-full h-[250px] sm:h-[300px] lg:h-[340px] flex items-center justify-center overflow-hidden bg-gradient-to-b from-[#0A0D13] to-[#07090E]">
+          <div class="relative w-full h-[250px] sm:h-[300px] lg:h-[330px] flex items-center justify-center overflow-hidden bg-[#0A0C12]">
             <canvas
               id="welcome-3d-canvas"
               class="w-full h-full select-none"
@@ -251,16 +257,16 @@ import Pictograms from './Pictograms.astro';
               <line x1="0" y1="82" x2="500" y2="82" stroke="#4B5563" stroke-width="3" />
               <line x1="0" y1="87" x2="500" y2="87" stroke="#2B3446" stroke-width="2" stroke-dasharray="6 4" />
               <g id="welcome-train-body">
-                <rect x="50" y="16" width="380" height="56" rx="8" fill="#161B26" stroke="#EDEAE2" stroke-width="2.5" />
-                <rect x="110" y="8" width="50" height="8" rx="2" fill="#252D3D" stroke="#EDEAE2" stroke-width="1.5" />
-                <rect x="300" y="8" width="50" height="8" rx="2" fill="#252D3D" stroke="#EDEAE2" stroke-width="1.5" />
-                <rect x="50" y="58" width="380" height="4" fill="var(--line-frontend)" />
-                <rect x="50" y="62" width="380" height="4" fill="var(--line-hardware)" />
+                <rect x="50" y="16" width="380" height="56" rx="4" fill="#181B22" stroke="#EDEAE2" stroke-width="2" />
+                <rect x="110" y="8" width="50" height="8" rx="2" fill="#242832" stroke="#EDEAE2" stroke-width="1.5" />
+                <rect x="300" y="8" width="50" height="8" rx="2" fill="#242832" stroke="#EDEAE2" stroke-width="1.5" />
+                <rect x="50" y="58" width="380" height="3" fill="#E4572E" />
+                <rect x="50" y="61" width="380" height="3" fill="#F2B705" />
                 <rect x="80" y="24" width="40" height="24" rx="2" fill="#0A0C10" />
                 <rect x="190" y="24" width="50" height="24" rx="2" fill="#0A0C10" />
                 <rect x="310" y="24" width="50" height="24" rx="2" fill="#0A0C10" />
-                <path d="M 430 24 Q 450 44 430 72 Z" fill="#252D3D" stroke="#EDEAE2" stroke-width="2.5" />
-                <circle cx="438" cy="56" r="4" fill="#FFC933" />
+                <path d="M 430 24 Q 450 44 430 72 Z" fill="#242832" stroke="#EDEAE2" stroke-width="2" />
+                <circle cx="438" cy="56" r="4" fill="#F2B705" />
                 <circle cx="95" cy="77" r="7" fill="#0A0C10" stroke="#4B5563" stroke-width="2" />
                 <circle cx="125" cy="77" r="7" fill="#0A0C10" stroke="#4B5563" stroke-width="2" />
                 <circle cx="340" cy="77" r="7" fill="#0A0C10" stroke="#4B5563" stroke-width="2" />
@@ -269,26 +275,25 @@ import Pictograms from './Pictograms.astro';
             </svg>
           </div>
 
-          <!-- Platform Edge Tactile Warning Strip (Glowing Yellow Line) -->
-          <div class="w-full bg-[#1A180E] border-t-2 border-[#D97706]/70 px-3 py-1 flex items-center justify-between font-mono text-[9px] text-[#FBBF24]">
+          <!-- Platform Edge Tactile Warning Strip (Yellow Line #F2B705) -->
+          <div class="w-full bg-[#18160E] border-t-2 border-[#F2B705]/80 px-3 py-1 flex items-center justify-between font-mono text-[9px] text-[#F2B705]">
             <div class="flex items-center gap-1.5">
-              <!-- Tactile Hazard Dots Pattern -->
-              <span class="w-1.5 h-1.5 rounded-full bg-[#F59E0B]"></span>
-              <span class="w-1.5 h-1.5 rounded-full bg-[#F59E0B]"></span>
-              <span class="w-1.5 h-1.5 rounded-full bg-[#F59E0B]"></span>
+              <span class="w-1.5 h-1.5 rounded-full bg-[#F2B705]"></span>
+              <span class="w-1.5 h-1.5 rounded-full bg-[#F2B705]"></span>
+              <span class="w-1.5 h-1.5 rounded-full bg-[#F2B705]"></span>
               <span class="font-bold tracking-widest uppercase">STAND BEHIND TACTILE YELLOW SAFETY LINE</span>
             </div>
-            <span class="hidden sm:inline font-bold tracking-wider text-[#FCD34D]">
+            <span class="hidden sm:inline font-bold tracking-wider text-[#F2B705]">
               PLATFORM 00 // DOOR CLEARANCE 1.2M
             </span>
           </div>
 
           <!-- Bottom 4-Line Livery Strip -->
           <div class="w-full h-1.5 flex">
-            <span class="w-1/4 h-full bg-line-frontend"></span>
-            <span class="w-1/4 h-full bg-line-hardware"></span>
-            <span class="w-1/4 h-full bg-line-backend"></span>
-            <span class="w-1/4 h-full bg-line-ai"></span>
+            <span class="w-1/4 h-full bg-[#E4572E]"></span>
+            <span class="w-1/4 h-full bg-[#F2B705]"></span>
+            <span class="w-1/4 h-full bg-[#0B6E4F]"></span>
+            <span class="w-1/4 h-full bg-[#1B3A8A]"></span>
           </div>
         </div>
 
@@ -300,9 +305,9 @@ import Pictograms from './Pictograms.astro';
   <!-- ========================================================
        LAYER 3: BOTTOM CONCOURSE GUIDE RAIL & SYSTEM FOOTER
        ======================================================== -->
-  <footer class="relative z-20 w-full max-w-7xl mx-auto px-4 sm:px-8 pb-3 sm:pb-4 border-t border-[#202738]/80 pt-2.5 flex items-center justify-between gap-3 font-mono text-[10px] sm:text-[11px] text-[#7A8799] flex-shrink-0">
+  <footer class="relative z-20 w-full max-w-7xl mx-auto px-4 sm:px-8 pb-3 sm:pb-4 border-t border-[#262C38] pt-2.5 flex items-center justify-between gap-3 font-mono text-[10px] sm:text-[11px] text-[#7A8799] flex-shrink-0">
     <div class="flex items-center gap-2 truncate">
-      <span class="font-bold text-white">YUG ROJIVADIYA</span>
+      <span class="font-bold text-[#EDEAE2]">YUG ROJIVADIYA</span>
       <span class="hidden sm:inline">// MULTIDISCIPLINARY ARCHITECT & DEVELOPER</span>
     </div>
     <div class="flex items-center gap-3 font-bold tracking-wider uppercase text-[#CBD5E1]">
@@ -311,96 +316,6 @@ import Pictograms from './Pictograms.astro';
     </div>
   </footer>
 </div>
-
-<style>
-  /* Luminous Neon Gradient Glow on THE YUG LINE */
-  .yug-line-glow {
-    text-shadow: 0 0 35px rgba(228, 87, 46, 0.4), 0 0 70px rgba(242, 183, 5, 0.2);
-  }
-
-  /* Animated Subway Light Streaks rushing past tunnel walls */
-  @keyframes streakGlideDownLeft {
-    0% {
-      transform: translateY(-100%) rotate(25deg);
-      opacity: 0;
-    }
-    15% {
-      opacity: 0.6;
-    }
-    45% {
-      transform: translateY(200%) rotate(25deg);
-      opacity: 0.6;
-    }
-    60%, 100% {
-      transform: translateY(200%) rotate(25deg);
-      opacity: 0;
-    }
-  }
-
-  @keyframes streakGlideDownRight {
-    0%, 30% {
-      transform: translateY(-100%) rotate(-25deg);
-      opacity: 0;
-    }
-    45% {
-      opacity: 0.6;
-    }
-    75% {
-      transform: translateY(200%) rotate(-25deg);
-      opacity: 0.6;
-    }
-    85%, 100% {
-      transform: translateY(200%) rotate(-25deg);
-      opacity: 0;
-    }
-  }
-
-  .tunnel-speed-streak {
-    position: absolute;
-    width: 2px;
-    height: 380px;
-    background: linear-gradient(to bottom, transparent, #FFC933, #FFFFFF, transparent);
-    pointer-events: none;
-    z-index: 10;
-  }
-
-  .tunnel-streak-left {
-    left: 8%;
-    animation: streakGlideDownLeft 8s cubic-bezier(0.4, 0, 0.2, 1) infinite;
-  }
-
-  .tunnel-streak-right {
-    right: 8%;
-    animation: streakGlideDownRight 10s cubic-bezier(0.4, 0, 0.2, 1) infinite;
-  }
-
-  /* Fade-In staggered entrance animations */
-  @keyframes stageFadeIn {
-    from {
-      opacity: 0;
-      transform: translateY(12px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  .animate-fadeIn {
-    animation: stageFadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .tunnel-streak-left,
-    .tunnel-streak-right {
-      animation: none !important;
-      display: none !important;
-    }
-    .animate-fadeIn {
-      animation: none !important;
-    }
-  }
-</style>
 
 <script>
   document.addEventListener('DOMContentLoaded', async () => {
