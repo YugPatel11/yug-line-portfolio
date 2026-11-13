@@ -295,7 +295,7 @@ const DESTINATIONS = [
           </div>
 
           <!-- LAYER 2: THE 2D ANIMATED CLERK (Positioned inside window) -->
-          <div class="clerk-container absolute inset-x-0 bottom-12 flex justify-center items-end pointer-events-none z-15">
+          <div id="counter-clerk-avatar" class="clerk-container absolute inset-x-0 bottom-12 flex justify-center items-end pointer-events-auto cursor-pointer z-15" title="Click to hear Station Master speak">
             <svg
               id="clerk-svg"
               viewBox="0 0 240 240"
@@ -496,18 +496,22 @@ const DESTINATIONS = [
         <!-- SPEECH BUBBLE (Polite Live Region per Section 4.2) -->
         <div
           id="clerk-speech-bubble"
-          class="absolute top-12 sm:top-14 left-1/2 -translate-x-1/2 max-w-sm w-[90%] p-3 sm:p-4 bg-paper border-3 border-ink shadow-[6px_6px_0_var(--ink)] z-40 transition-transform duration-300"
+          class="absolute top-12 sm:top-14 left-1/2 -translate-x-1/2 max-w-sm w-[90%] p-3 sm:p-4 bg-paper border-3 border-ink shadow-[6px_6px_0_var(--ink)] z-40 transition-all duration-300 cursor-pointer hover:shadow-[8px_8px_0_var(--ink)] hover:-translate-y-0.5 select-none"
           role="status"
           aria-live="polite"
+          title="Click to hear Station Master speak"
         >
-          <div class="flex items-center justify-between mb-1 border-b border-rule pb-1">
+          <div class="flex items-center justify-between mb-1 border-b border-rule pb-1 pointer-events-none">
             <div class="flex items-center gap-2">
-              <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+              <span id="clerk-speech-indicator" class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
               <span class="font-mono text-[10px] font-black uppercase tracking-wider text-ink">
                 STATION MASTER // COUNTER 01
               </span>
             </div>
-            <span class="font-mono text-[9px] text-ink-soft">LIVE</span>
+            <div class="flex items-center gap-1 font-mono text-[9px] text-ink-soft">
+              <span id="clerk-audio-icon">🔊</span>
+              <span id="clerk-speech-badge">VOICE</span>
+            </div>
           </div>
           <p id="clerk-speech-text" class="font-manrope text-sm sm:text-base font-bold text-ink leading-snug">
             "Namaste! Where to today? Select any stop on the fare board."
@@ -713,6 +717,16 @@ const DESTINATIONS = [
     100% { transform: translateX(250%); }
   }
 
+  @keyframes clerkMouthTalk {
+    0%, 100% { transform: scaleY(1); }
+    50% { transform: scaleY(2.2); }
+  }
+
+  .clerk-mouth-talking {
+    animation: clerkMouthTalk 0.16s ease-in-out infinite alternate !important;
+    transform-origin: 120px 142px;
+  }
+
   .clerk-blink-motion {
     animation: clerkBlink 4.5s infinite;
     transform-origin: center;
@@ -739,6 +753,7 @@ const DESTINATIONS = [
     .clerk-wave-motion,
     .clerk-head-motion,
     .clerk-typing,
+    .clerk-mouth-talking,
     .concourse-passing-train {
       animation: none !important;
     }
@@ -755,6 +770,7 @@ const DESTINATIONS = [
   let isPrinting = false;
   let isReadyForTake = false;
   let idleTimer: any = null;
+  let hasSpokenGreeting = false;
 
   // Live Concourse Clock
   const clockEl = document.getElementById('concourse-live-clock');
@@ -766,7 +782,11 @@ const DESTINATIONS = [
   setInterval(updateConcourseClock, 1000);
   updateConcourseClock();
 
+  const speechBubble = document.getElementById('clerk-speech-bubble');
   const speechText = document.getElementById('clerk-speech-text');
+  const speechBadge = document.getElementById('clerk-speech-badge');
+  const clerkMouth = document.getElementById('clerk-mouth');
+  const clerkAvatar = document.getElementById('counter-clerk-avatar');
   const primaryBtn = document.getElementById('counter-primary-action-btn') as HTMLButtonElement | null;
   const quickBtn = document.getElementById('counter-quick-ticket-btn');
   const bellBtn = document.getElementById('counter-bell-btn');
@@ -777,22 +797,165 @@ const DESTINATIONS = [
   const clerkRightArm = document.getElementById('clerk-right-arm');
   const clerkLeftArm = document.getElementById('clerk-left-arm');
 
+  // Find best available voice for Station Master (Indian English preference)
+  const getClerkVoice = (): SpeechSynthesisVoice | null => {
+    if (!('speechSynthesis' in window)) return null;
+    const voices = window.speechSynthesis.getVoices();
+    if (!voices || voices.length === 0) return null;
+
+    const inVoice = voices.find((v) => {
+      const lang = v.lang.toLowerCase().replace('_', '-');
+      const name = v.name.toLowerCase();
+      return (
+        lang.includes('en-in') ||
+        lang.includes('hi-in') ||
+        name.includes('india') ||
+        name.includes('ravi') ||
+        name.includes('priya') ||
+        name.includes('heera') ||
+        name.includes('neerja')
+      );
+    });
+    if (inVoice) return inVoice;
+
+    return voices.find((v) => v.lang.toLowerCase().startsWith('en')) || null;
+  };
+
+  // Station Master Speech Synthesizer
+  const speakClerk = (rawText: string, onEnd?: () => void) => {
+    if (!('speechSynthesis' in window)) {
+      if (onEnd) onEnd();
+      return;
+    }
+
+    // Check mute preference
+    try {
+      const soundPref = localStorage.getItem('yugline_sound');
+      if (soundPref === 'off') {
+        if (onEnd) onEnd();
+        return;
+      }
+    } catch (e) {}
+
+    try {
+      window.speechSynthesis.cancel();
+      const clean = rawText.replace(/^["'“]|["'”]$/g, '').trim();
+      if (!clean) {
+        if (onEnd) onEnd();
+        return;
+      }
+
+      const utterance = new SpeechSynthesisUtterance(clean);
+      utterance.rate = 0.98;
+      utterance.pitch = 1.05;
+      utterance.volume = 1.0;
+
+      const voice = getClerkVoice();
+      if (voice) {
+        utterance.voice = voice;
+        utterance.lang = voice.lang;
+      } else {
+        utterance.lang = 'en-IN';
+      }
+
+      utterance.onstart = () => {
+        if (clerkMouth) clerkMouth.classList.add('clerk-mouth-talking');
+        if (speechBubble) speechBubble.classList.add('ring-4', 'ring-line-hardware');
+        if (speechBadge) {
+          speechBadge.textContent = 'SPEAKING...';
+          speechBadge.classList.add('text-line-frontend');
+        }
+      };
+
+      const finishSpeaking = () => {
+        if (clerkMouth) clerkMouth.classList.remove('clerk-mouth-talking');
+        if (speechBubble) speechBubble.classList.remove('ring-4', 'ring-line-hardware');
+        if (speechBadge) {
+          speechBadge.textContent = 'REPLAY 🔊';
+          speechBadge.classList.remove('text-line-frontend');
+        }
+        if (onEnd) onEnd();
+      };
+
+      utterance.onend = finishSpeaking;
+      utterance.onerror = finishSpeaking;
+
+      window.speechSynthesis.speak(utterance);
+    } catch (err) {
+      if (onEnd) onEnd();
+    }
+  };
+
+  // Initial Welcome Greeting
+  const triggerInitialGreeting = () => {
+    if (hasSpokenGreeting) return;
+    hasSpokenGreeting = true;
+    if (!selectedStationId && speechText && speechText.textContent) {
+      speakClerk(speechText.textContent);
+    }
+  };
+
+  // Click speech bubble or clerk avatar to replay current speech
+  const replayCurrentSpeech = () => {
+    if (speechText && speechText.textContent) {
+      speakClerk(speechText.textContent);
+    }
+  };
+  if (speechBubble) speechBubble.addEventListener('click', replayCurrentSpeech);
+  if (clerkAvatar) clerkAvatar.addEventListener('click', replayCurrentSpeech);
+
+  // Trigger greeting when entering from Welcome screen with sound
+  const enterSoundBtn = document.getElementById('welcome-enter-sound-btn');
+  if (enterSoundBtn) {
+    enterSoundBtn.addEventListener('click', () => {
+      setTimeout(() => {
+        triggerInitialGreeting();
+      }, 500);
+    });
+  }
+
+  // If already on #base, trigger greeting on first interaction
+  const chooseSection = document.getElementById('journey-step-choose');
+  if (chooseSection) {
+    chooseSection.addEventListener(
+      'click',
+      (e) => {
+        if (
+          !(e.target as HTMLElement).closest('.destination-choice-btn') &&
+          !(e.target as HTMLElement).closest('#counter-bell-btn')
+        ) {
+          triggerInitialGreeting();
+        }
+      },
+      { once: true }
+    );
+  }
+
+  // Pre-load voices if browser requires event
+  if ('speechSynthesis' in window && window.speechSynthesis.onvoiceschanged !== undefined) {
+    window.speechSynthesis.onvoiceschanged = () => {
+      getClerkVoice();
+    };
+  }
+
   // Ring Counter Bell
   if (bellBtn) {
     bellBtn.addEventListener('click', () => {
       sound.counterBell();
-      if (speechText) speechText.textContent = '"Ding! Yes, right here! Select any destination on the right."';
+      const bellMsg = '"Ding! Yes, right here! Select any destination on the right."';
+      if (speechText) speechText.textContent = bellMsg;
+      speakClerk(bellMsg);
     });
   }
 
-  // Idle timer for 8s no interaction
+  // Idle timer for 9s no interaction
   const resetIdleTimer = () => {
     clearTimeout(idleTimer);
     idleTimer = setTimeout(() => {
       if (!selectedStationId && speechText) {
         speechText.textContent = '"Take your time! Every line has something special."';
       }
-    }, 8000);
+    }, 9000);
   };
   resetIdleTimer();
 
@@ -845,16 +1008,26 @@ const DESTINATIONS = [
       // 1. Clerk nods head
       if (clerkHead) {
         clerkHead.style.transform = 'translateY(5px) rotate(2deg)';
-        setTimeout(() => { clerkHead.style.transform = 'translateY(0) rotate(0deg)'; }, 350);
+        setTimeout(() => {
+          clerkHead.style.transform = 'translateY(0) rotate(0deg)';
+        }, 350);
       }
 
       // 2. Play soft bell / click
       sound.doorDing();
 
-      // 3. Update speech bubble
+      // 3. Update speech bubble & speak station dialogue
       if (speechText) {
         speechText.textContent = `"${dialogue}"`;
       }
+      const activeSt = stId;
+      speakClerk(dialogue, () => {
+        if (selectedStationId === activeSt && isReadyForTake) {
+          const passMsg = `"Here is your transit pass for ${selectedCode}! Take it and head to the gate."`;
+          if (speechText) speechText.textContent = passMsg;
+          speakClerk(passMsg);
+        }
+      });
 
       // Update ticket strip preview
       if (stripCode) stripCode.textContent = stCode;
@@ -905,13 +1078,17 @@ const DESTINATIONS = [
 
     // Step D: Slide ticket into tray
     sound.paperSlide();
-    if (speechText) {
-      speechText.textContent = `"Here is your transit pass for ${selectedCode}! Take it and head to the gate."`;
-    }
 
     // Step E: Ready in tray!
     isPrinting = false;
     isReadyForTake = true;
+
+    // If speech synthesis has finished or is not speaking, update speech bubble
+    if (!('speechSynthesis' in window) || !window.speechSynthesis.speaking) {
+      const passMsg = `"Here is your transit pass for ${selectedCode}! Take it and head to the gate."`;
+      if (speechText) speechText.textContent = passMsg;
+      speakClerk(passMsg);
+    }
 
     if (primaryBtn) {
       primaryBtn.disabled = false;
