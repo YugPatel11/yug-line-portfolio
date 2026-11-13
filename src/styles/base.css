@@ -143,7 +143,6 @@
 .platform-floor-strip {
   background-color: var(--floor);
   border-top: 3px solid var(--ink);
-  position: relative;
   background-image: 
     linear-gradient(to right, var(--ink) 1px, transparent 1px),
     linear-gradient(to bottom, var(--ink) 1px, transparent 1px);

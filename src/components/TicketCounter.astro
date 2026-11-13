@@ -311,8 +311,9 @@ const DESTINATIONS = [
               <!-- THE PHYSICAL TICKET (Travels between printer, clerk & tray) -->
               <div
                 id="counter-ticket-element"
-                class="absolute -top-3 w-40 p-2 bg-paper border-2 border-ink shadow-[3px_3px_0_var(--ink)] opacity-0 pointer-events-none transition-all duration-500 will-change-transform z-30"
+                class="absolute -top-7 w-44 p-2.5 bg-paper border-2 border-ink shadow-[4px_4px_0_var(--ink)] opacity-0 pointer-events-none transition-all duration-300 will-change-transform z-30 cursor-pointer hover:scale-105"
                 style="transform: translateY(-24px) scale(0.9);"
+                title="Click to take ticket and board!"
               >
                 <div class="flex items-center justify-between border-b border-rule pb-1 mb-1">
                   <span id="ticket-strip-code" class="font-mono text-[9px] font-black text-line-frontend">ST-01</span>
@@ -324,6 +325,10 @@ const DESTINATIONS = [
                 <div class="mt-1 flex items-center justify-between font-mono text-[7px] text-ink-soft">
                   <span>FARE: ₹0</span>
                   <span class="font-bold text-emerald-600">VALID TODAY</span>
+                </div>
+                <div class="mt-1.5 pt-1 border-t border-rule bg-ink text-paper text-[8px] font-mono font-bold uppercase text-center py-0.5 flex items-center justify-center gap-1">
+                  <span>TAKE TICKET</span>
+                  <span>➔</span>
                 </div>
               </div>
             </div>
@@ -559,6 +564,27 @@ const DESTINATIONS = [
   };
   resetIdleTimer();
 
+  // Take ticket and proceed helper
+  const takeTicketAndProceed = () => {
+    sound.punch();
+    if (ticketEl) {
+      ticketEl.style.transform = 'translateY(60px) scale(0.8)';
+      ticketEl.style.opacity = '0';
+    }
+    const machine = (window as any).__yugline || (window as any).__yuglineMachine;
+    if (machine) {
+      machine.selectDestination(selectedStationId || 'station-01');
+      machine.setStep('gate');
+    }
+  };
+
+  // Allow clicking directly on the extruded ticket in tray
+  if (ticketEl) {
+    ticketEl.addEventListener('click', () => {
+      takeTicketAndProceed();
+    });
+  }
+
   // Listen to destination button clicks
   document.querySelectorAll('.destination-choice-btn').forEach((btn) => {
     btn.addEventListener('click', () => {
@@ -568,9 +594,21 @@ const DESTINATIONS = [
       const stTitle = btn.getAttribute('data-station-title') || '';
       const dialogue = btn.getAttribute('data-dialogue') || '';
 
+      // If already selected and ticket is ready in tray, clicking again proceeds directly!
+      if (selectedStationId === stId && isReadyForTake) {
+        takeTicketAndProceed();
+        return;
+      }
+
       selectedStationId = stId;
       selectedCode = stCode;
       selectedTitle = stTitle;
+
+      // Highlight active button on the fare board with bright transit line border
+      document.querySelectorAll('.destination-choice-btn').forEach((b) => {
+        b.classList.remove('ring-2', 'ring-line-hardware', 'border-line-hardware', 'bg-surface');
+      });
+      btn.classList.add('ring-2', 'ring-line-hardware', 'border-line-hardware', 'bg-surface');
 
       // 1. Clerk nods head
       if (clerkHead) {
@@ -586,52 +624,42 @@ const DESTINATIONS = [
         speechText.textContent = `"${dialogue}"`;
       }
 
-      // 4. Update primary action button
-      if (primaryBtn) {
-        primaryBtn.disabled = false;
-        primaryBtn.classList.remove('opacity-60');
-        primaryBtn.innerHTML = `<span>Buy ticket for ${stCode} · ₹0 (Free pass) ➔</span>`;
-        primaryBtn.focus();
-      }
-
       // Update ticket strip preview
       if (stripCode) stripCode.textContent = stCode;
       if (stripTitle) stripTitle.textContent = stTitle.toUpperCase();
+
+      // 4. IMMEDIATELY issue and hand over ticket! (User request)
+      executeBuyTicket();
     });
   });
 
-  // Execute Ticket Purchase Sequence (~3s per Section 4.1)
+  // Execute Ticket Issuance Sequence (Responsive, animated handover)
   const executeBuyTicket = async () => {
     if (!selectedStationId || isPrinting) return;
     isPrinting = true;
+    isReadyForTake = false;
 
     if (primaryBtn) {
       primaryBtn.disabled = true;
-      primaryBtn.innerHTML = `<span>Printing & Stamping ticket...</span>`;
+      primaryBtn.innerHTML = `<span>Issuing Ticket for ${selectedCode}...</span>`;
     }
 
-    // Clerk speech update
-    if (speechText) {
-      speechText.textContent = '"Printing your pass now..."';
-    }
-
-    // Step A: Typing clatter (0s - 0.8s)
+    // Step A: Typing clatter
     if (clerkLeftArm) clerkLeftArm.classList.add('clerk-typing');
     sound.keyboardClick();
-    await new Promise((r) => setTimeout(r, 600));
-    sound.keyboardClick();
-    await new Promise((r) => setTimeout(r, 400));
+    await new Promise((r) => setTimeout(r, 250));
     if (clerkLeftArm) clerkLeftArm.classList.remove('clerk-typing');
 
-    // Step B: Printer extrusion sound (0.8s - 1.8s)
+    // Step B: Printer extrusion
     sound.printer();
     if (ticketEl) {
-      ticketEl.style.opacity = '0.6';
+      ticketEl.style.opacity = '0.7';
       ticketEl.style.transform = 'translateY(-12px) scale(0.95)';
+      ticketEl.style.pointerEvents = 'auto';
     }
-    await new Promise((r) => setTimeout(r, 900));
+    await new Promise((r) => setTimeout(r, 250));
 
-    // Step C: Rubber Stamp impact thunk (1.8s - 2.2s)
+    // Step C: Rubber Stamp impact thunk
     if (clerkRightArm) {
       clerkRightArm.style.transform = 'translateY(8px) rotate(-15deg)';
     }
@@ -640,13 +668,13 @@ const DESTINATIONS = [
       ticketEl.style.opacity = '1';
       ticketEl.style.transform = 'translateY(0) scale(1)';
     }
-    await new Promise((r) => setTimeout(r, 300));
+    await new Promise((r) => setTimeout(r, 200));
     if (clerkRightArm) clerkRightArm.style.transform = 'translateY(0) rotate(0deg)';
 
-    // Step D: Slide ticket through glass slot into tray (2.2s - 2.8s)
+    // Step D: Slide ticket into tray
     sound.paperSlide();
     if (speechText) {
-      speechText.textContent = '"Fare: ₹0. Free pass. Mind the gap!"';
+      speechText.textContent = `"Here is your pass for ${selectedCode}! Take it and enter."`;
     }
 
     // Step E: Ready in tray!
@@ -656,30 +684,18 @@ const DESTINATIONS = [
     if (primaryBtn) {
       primaryBtn.disabled = false;
       primaryBtn.classList.add('animate-pulse');
-      primaryBtn.innerHTML = `<span>Take my ticket ➔</span>`;
+      primaryBtn.innerHTML = `<span>Take Ticket for ${selectedCode} & Board Metro ➔</span>`;
       primaryBtn.focus();
     }
   };
 
-  // Primary Button Click (Handles Buy OR Take)
+  // Primary Button Click (Handles Take)
   if (primaryBtn) {
     primaryBtn.addEventListener('click', () => {
       if (!isReadyForTake) {
         executeBuyTicket();
       } else {
-        // Take ticket and proceed to GateScreen
-        sound.punch();
-        if (ticketEl) {
-          ticketEl.style.transform = 'translateY(60px) scale(0.8)';
-          ticketEl.style.opacity = '0';
-        }
-
-        // Notify Machine
-        const machine = (window as any).__yugline || (window as any).__yuglineMachine;
-        if (machine) {
-          machine.selectDestination(selectedStationId);
-          machine.setStep('gate');
-        }
+        takeTicketAndProceed();
       }
     });
   }

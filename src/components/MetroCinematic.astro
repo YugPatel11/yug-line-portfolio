@@ -337,8 +337,8 @@ import Pictograms from './Pictograms.astro';
   <!-- LAYER 3: PLATFORM FLOOR (Starts right at horizon 24vh, goes to bottom) -->
   <div
     id="layer-platform-floor"
-    class="absolute inset-x-0 bottom-0 border-t-4 border-ink pointer-events-none platform-floor-strip"
-    style="height: 24vh; background-color: var(--surface); z-index: 30;"
+    class="!absolute inset-x-0 bottom-0 border-t-4 border-ink pointer-events-none platform-floor-strip"
+    style="position: absolute !important; bottom: 0 !important; left: 0 !important; right: 0 !important; height: 24vh; background-color: var(--surface); z-index: 30;"
   >
     <!-- Tactile Yellow Safety Line with Tactile Dots -->
     <div class="platform-tactile-line w-full h-8 bg-line-hardware border-b-2 border-ink flex items-center justify-around px-4">
