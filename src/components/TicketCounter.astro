@@ -769,7 +769,6 @@ const DESTINATIONS = [
   let selectedCode = '';
   let isPrinting = false;
   let isReadyForTake = false;
-  let idleTimer: any = null;
 
   // Live Concourse Clock
   const clockEl = document.getElementById('concourse-live-clock');
@@ -924,26 +923,43 @@ const DESTINATIONS = [
     });
   }
 
-  // 2. Trigger automatically on page load if already at base station
-  const checkInitialAnnouncement = () => {
+  // 2. Trigger automatically on page reload whenever on base station
+  let hasAnnouncedGreeting = false;
+  const playGreetingOnReload = () => {
+    if (hasAnnouncedGreeting) return;
     const welcomeEl = document.getElementById('scene-welcome');
     const isWelcomeVisible = welcomeEl && welcomeEl.style.display !== 'none';
     const hash = window.location.hash.toLowerCase();
     if (!isWelcomeVisible && (hash === '' || hash === '#base' || hash === '#station-00')) {
-      setTimeout(() => {
-        triggerInitialGreeting();
-      }, 500);
+      if ('speechSynthesis' in window && window.speechSynthesis.paused) {
+        window.speechSynthesis.resume();
+      }
+      hasAnnouncedGreeting = true;
+      triggerInitialGreeting();
     }
   };
-  if (document.readyState === 'complete') {
-    checkInitialAnnouncement();
-  } else {
-    window.addEventListener('load', checkInitialAnnouncement);
+
+  // Immediate attempt on reload
+  playGreetingOnReload();
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', playGreetingOnReload);
+  }
+  window.addEventListener('load', playGreetingOnReload);
+
+  // If voices were loading asynchronously on reload, retry when available
+  if ('speechSynthesis' in window && window.speechSynthesis.onvoiceschanged !== undefined) {
+    window.speechSynthesis.onvoiceschanged = () => {
+      getClerkVoice();
+      if (!hasAnnouncedGreeting && !selectedStationId) {
+        playGreetingOnReload();
+      }
+    };
   }
 
   // 3. Trigger automatically whenever returning to base station
   window.addEventListener('yugline:step_choose', () => {
     isTransitioningToMetro = false;
+    hasAnnouncedGreeting = false;
     setTimeout(() => {
       triggerInitialGreeting();
     }, 300);
@@ -953,17 +969,15 @@ const DESTINATIONS = [
     const hash = window.location.hash.toLowerCase();
     if (hash === '#base' || hash === '' || hash === '#station-00') {
       isTransitioningToMetro = false;
+      hasAnnouncedGreeting = false;
       setTimeout(() => {
         triggerInitialGreeting();
       }, 300);
     }
   });
 
-  // 4. Fallback user gesture to satisfy browser audio autoplay requirements
-  let hasUserInteractedOnce = false;
+  // 4. Fallback user gesture to satisfy browser audio autoplay requirements on reload
   const onFirstInteraction = (e: Event) => {
-    if (hasUserInteractedOnce) return;
-    hasUserInteractedOnce = true;
     if (
       (e.target as HTMLElement).closest('.destination-choice-btn') ||
       (e.target as HTMLElement).closest('#counter-bell-btn')
@@ -971,19 +985,17 @@ const DESTINATIONS = [
       return;
     }
     const chooseVisible = document.getElementById('journey-step-choose')?.style.display !== 'none';
-    if (chooseVisible && !selectedStationId) {
+    if (chooseVisible && !selectedStationId && !hasAnnouncedGreeting) {
+      if ('speechSynthesis' in window && window.speechSynthesis.paused) {
+        window.speechSynthesis.resume();
+      }
+      hasAnnouncedGreeting = true;
       triggerInitialGreeting();
     }
   };
-  window.addEventListener('click', onFirstInteraction, { passive: true });
-  window.addEventListener('touchstart', onFirstInteraction, { passive: true });
-
-  // Pre-load voices if browser requires event
-  if ('speechSynthesis' in window && window.speechSynthesis.onvoiceschanged !== undefined) {
-    window.speechSynthesis.onvoiceschanged = () => {
-      getClerkVoice();
-    };
-  }
+  ['pointerdown', 'touchstart', 'click', 'keydown'].forEach((evt) => {
+    window.addEventListener(evt, onFirstInteraction, { passive: true });
+  });
 
   // Ring Counter Bell
   if (bellBtn) {
@@ -994,17 +1006,6 @@ const DESTINATIONS = [
       speakClerk(bellMsg);
     });
   }
-
-  // Idle timer for 9s no interaction
-  const resetIdleTimer = () => {
-    clearTimeout(idleTimer);
-    idleTimer = setTimeout(() => {
-      if (!selectedStationId && speechText) {
-        speechText.textContent = '"Take your time! Every line has something special."';
-      }
-    }, 9000);
-  };
-  resetIdleTimer();
 
   const CLEAN_STATION_NAMES: Record<string, string> = {
     'station-00': 'Base',
@@ -1053,7 +1054,6 @@ const DESTINATIONS = [
   // Listen to destination button clicks
   document.querySelectorAll('.destination-choice-btn').forEach((btn) => {
     btn.addEventListener('click', () => {
-      clearTimeout(idleTimer);
       const stId = btn.getAttribute('data-station-id') as StationCode;
       const stCode = btn.getAttribute('data-station-code') || '';
       const stTitle = btn.getAttribute('data-station-title') || '';
