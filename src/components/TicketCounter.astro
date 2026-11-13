@@ -977,8 +977,13 @@ const DESTINATIONS = [
     'station-06': 'Contact',
   };
 
+  let isTransitioningToMetro = false;
+
   // Take ticket and launch full-screen cinematic metro
   const proceedToMetro = (stId?: StationCode) => {
+    if (isTransitioningToMetro) return;
+    isTransitioningToMetro = true;
+
     const target = stId || selectedStationId || 'station-01';
     sound.punch();
     if (ticketEl) {
@@ -987,12 +992,17 @@ const DESTINATIONS = [
     }
     const machine = (window as any).__yugline || (window as any).__yuglineMachine;
     if (machine) {
-      machine.selectDestination(target);
+      machine.selectedStation = target;
       machine.launchCinematicMetro(target);
     } else if ((window as any).__launchMetroCinematic) {
       (window as any).__launchMetroCinematic(target);
     }
   };
+
+  // Reset transition flag if user returns to choose step
+  window.addEventListener('yugline:step_choose', () => {
+    isTransitioningToMetro = false;
+  });
 
   // Allow clicking directly on the extruded ticket in tray
   if (ticketEl) {

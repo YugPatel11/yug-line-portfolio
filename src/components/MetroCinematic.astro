@@ -545,9 +545,10 @@ import Pictograms from './Pictograms.astro';
 
     // Main Cinematic Execution Function
     const launchMetro = (destinationId: string) => {
-      if (isLaunching) return;
+      // Prevent double-launch if already launching or stage is already visible
+      if (isLaunching || (stage && stage.style.display === 'block')) return;
       isLaunching = true;
-      setTimeout(() => { isLaunching = false; }, 800);
+      setTimeout(() => { isLaunching = false; }, 1500);
 
       currentDestination = destinationId as StationCode;
       isBoarding = false;
@@ -796,6 +797,7 @@ import Pictograms from './Pictograms.astro';
         setTimeout(() => {
           stage.style.display = 'none';
           stage.style.opacity = '1';
+          isLaunching = false;
         }, 250);
       }
 
