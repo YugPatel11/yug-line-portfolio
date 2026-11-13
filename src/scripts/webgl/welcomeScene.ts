@@ -1,9 +1,9 @@
 // src/scripts/webgl/welcomeScene.ts
-// Architectural Procedural 3D Metro Train Consist (Lead Cab + Passenger Carriage)
-// Built with authentic transit proportions, brushed stainless steel body,
-// 4-line transit livery (#E4572E, #F2B705, #0B6E4F, #1B3A8A), panoramic smoked glass,
-// illuminated passenger interior, aerodynamic cab with projector LED headlights,
-// roof HVAC pods, undercarriage bogies with flanged steel wheels, and smooth 360° turntable.
+// Ultra-Realistic Fixed-Angle 3D Metro Train Consist (Car A Lead Cab + Gangway + Car B)
+// Features accurate transit proportions, brushed stainless steel body with procedural studio reflections,
+// articulated diamond roof pantograph, panoramic smoked glass with illuminated passenger interior,
+// aerodynamic raked cab with projector LED headlights, windshield wipers, driver console,
+// detailed 2-axle bogies with flanged steel wheels, and subtle station arrival & idle suspension breathing.
 
 import * as THREE from 'three';
 
@@ -16,24 +16,20 @@ export class Welcome3DScene {
   private rootGroup: THREE.Group;
   private trainGroup: THREE.Group;
   private plinthGroup: THREE.Group;
+  private envTexture: THREE.Texture | null = null;
   private animId: number = 0;
   private isDestroyed: boolean = false;
-  private isDragging: boolean = false;
-  private previousMouseX: number = 0;
-  private targetRotationY: number = -0.68; // 3/4 isometric transit angle (~39°)
-  private currentRotationY: number = -0.68;
-  private autoRotateSpeed: number = 0.002;
   private rollInProgress: number = 0;
-  private mouseParallaxX: number = 0;
-  private mouseParallaxY: number = 0;
-  private targetMouseParallaxX: number = 0;
-  private targetMouseParallaxY: number = 0;
+
+  // Fixed optimal cinematic 3/4 transit hero angle (~ -41°)
+  private readonly fixedAngleY: number = -0.72;
+  private readonly fixedPitchX: number = 0.04;
 
   constructor(containerId: string, canvasId: string) {
     this.container = document.getElementById(containerId) as HTMLElement;
     this.canvas = document.getElementById(canvasId) as HTMLCanvasElement;
     this.scene = new THREE.Scene();
-    this.camera = new THREE.PerspectiveCamera(32, 1, 0.1, 100);
+    this.camera = new THREE.PerspectiveCamera(31, 1, 0.1, 100);
     this.rootGroup = new THREE.Group();
     this.trainGroup = new THREE.Group();
     this.plinthGroup = new THREE.Group();
@@ -44,7 +40,6 @@ export class Welcome3DScene {
   }
 
   private init() {
-    // Check reduced motion preference
     if (
       document.documentElement.classList.contains('reduce-motion') ||
       window.matchMedia('(prefers-reduced-motion: reduce)').matches
@@ -65,56 +60,33 @@ export class Welcome3DScene {
 
       this.updateSize();
 
-      // Camera: Elevated 3/4 transit perspective showing cab, flank, and roof
-      this.camera.position.set(4.8, 2.4, 4.4);
-      this.camera.lookAt(0, 0.62, 0);
+      // Camera: Elevated 3/4 transit hero angle showing cab, flank, pantograph, and track
+      this.camera.position.set(4.65, 2.35, 4.3);
+      this.camera.lookAt(0, 0.62, 0.15);
 
-      // Natural Studio 3-Point Lighting Setup (Calibrated to site palette)
-      const ambientLight = new THREE.AmbientLight(0xffffff, 0.9);
-      this.scene.add(ambientLight);
+      // Generate Procedural Studio Environment for Authentic Metallic Reflections
+      this.setupStudioEnvironment();
 
-      // 1. Studio Key Directional Light (Warm White)
-      const keyLight = new THREE.DirectionalLight(0xfffdfa, 2.2);
-      keyLight.position.set(5.5, 7.5, 6);
-      keyLight.castShadow = true;
-      keyLight.shadow.mapSize.width = 1024;
-      keyLight.shadow.mapSize.height = 1024;
-      keyLight.shadow.bias = -0.0005;
-      this.scene.add(keyLight);
+      // Natural Studio Lighting Setup (Aligned to site palette)
+      this.setupLighting();
 
-      // 2. Cool Slate Fill Light (Soft architectural shadow tone)
-      const fillLight = new THREE.DirectionalLight(0x6b7c96, 0.95);
-      fillLight.position.set(-5, 3.5, -4);
-      this.scene.add(fillLight);
-
-      // 3. Crisp Rim Light (Roof edge and contour definition)
-      const rimLight = new THREE.DirectionalLight(0xdde5f4, 1.3);
-      rimLight.position.set(-4, 4, 5);
-      this.scene.add(rimLight);
-
-      // Build Plinth & Railway Track
+      // Build Architectural Plinth & Track Bed
       this.buildPlinthAndTrack();
 
-      // Build High-Detail Realistic Procedural Metro Train (Car A + Gangway + Car B)
-      this.buildDetailedMetroTrain();
+      // Build Ultra-Realistic Metro Train Consist
+      this.buildUltraRealisticMetroTrain();
 
       // Assemble Root Group
       this.rootGroup.add(this.plinthGroup);
       this.rootGroup.add(this.trainGroup);
       this.scene.add(this.rootGroup);
 
-      // Initial rotation
-      this.rootGroup.rotation.y = this.currentRotationY;
+      // Lock to Fixed Cinematic Hero Angle
+      this.rootGroup.rotation.y = this.fixedAngleY;
+      this.rootGroup.rotation.x = this.fixedPitchX;
 
-      // Event listeners for interactive turntable drag
+      // Event listener for responsive resize
       window.addEventListener('resize', this.onResize);
-      this.container.addEventListener('mousedown', this.onMouseDown);
-      window.addEventListener('mousemove', this.onMouseMove);
-      window.addEventListener('mouseup', this.onMouseUp);
-
-      this.container.addEventListener('touchstart', this.onTouchStart, { passive: true });
-      window.addEventListener('touchmove', this.onTouchMove, { passive: true });
-      window.addEventListener('touchend', this.onTouchEnd);
 
       // Reveal 3D Canvas
       this.canvas.style.display = 'block';
@@ -132,55 +104,121 @@ export class Welcome3DScene {
   }
 
   // =========================================================================
-  // ARCHITECTURAL TRACK BED & DISPLAY PLINTH
+  // PROCEDURAL STUDIO ENVIRONMENT FOR AUTHENTIC METALLIC REFLECTIONS
+  // =========================================================================
+  private setupStudioEnvironment() {
+    const canvas = document.createElement('canvas');
+    canvas.width = 512;
+    canvas.height = 256;
+    const ctx = canvas.getContext('2d')!;
+
+    // Background gradient: dark concourse tunnel environment
+    const bgGrad = ctx.createLinearGradient(0, 0, 0, 256);
+    bgGrad.addColorStop(0, '#0c0f16');
+    bgGrad.addColorStop(0.35, '#1b2230');
+    bgGrad.addColorStop(0.5, '#2c3547');
+    bgGrad.addColorStop(0.55, '#161922');
+    bgGrad.addColorStop(1, '#090b10');
+    ctx.fillStyle = bgGrad;
+    ctx.fillRect(0, 0, 512, 256);
+
+    // Overhead linear station LED tube light banks (Crisp specular highlights)
+    const tubeGrad = ctx.createRadialGradient(256, 35, 10, 256, 35, 200);
+    tubeGrad.addColorStop(0, '#ffffff');
+    tubeGrad.addColorStop(0.3, '#f5efe0');
+    tubeGrad.addColorStop(0.7, '#8e9eb5');
+    tubeGrad.addColorStop(1, 'transparent');
+    ctx.fillStyle = tubeGrad;
+    ctx.fillRect(60, 0, 392, 90);
+
+    // Side platform ambient warm floor bounce
+    const platformGrad = ctx.createLinearGradient(0, 150, 0, 256);
+    platformGrad.addColorStop(0, 'rgba(242, 183, 5, 0.12)'); // Site Yellow accent
+    platformGrad.addColorStop(1, 'transparent');
+    ctx.fillStyle = platformGrad;
+    ctx.fillRect(0, 150, 512, 106);
+
+    this.envTexture = new THREE.CanvasTexture(canvas);
+    this.envTexture.mapping = THREE.EquirectangularReflectionMapping;
+    this.scene.environment = this.envTexture;
+  }
+
+  // =========================================================================
+  // NATURAL CALIBRATED LIGHTING SETUP
+  // =========================================================================
+  private setupLighting() {
+    // 1. Ambient Light for balanced base illumination
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.85);
+    this.scene.add(ambientLight);
+
+    // 2. Primary Key Directional Light (Warm White)
+    const keyLight = new THREE.DirectionalLight(0xfffdf6, 2.4);
+    keyLight.position.set(5.5, 7.8, 5.8);
+    keyLight.castShadow = true;
+    keyLight.shadow.mapSize.width = 1024;
+    keyLight.shadow.mapSize.height = 1024;
+    keyLight.shadow.bias = -0.0004;
+    this.scene.add(keyLight);
+
+    // 3. Cool Slate Secondary Fill Light (Softens contrast on undercarriage)
+    const fillLight = new THREE.DirectionalLight(0x788aa3, 1.1);
+    fillLight.position.set(-5, 3.5, -4);
+    this.scene.add(fillLight);
+
+    // 4. Crisp Roof Rim Light (Edge definition along pantograph and roof curve)
+    const rimLight = new THREE.DirectionalLight(0xdde6f5, 1.4);
+    rimLight.position.set(-4, 4.5, 4.5);
+    this.scene.add(rimLight);
+  }
+
+  // =========================================================================
+  // ARCHITECTURAL TRACK BED & PLATFORM PLINTH
   // =========================================================================
   private buildPlinthAndTrack() {
-    // 1. Dark Graphite Foundation Plinth
+    // 1. Dark Graphite Foundation Slab
     const plinthMat = new THREE.MeshStandardMaterial({
-      color: 0x11141c,
+      color: 0x10131a,
       roughness: 0.5,
-      metalness: 0.3,
+      metalness: 0.35,
     });
-    const plinthGeom = new THREE.BoxGeometry(2.2, 0.12, 6.8);
-    const plinth = new THREE.Mesh(plinthGeom, plinthMat);
-    plinth.position.set(0, -0.06, 0);
+    const plinth = new THREE.Mesh(new THREE.BoxGeometry(2.3, 0.14, 7.0), plinthMat);
+    plinth.position.set(0, -0.07, 0);
     plinth.receiveShadow = true;
     this.plinthGroup.add(plinth);
 
     // Ballast gravel top bed
     const ballastMat = new THREE.MeshStandardMaterial({
-      color: 0x181c26,
+      color: 0x171b24,
       roughness: 0.95,
       metalness: 0.1,
     });
-    const ballastGeom = new THREE.BoxGeometry(2.14, 0.04, 6.74);
-    const ballast = new THREE.Mesh(ballastGeom, ballastMat);
+    const ballast = new THREE.Mesh(new THREE.BoxGeometry(2.24, 0.04, 6.94), ballastMat);
     ballast.position.set(0, 0.02, 0);
     ballast.receiveShadow = true;
     this.plinthGroup.add(ballast);
 
-    // 2. Concrete Track Sleepers (Ties) with Pandrol Spring Baseplates
+    // 2. Concrete Sleepers (Ties) with Pandrol Spring Baseplates
     const tieMat = new THREE.MeshStandardMaterial({
       color: 0x222733,
       roughness: 0.8,
       metalness: 0.15,
     });
     const tiePlateMat = new THREE.MeshStandardMaterial({
-      color: 0x3d4454,
+      color: 0x3e4554,
       roughness: 0.4,
       metalness: 0.8,
     });
     const tieGeom = new THREE.BoxGeometry(1.5, 0.06, 0.15);
     const plateGeom = new THREE.BoxGeometry(0.12, 0.02, 0.14);
 
-    for (let z = -3.15; z <= 3.15; z += 0.35) {
+    for (let z = -3.25; z <= 3.25; z += 0.36) {
       const tie = new THREE.Mesh(tieGeom, tieMat);
       tie.position.set(0, 0.06, z);
       tie.castShadow = true;
       tie.receiveShadow = true;
       this.plinthGroup.add(tie);
 
-      // Steel tie plates under rails
+      // Steel tie baseplates under both rails
       const plateL = new THREE.Mesh(plateGeom, tiePlateMat);
       plateL.position.set(-0.48, 0.095, z);
       this.plinthGroup.add(plateL);
@@ -190,13 +228,13 @@ export class Welcome3DScene {
       this.plinthGroup.add(plateR);
     }
 
-    // 3. Continuous Polished Steel Rails
+    // 3. Continuous Polished Steel Running Rails
     const railMat = new THREE.MeshStandardMaterial({
       color: 0xa8b4c7,
-      metalness: 0.95,
-      roughness: 0.12,
+      metalness: 0.96,
+      roughness: 0.1,
     });
-    const railGeom = new THREE.BoxGeometry(0.05, 0.08, 6.74);
+    const railGeom = new THREE.BoxGeometry(0.05, 0.08, 6.94);
 
     const railL = new THREE.Mesh(railGeom, railMat);
     railL.position.set(-0.48, 0.13, 0);
@@ -210,14 +248,14 @@ export class Welcome3DScene {
     railR.receiveShadow = true;
     this.plinthGroup.add(railR);
 
-    // 4. Station Platform Edge with Tactile Yellow Safety Band (Site Yellow #F2B705)
+    // 4. Station Platform Edge with Tactile Yellow Safety Pavers (#F2B705)
     const platformSlabMat = new THREE.MeshStandardMaterial({
-      color: 0x161a24,
+      color: 0x151822,
       roughness: 0.6,
-      metalness: 0.2,
+      metalness: 0.25,
     });
-    const platformSlab = new THREE.Mesh(new THREE.BoxGeometry(0.4, 0.18, 6.74), platformSlabMat);
-    platformSlab.position.set(0.95, 0.1, 0);
+    const platformSlab = new THREE.Mesh(new THREE.BoxGeometry(0.42, 0.18, 6.94), platformSlabMat);
+    platformSlab.position.set(0.96, 0.1, 0);
     platformSlab.receiveShadow = true;
     this.plinthGroup.add(platformSlab);
 
@@ -227,13 +265,13 @@ export class Welcome3DScene {
       emissiveIntensity: 0.25,
       roughness: 0.35,
     });
-    const safetyStrip = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.015, 6.74), yellowSafetyMat);
+    const safetyStrip = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.015, 6.94), yellowSafetyMat);
     safetyStrip.position.set(0.77, 0.195, 0);
     this.plinthGroup.add(safetyStrip);
 
-    // Tactile studs along yellow line
+    // Raised tactile safety studs along warning line
     const studGeom = new THREE.CylinderGeometry(0.012, 0.012, 0.01, 8);
-    for (let z = -3.1; z <= 3.1; z += 0.2) {
+    for (let z = -3.2; z <= 3.2; z += 0.2) {
       const stud = new THREE.Mesh(studGeom, yellowSafetyMat);
       stud.position.set(0.77, 0.205, z);
       this.plinthGroup.add(stud);
@@ -241,105 +279,116 @@ export class Welcome3DScene {
   }
 
   // =========================================================================
-  // HIGH-DETAIL REALISTIC PROCEDURAL METRO TRAIN
+  // ULTRA-REALISTIC PROCEDURAL METRO TRAIN
   // =========================================================================
-  private buildDetailedMetroTrain() {
+  private buildUltraRealisticMetroTrain() {
     // -------------------------------------------------------------
-    // Shared High-Fidelity Materials (Pure Site Palette Alignment)
+    // High-Fidelity Materials with Accurate Realism
     // -------------------------------------------------------------
-    const stainlessSteelMat = new THREE.MeshStandardMaterial({
+    const brushedStainlessMat = new THREE.MeshStandardMaterial({
       color: 0xd6dae4,
-      metalness: 0.72,
-      roughness: 0.22,
+      metalness: 0.82,
+      roughness: 0.2,
     });
 
-    const brushedFluteMat = new THREE.MeshStandardMaterial({
-      color: 0xc8cdd8,
-      metalness: 0.8,
-      roughness: 0.26,
+    const corrugatedFluteMat = new THREE.MeshStandardMaterial({
+      color: 0xc4c9d6,
+      metalness: 0.88,
+      roughness: 0.24,
     });
 
-    const darkCharcoalMat = new THREE.MeshStandardMaterial({
-      color: 0x181b22,
-      metalness: 0.5,
+    const darkTrimMat = new THREE.MeshStandardMaterial({
+      color: 0x161820,
+      metalness: 0.55,
       roughness: 0.45,
     });
 
-    const darkWindowFrameMat = new THREE.MeshStandardMaterial({
-      color: 0x12151c,
-      metalness: 0.6,
-      roughness: 0.4,
+    const windowPillarMat = new THREE.MeshStandardMaterial({
+      color: 0x10131a,
+      metalness: 0.7,
+      roughness: 0.35,
     });
 
     const smokedGlassMat = new THREE.MeshStandardMaterial({
-      color: 0x101622,
-      metalness: 0.9,
-      roughness: 0.04,
+      color: 0x111622,
+      metalness: 0.92,
+      roughness: 0.05,
       transparent: true,
       opacity: 0.88,
     });
 
-    const interiorGlowMat = new THREE.MeshStandardMaterial({
-      color: 0xfff3d6,
-      emissive: 0xffe6b0,
-      emissiveIntensity: 0.28,
-      roughness: 0.6,
+    const interiorPassengerMat = new THREE.MeshStandardMaterial({
+      color: 0xfff2d8,
+      emissive: 0xffe2a4,
+      emissiveIntensity: 0.32,
+      roughness: 0.5,
     });
 
-    const wheelSteelMat = new THREE.MeshStandardMaterial({
-      color: 0x2e3442,
-      metalness: 0.9,
-      roughness: 0.15,
-    });
-
-    const bogieFrameMat = new THREE.MeshStandardMaterial({
-      color: 0x1f242e,
-      metalness: 0.6,
+    const seatMat = new THREE.MeshStandardMaterial({
+      color: 0x1e2738,
       roughness: 0.7,
     });
 
-    // Site 4-Line Livery Materials
-    const stripeFrontendMat = new THREE.MeshStandardMaterial({
-      color: 0xe4572e,
-      roughness: 0.35,
-    });
-    const stripeHardwareMat = new THREE.MeshStandardMaterial({
-      color: 0xf2b705,
-      roughness: 0.35,
-    });
-    const stripeBackendMat = new THREE.MeshStandardMaterial({
-      color: 0x0b6e4f,
-      roughness: 0.35,
-    });
-    const stripeAIMat = new THREE.MeshStandardMaterial({
-      color: 0x1b3a8a,
-      roughness: 0.35,
+    const stanchionPoleMat = new THREE.MeshStandardMaterial({
+      color: 0xe2e6ef,
+      metalness: 0.95,
+      roughness: 0.1,
     });
 
+    const wheelSteelMat = new THREE.MeshStandardMaterial({
+      color: 0x2b313f,
+      metalness: 0.92,
+      roughness: 0.14,
+    });
+
+    const bogieSteelMat = new THREE.MeshStandardMaterial({
+      color: 0x1c202a,
+      metalness: 0.65,
+      roughness: 0.65,
+    });
+
+    // Site 4-Line Enamel Livery Materials
+    const stripeFrontendMat = new THREE.MeshStandardMaterial({ color: 0xe4572e, roughness: 0.35 });
+    const stripeHardwareMat = new THREE.MeshStandardMaterial({ color: 0xf2b705, roughness: 0.35 });
+    const stripeBackendMat = new THREE.MeshStandardMaterial({ color: 0x0b6e4f, roughness: 0.35 });
+    const stripeAIMat = new THREE.MeshStandardMaterial({ color: 0x1b3a8a, roughness: 0.35 });
+
     // -------------------------------------------------------------
-    // Helper: Build a 2-Axle Bogie (Truck) with Wheels & Suspension
+    // Helper: Build High-Detail 2-Axle Bogie Truck
     // -------------------------------------------------------------
     const createBogie = (zCenter: number): THREE.Group => {
       const bogie = new THREE.Group();
       bogie.position.set(0, 0, zCenter);
 
-      // Bogie H-Frame
-      const sideBeamGeom = new THREE.BoxGeometry(0.06, 0.08, 0.85);
-      const sideBeamL = new THREE.Mesh(sideBeamGeom, bogieFrameMat);
+      // Heavy Cast H-Frame Side Beams
+      const sideBeamGeom = new THREE.BoxGeometry(0.07, 0.09, 0.9);
+      const sideBeamL = new THREE.Mesh(sideBeamGeom, bogieSteelMat);
       sideBeamL.position.set(-0.55, 0.25, 0);
       sideBeamL.castShadow = true;
       bogie.add(sideBeamL);
 
-      const sideBeamR = new THREE.Mesh(sideBeamGeom, bogieFrameMat);
+      const sideBeamR = new THREE.Mesh(sideBeamGeom, bogieSteelMat);
       sideBeamR.position.set(0.55, 0.25, 0);
       sideBeamR.castShadow = true;
       bogie.add(sideBeamR);
 
-      const centerTransom = new THREE.Mesh(new THREE.BoxGeometry(1.1, 0.07, 0.2), bogieFrameMat);
-      centerTransom.position.set(0, 0.25, 0);
-      bogie.add(centerTransom);
+      // Center Transom Bolster
+      const transom = new THREE.Mesh(new THREE.BoxGeometry(1.12, 0.08, 0.22), bogieSteelMat);
+      transom.position.set(0, 0.25, 0);
+      bogie.add(transom);
 
-      // 2 Axles with 4 Flanged Steel Wheels
+      // Coil Suspension Springs on side frames
+      const springMat = new THREE.MeshStandardMaterial({ color: 0x485164, metalness: 0.85, roughness: 0.25 });
+      const springGeom = new THREE.CylinderGeometry(0.035, 0.035, 0.12, 12);
+      [-0.55, 0.55].forEach((sx) => {
+        [-0.15, 0.15].forEach((sz) => {
+          const spring = new THREE.Mesh(springGeom, springMat);
+          spring.position.set(sx, 0.32, sz);
+          bogie.add(spring);
+        });
+      });
+
+      // 2 Axles with 4 Steel Flanged Wheels
       const axlePositions = [-0.3, 0.3];
       const axleGeom = new THREE.CylinderGeometry(0.025, 0.025, 1.1, 16);
       axleGeom.rotateZ(Math.PI / 2);
@@ -347,16 +396,18 @@ export class Welcome3DScene {
       const wheelGeom = new THREE.CylinderGeometry(0.125, 0.125, 0.05, 24);
       wheelGeom.rotateZ(Math.PI / 2);
 
-      const flangeGeom = new THREE.CylinderGeometry(0.14, 0.14, 0.015, 24);
+      const flangeGeom = new THREE.CylinderGeometry(0.142, 0.142, 0.015, 24);
       flangeGeom.rotateZ(Math.PI / 2);
 
+      const hubGeom = new THREE.CylinderGeometry(0.045, 0.045, 0.07, 16);
+      hubGeom.rotateZ(Math.PI / 2);
+
       axlePositions.forEach((az) => {
-        // Axle rod
         const axle = new THREE.Mesh(axleGeom, wheelSteelMat);
         axle.position.set(0, 0.24, az);
         bogie.add(axle);
 
-        // Left Wheel & Flange
+        // Left Wheel & Disc
         const wheelL = new THREE.Mesh(wheelGeom, wheelSteelMat);
         wheelL.position.set(-0.48, 0.24, az);
         wheelL.castShadow = true;
@@ -366,7 +417,11 @@ export class Welcome3DScene {
         flangeL.position.set(-0.51, 0.24, az);
         bogie.add(flangeL);
 
-        // Right Wheel & Flange
+        const hubL = new THREE.Mesh(hubGeom, stanchionPoleMat);
+        hubL.position.set(-0.525, 0.24, az);
+        bogie.add(hubL);
+
+        // Right Wheel & Disc
         const wheelR = new THREE.Mesh(wheelGeom, wheelSteelMat);
         wheelR.position.set(0.48, 0.24, az);
         wheelR.castShadow = true;
@@ -375,57 +430,156 @@ export class Welcome3DScene {
         const flangeR = new THREE.Mesh(flangeGeom, wheelSteelMat);
         flangeR.position.set(0.51, 0.24, az);
         bogie.add(flangeR);
+
+        const hubR = new THREE.Mesh(hubGeom, stanchionPoleMat);
+        hubR.position.set(0.525, 0.24, az);
+        bogie.add(hubR);
       });
 
-      // Third Rail Pick-Up Shoe (Yellow accent marker)
-      const shoeMat = new THREE.MeshStandardMaterial({ color: 0xf2b705, metalness: 0.8, roughness: 0.2 });
-      const shoe = new THREE.Mesh(new THREE.BoxGeometry(0.04, 0.03, 0.2), shoeMat);
-      shoe.position.set(-0.62, 0.18, 0);
+      // Third Rail Contact Shoe (Yellow Accent Marker)
+      const shoe = new THREE.Mesh(
+        new THREE.BoxGeometry(0.04, 0.03, 0.22),
+        new THREE.MeshStandardMaterial({ color: 0xf2b705, metalness: 0.85, roughness: 0.25 })
+      );
+      shoe.position.set(-0.62, 0.17, 0);
       bogie.add(shoe);
 
       return bogie;
     };
 
     // -------------------------------------------------------------
-    // Helper: Build Rooftop Aerodynamic HVAC Pods
+    // Helper: Build Aerodynamic Rooftop HVAC Pod
     // -------------------------------------------------------------
     const createRoofHVAC = (zCenter: number): THREE.Group => {
       const hvac = new THREE.Group();
-      hvac.position.set(0, 1.4, zCenter);
+      hvac.position.set(0, 1.41, zCenter);
 
-      // Main aerodynamic casing
-      const casing = new THREE.Mesh(new THREE.BoxGeometry(0.72, 0.1, 0.78), darkCharcoalMat);
-      casing.castShadow = true;
-      hvac.add(casing);
+      const podGeom = new THREE.BoxGeometry(0.72, 0.1, 0.8);
+      const pod = new THREE.Mesh(podGeom, darkTrimMat);
+      pod.castShadow = true;
+      hvac.add(pod);
 
-      // Exhaust fan grilles (circular louvers)
-      const fanMat = new THREE.MeshStandardMaterial({ color: 0x2a313d, roughness: 0.5, metalness: 0.7 });
+      // Dual circular exhaust fan covers
+      const fanMat = new THREE.MeshStandardMaterial({ color: 0x2a313d, roughness: 0.5, metalness: 0.75 });
       const fanGeom = new THREE.CylinderGeometry(0.12, 0.12, 0.02, 16);
 
-      const fan1 = new THREE.Mesh(fanGeom, fanMat);
-      fan1.position.set(-0.16, 0.06, 0);
-      hvac.add(fan1);
+      const f1 = new THREE.Mesh(fanGeom, fanMat);
+      f1.position.set(-0.16, 0.06, 0);
+      hvac.add(f1);
 
-      const fan2 = new THREE.Mesh(fanGeom, fanMat);
-      fan2.position.set(0.16, 0.06, 0);
-      hvac.add(fan2);
+      const f2 = new THREE.Mesh(fanGeom, fanMat);
+      f2.position.set(0.16, 0.06, 0);
+      hvac.add(f2);
 
       return hvac;
     };
 
     // -------------------------------------------------------------
-    // 1. CAR A: LEAD CARRIAGE (Swept Driver Cab, Windshield & Headlights)
+    // Helper: Build High-Detail Articulated Diamond Roof Pantograph
+    // -------------------------------------------------------------
+    const createArticulatedPantograph = (zCenter: number): THREE.Group => {
+      const pantograph = new THREE.Group();
+      pantograph.position.set(0, 1.42, zCenter);
+
+      const frameMat = new THREE.MeshStandardMaterial({
+        color: 0xd8dee9,
+        metalness: 0.9,
+        roughness: 0.15,
+      });
+      const insulatorMat = new THREE.MeshStandardMaterial({
+        color: 0x9e432b, // Terracotta porcelain insulator color
+        roughness: 0.4,
+        metalness: 0.3,
+      });
+
+      // 1. 4 Porcelain Insulator Footings on Roof Mounting Base
+      const insulatorGeom = new THREE.CylinderGeometry(0.024, 0.03, 0.06, 12);
+      const postPositions = [
+        [-0.24, -0.2],
+        [0.24, -0.2],
+        [-0.24, 0.2],
+        [0.24, 0.2],
+      ];
+      postPositions.forEach(([ix, iz]) => {
+        const post = new THREE.Mesh(insulatorGeom, insulatorMat);
+        post.position.set(ix, 0.03, iz);
+        pantograph.add(post);
+      });
+
+      // 2. Base Tubular Support Frame
+      const baseFrame = new THREE.Mesh(new THREE.BoxGeometry(0.52, 0.02, 0.44), frameMat);
+      baseFrame.position.set(0, 0.07, 0);
+      pantograph.add(baseFrame);
+
+      // 3. Lower Articulated Arm (Angled upwards toward rear)
+      const lowerArmGeom = new THREE.CylinderGeometry(0.015, 0.015, 0.46, 10);
+      lowerArmGeom.rotateX(Math.PI / 4.2); // ~43° angle
+
+      const lowerArmL = new THREE.Mesh(lowerArmGeom, frameMat);
+      lowerArmL.position.set(-0.16, 0.22, -0.06);
+      pantograph.add(lowerArmL);
+
+      const lowerArmR = new THREE.Mesh(lowerArmGeom, frameMat);
+      lowerArmR.position.set(0.16, 0.22, -0.06);
+      pantograph.add(lowerArmR);
+
+      // Transverse pivot joint rod
+      const pivotRod = new THREE.Mesh(new THREE.CylinderGeometry(0.018, 0.018, 0.36, 12), frameMat);
+      pivotRod.rotateZ(Math.PI / 2);
+      pivotRod.position.set(0, 0.37, -0.2);
+      pantograph.add(pivotRod);
+
+      // 4. Upper Scissor / Diamond Arms (Angled back forward)
+      const upperArmGeom = new THREE.CylinderGeometry(0.012, 0.012, 0.42, 10);
+      upperArmGeom.rotateX(-Math.PI / 5.2); // Return forward angle
+
+      const upperArmL = new THREE.Mesh(upperArmGeom, frameMat);
+      upperArmL.position.set(-0.12, 0.51, -0.07);
+      pantograph.add(upperArmL);
+
+      const upperArmR = new THREE.Mesh(upperArmGeom, frameMat);
+      upperArmR.position.set(0.12, 0.51, -0.07);
+      pantograph.add(upperArmR);
+
+      // 5. Top Carbon Collector Bow (Contact strip that touches overhead catenary)
+      const collectorBarMat = new THREE.MeshStandardMaterial({
+        color: 0x222630, // Graphite carbon wear strip
+        metalness: 0.9,
+        roughness: 0.2,
+      });
+      const collectorBar = new THREE.Mesh(new THREE.BoxGeometry(0.68, 0.018, 0.05), collectorBarMat);
+      collectorBar.position.set(0, 0.66, 0.06);
+      pantograph.add(collectorBar);
+
+      // Curved Horn Endtips (Aerodynamic safety horn curls)
+      const hornGeom = new THREE.CylinderGeometry(0.008, 0.008, 0.08, 8);
+      hornGeom.rotateZ(Math.PI / 3);
+
+      const hornL = new THREE.Mesh(hornGeom, frameMat);
+      hornL.position.set(-0.36, 0.63, 0.06);
+      pantograph.add(hornL);
+
+      const hornR = new THREE.Mesh(hornGeom, frameMat);
+      hornR.position.set(0.36, 0.63, 0.06);
+      hornR.rotation.z = -Math.PI / 3;
+      pantograph.add(hornR);
+
+      return pantograph;
+    };
+
+    // -------------------------------------------------------------
+    // 1. CAR A: LEAD CARRIAGE (Swept Aerodynamic Cab & Headlights)
     // -------------------------------------------------------------
     const carA = new THREE.Group();
-    const carALength = 2.75;
+    const carALength = 2.8;
     const carAWidth = 1.24;
     const carAHeight = 0.94;
     const bodyBaseY = 0.88;
 
-    // Main Stainless Steel Body Box
+    // Main Stainless Steel Carriage Body
     const carABody = new THREE.Mesh(
       new THREE.BoxGeometry(carAWidth, carAHeight, carALength),
-      stainlessSteelMat
+      brushedStainlessMat
     );
     carABody.position.set(0, bodyBaseY, 1.35);
     carABody.castShadow = true;
@@ -433,56 +587,71 @@ export class Welcome3DScene {
     carA.add(carABody);
 
     // Arched Roof Crown
-    const roofGeom = new THREE.BoxGeometry(carAWidth - 0.08, 0.08, carALength);
-    const carARoof = new THREE.Mesh(roofGeom, stainlessSteelMat);
+    const carARoof = new THREE.Mesh(
+      new THREE.BoxGeometry(carAWidth - 0.08, 0.08, carALength),
+      brushedStainlessMat
+    );
     carARoof.position.set(0, bodyBaseY + carAHeight / 2 + 0.035, 1.35);
     carA.add(carARoof);
 
-    // Continuous Dark Window Belt Band
+    // Dark Structural Window Belt
     const windowBelt = new THREE.Mesh(
-      new THREE.BoxGeometry(carAWidth + 0.015, 0.38, carALength - 0.2),
-      darkWindowFrameMat
+      new THREE.BoxGeometry(carAWidth + 0.015, 0.38, carALength - 0.15),
+      windowPillarMat
     );
     windowBelt.position.set(0, bodyBaseY + 0.08, 1.35);
     carA.add(windowBelt);
 
-    // Warm Interior Cabin Luminescence (Visible through glass)
+    // Warm Interior Cabin Luminescence
     const interiorA = new THREE.Mesh(
-      new THREE.BoxGeometry(carAWidth - 0.14, carAHeight - 0.16, carALength - 0.3),
-      interiorGlowMat
+      new THREE.BoxGeometry(carAWidth - 0.16, carAHeight - 0.16, carALength - 0.3),
+      interiorPassengerMat
     );
     interiorA.position.set(0, bodyBaseY, 1.35);
     carA.add(interiorA);
 
-    // Left & Right Panoramic Smoked Windows
+    // Visible Passenger Seats & Stainless Grab Stanchions inside Car A
+    const seatGeom = new THREE.BoxGeometry(0.24, 0.22, 0.44);
+    const stanchionGeom = new THREE.CylinderGeometry(0.012, 0.012, 0.72, 10);
+    [0.75, 1.55].forEach((pz) => {
+      // Platform side seats
+      const seat = new THREE.Mesh(seatGeom, seatMat);
+      seat.position.set(carAWidth / 2 - 0.2, bodyBaseY - 0.15, pz);
+      carA.add(seat);
+
+      // Grab Stanchion pole
+      const pole = new THREE.Mesh(stanchionGeom, stanchionPoleMat);
+      pole.position.set(carAWidth / 2 - 0.25, bodyBaseY + 0.08, pz + 0.3);
+      carA.add(pole);
+    });
+
+    // Panoramic Smoked Glass Side Windows
     const glassPaneGeom = new THREE.BoxGeometry(0.02, 0.32, 0.52);
     const windowZOffsets = [0.45, 1.25, 2.05];
-
     windowZOffsets.forEach((wz) => {
-      // Flank Left Glass
       const glassL = new THREE.Mesh(glassPaneGeom, smokedGlassMat);
       glassL.position.set(-(carAWidth / 2 + 0.01), bodyBaseY + 0.08, wz);
       carA.add(glassL);
 
-      // Flank Right Glass
       const glassR = new THREE.Mesh(glassPaneGeom, smokedGlassMat);
       glassR.position.set(carAWidth / 2 + 0.01, bodyBaseY + 0.08, wz);
       carA.add(glassR);
     });
 
-    // Passenger Double Sliding Doors (Recessed with Center Rubber Gasket)
+    // Double Sliding Passenger Doors with Center Rubber Gasket & Handles
     const doorFrameGeom = new THREE.BoxGeometry(0.025, 0.72, 0.44);
     const doorGlassGeom = new THREE.BoxGeometry(0.03, 0.28, 0.14);
     const doorGasketGeom = new THREE.BoxGeometry(0.032, 0.72, 0.012);
+    const doorHandleGeom = new THREE.CylinderGeometry(0.008, 0.008, 0.14, 8);
     const doorZPositions = [0.85, 1.65];
 
     doorZPositions.forEach((dz) => {
-      // Right Side Doors (Platform Facing)
-      const doorFrameR = new THREE.Mesh(doorFrameGeom, darkWindowFrameMat);
+      // Right (Platform Facing) Door
+      const doorFrameR = new THREE.Mesh(doorFrameGeom, darkTrimMat);
       doorFrameR.position.set(carAWidth / 2 + 0.01, bodyBaseY - 0.06, dz);
       carA.add(doorFrameR);
 
-      // Glass inserts in both leaves
+      // Glass inserts in door leaves
       const dGlass1 = new THREE.Mesh(doorGlassGeom, smokedGlassMat);
       dGlass1.position.set(carAWidth / 2 + 0.015, bodyBaseY + 0.08, dz - 0.11);
       carA.add(dGlass1);
@@ -498,17 +667,26 @@ export class Welcome3DScene {
       );
       gasket.position.set(carAWidth / 2 + 0.016, bodyBaseY - 0.06, dz);
       carA.add(gasket);
+
+      // Stainless steel door handles
+      const handle1 = new THREE.Mesh(doorHandleGeom, stanchionPoleMat);
+      handle1.position.set(carAWidth / 2 + 0.025, bodyBaseY - 0.06, dz - 0.03);
+      carA.add(handle1);
+
+      const handle2 = new THREE.Mesh(doorHandleGeom, stanchionPoleMat);
+      handle2.position.set(carAWidth / 2 + 0.025, bodyBaseY - 0.06, dz + 0.03);
+      carA.add(handle2);
     });
 
-    // Fluted Longitudinal Ribs along lower stainless steel flanks
+    // Fluted Stainless Steel Ribs along lower flanks
     const fluteRibGeom = new THREE.BoxGeometry(carAWidth + 0.02, 0.016, carALength - 0.1);
     [-0.18, -0.23, -0.28].forEach((ry) => {
-      const rib = new THREE.Mesh(fluteRibGeom, brushedFluteMat);
+      const rib = new THREE.Mesh(fluteRibGeom, corrugatedFluteMat);
       rib.position.set(0, bodyBaseY + ry, 1.35);
       carA.add(rib);
     });
 
-    // 4-Line Transit Livery Strip (Frontend, Hardware, Backend, AI)
+    // 4-Line Livery Enamel Pinstripes (Site colors)
     const stripeThickness = 0.022;
     const stripeLiveryGeom = new THREE.BoxGeometry(carAWidth + 0.024, stripeThickness, carALength - 0.08);
 
@@ -529,67 +707,85 @@ export class Welcome3DScene {
     carA.add(stripe4);
 
     // -------------------------------------------------------------
-    // AERODYNAMIC SWEPT DRIVER CAB & NOSE (FRONT OF CAR A)
+    // AERODYNAMIC SWEPT CAB NOSE & FRONT DRIVER CABIN
     // -------------------------------------------------------------
-    const cabFrontZ = 1.35 + carALength / 2; // Z = 2.725
-    const noseLength = 0.45;
+    const cabFrontZ = 1.35 + carALength / 2; // Z = 2.75
+    const noseLength = 0.48;
 
-    // Aerodynamic Beveled Cab Nose Housing
+    // Aerodynamic Beveled Cab Nose Section
     const cabNose = new THREE.Mesh(
       new THREE.BoxGeometry(carAWidth - 0.04, carAHeight - 0.06, noseLength),
-      stainlessSteelMat
+      brushedStainlessMat
     );
     cabNose.position.set(0, bodyBaseY - 0.02, cabFrontZ + noseLength / 2 - 0.04);
     cabNose.castShadow = true;
     carA.add(cabNose);
 
-    // Raked Front Windshield (Angled aerodynamic dark glass)
+    // Driver's Cabin Interior Visible Through Windshield
+    const driverConsoleMat = new THREE.MeshStandardMaterial({ color: 0x161a22, roughness: 0.6 });
+    const consoleBox = new THREE.Mesh(new THREE.BoxGeometry(0.7, 0.28, 0.28), driverConsoleMat);
+    consoleBox.position.set(0, bodyBaseY - 0.05, cabFrontZ + noseLength * 0.35);
+    carA.add(consoleBox);
+
+    // Driver High-Back Seat
+    const driverSeat = new THREE.Mesh(new THREE.BoxGeometry(0.24, 0.34, 0.22), seatMat);
+    driverSeat.position.set(0, bodyBaseY + 0.02, cabFrontZ + noseLength * 0.08);
+    carA.add(driverSeat);
+
+    // Raked Panoramic Aerodynamic Front Windshield
     const windshield = new THREE.Mesh(
-      new THREE.BoxGeometry(carAWidth - 0.18, 0.42, 0.06),
+      new THREE.BoxGeometry(carAWidth - 0.16, 0.42, 0.06),
       smokedGlassMat
     );
     windshield.position.set(0, bodyBaseY + 0.12, cabFrontZ + noseLength - 0.02);
-    windshield.rotation.x = -0.22; // Raked back angle
+    windshield.rotation.x = -0.24; // Streamlined raked windshield
     carA.add(windshield);
 
-    // Destination LED Matrix Display (Amber Matrix Text Sign)
+    // Black Windshield Wiper
+    const wiperMat = new THREE.MeshStandardMaterial({ color: 0x090b0e, roughness: 0.8 });
+    const wiperArm = new THREE.Mesh(new THREE.CylinderGeometry(0.008, 0.008, 0.26, 8), wiperMat);
+    wiperArm.rotation.z = Math.PI / 4;
+    wiperArm.position.set(-0.06, bodyBaseY + 0.08, cabFrontZ + noseLength + 0.015);
+    carA.add(wiperArm);
+
+    // Recessed Amber Destination Matrix LED Display ("CENTRAL // 01")
     const destDisplayMat = new THREE.MeshStandardMaterial({
       color: 0x141005,
       emissive: 0xf2b705,
-      emissiveIntensity: 1.4,
+      emissiveIntensity: 1.5,
       roughness: 0.3,
     });
-    const destDisplay = new THREE.Mesh(new THREE.BoxGeometry(0.65, 0.09, 0.03), destDisplayMat);
-    destDisplay.position.set(0, bodyBaseY + 0.37, cabFrontZ + noseLength - 0.08);
+    const destDisplay = new THREE.Mesh(new THREE.BoxGeometry(0.66, 0.09, 0.03), destDisplayMat);
+    destDisplay.position.set(0, bodyBaseY + 0.38, cabFrontZ + noseLength - 0.08);
     carA.add(destDisplay);
 
-    // Front Aerodynamic Lower Chin Spoiler / Cowcatcher
+    // Lower Front Chin Scoop / Cowcatcher
     const chinSpoiler = new THREE.Mesh(
-      new THREE.BoxGeometry(carAWidth - 0.1, 0.14, 0.2),
-      darkCharcoalMat
+      new THREE.BoxGeometry(carAWidth - 0.1, 0.14, 0.22),
+      darkTrimMat
     );
     chinSpoiler.position.set(0, bodyBaseY - 0.42, cabFrontZ + noseLength - 0.04);
     carA.add(chinSpoiler);
 
-    // Knuckle Coupler & Air Hoses at Front Bumper
+    // Heavy-Duty Knuckle Coupler with Air Hoses
     const coupler = new THREE.Mesh(
       new THREE.BoxGeometry(0.12, 0.09, 0.28),
-      new THREE.MeshStandardMaterial({ color: 0x222730, metalness: 0.9, roughness: 0.3 })
+      new THREE.MeshStandardMaterial({ color: 0x222730, metalness: 0.9, roughness: 0.25 })
     );
     coupler.position.set(0, 0.38, cabFrontZ + noseLength + 0.1);
     carA.add(coupler);
 
-    // Dual Projector LED Headlights with Chrome Bezels
-    const headlightBezelMat = new THREE.MeshStandardMaterial({
-      color: 0xe8ecf2,
-      metalness: 0.95,
-      roughness: 0.1,
+    // Dual Projector LED Headlights with Chrome Reflectors & Glass Domes
+    const chromeBezelMat = new THREE.MeshStandardMaterial({
+      color: 0xeef2f8,
+      metalness: 0.98,
+      roughness: 0.08,
     });
-    const headlightLensMat = new THREE.MeshStandardMaterial({
+    const ledLensMat = new THREE.MeshStandardMaterial({
       color: 0xffffff,
-      emissive: 0xfffcf0,
-      emissiveIntensity: 3.8,
-      roughness: 0.05,
+      emissive: 0xfffcf2,
+      emissiveIntensity: 4.2,
+      roughness: 0.04,
     });
 
     const bezelGeom = new THREE.CylinderGeometry(0.065, 0.065, 0.03, 16);
@@ -598,30 +794,27 @@ export class Welcome3DScene {
 
     const headlightPositions = [-0.34, 0.34];
     headlightPositions.forEach((hx) => {
-      // Chrome surround bezel
-      const bezel = new THREE.Mesh(bezelGeom, headlightBezelMat);
+      const bezel = new THREE.Mesh(bezelGeom, chromeBezelMat);
       bezel.position.set(hx, bodyBaseY - 0.12, cabFrontZ + noseLength);
       carA.add(bezel);
 
-      // Glowing LED projector bulb
-      const lens = new THREE.Mesh(lensGeom, headlightLensMat);
+      const lens = new THREE.Mesh(lensGeom, ledLensMat);
       lens.position.set(hx, bodyBaseY - 0.12, cabFrontZ + noseLength + 0.02);
       carA.add(lens);
 
-      // Forward SpotLight casting warm glow on tracks
-      const spot = new THREE.SpotLight(0xfffae8, 2.5, 7.5, Math.PI / 8, 0.45);
-      spot.position.set(hx, bodyBaseY - 0.12, cabFrontZ + noseLength + 0.05);
-      spot.target.position.set(hx, 0.1, cabFrontZ + noseLength + 4.5);
+      // Forward SpotLight casting soft beam along rails
+      const spot = new THREE.SpotLight(0xfffaea, 2.6, 8.0, Math.PI / 7.5, 0.45);
+      spot.position.set(hx, bodyBaseY - 0.12, cabFrontZ + noseLength + 0.06);
+      spot.target.position.set(hx, 0.1, cabFrontZ + noseLength + 5.0);
       carA.add(spot);
       carA.add(spot.target);
     });
 
-    // Dual Red Upper Marker Lights (Site Red #E4572E)
+    // Dual Red Upper Clearance / Marker LEDs (#E4572E)
     const markerMat = new THREE.MeshStandardMaterial({
       color: 0xe4572e,
       emissive: 0xe4572e,
       emissiveIntensity: 2.2,
-      roughness: 0.2,
     });
     const markerGeom = new THREE.SphereGeometry(0.025, 12, 12);
 
@@ -633,14 +826,14 @@ export class Welcome3DScene {
     markerR.position.set(0.46, bodyBaseY + 0.38, cabFrontZ + noseLength - 0.1);
     carA.add(markerR);
 
-    // Car A Rooftop HVAC Pods
-    carA.add(createRoofHVAC(0.7));
-    carA.add(createRoofHVAC(2.0));
+    // Car A Articulated Roof Pantograph & HVAC Unit
+    carA.add(createArticulatedPantograph(1.1));
+    carA.add(createRoofHVAC(2.2));
 
-    // Car A Underbody Equipment Enclosures
-    const underbox1 = new THREE.Mesh(new THREE.BoxGeometry(0.9, 0.2, 0.7), darkCharcoalMat);
-    underbox1.position.set(0, 0.32, 1.35);
-    carA.add(underbox1);
+    // Car A Underbody Traction Enclosures
+    const underbox = new THREE.Mesh(new THREE.BoxGeometry(0.9, 0.22, 0.8), darkTrimMat);
+    underbox.position.set(0, 0.32, 1.35);
+    carA.add(underbox);
 
     // Car A Bogies
     carA.add(createBogie(0.6));
@@ -649,17 +842,16 @@ export class Welcome3DScene {
     this.trainGroup.add(carA);
 
     // -------------------------------------------------------------
-    // GANGWAY BELLOWS (Flexible Pleated Accordion Joint)
+    // GANGWAY BELLOWS (Pleated Rubber Articulation Joint)
     // -------------------------------------------------------------
     const bellowsMat = new THREE.MeshStandardMaterial({
-      color: 0x12151c,
+      color: 0x12141a,
       roughness: 0.85,
       metalness: 0.2,
     });
     const bellowsGroup = new THREE.Group();
     bellowsGroup.position.set(0, bodyBaseY, -0.05);
 
-    // 4 accordion pleat rings
     for (let pz = -0.12; pz <= 0.12; pz += 0.08) {
       const pleat = new THREE.Mesh(
         new THREE.BoxGeometry(carAWidth - 0.12, carAHeight - 0.08, 0.04),
@@ -680,7 +872,7 @@ export class Welcome3DScene {
     // Body
     const carBBody = new THREE.Mesh(
       new THREE.BoxGeometry(carAWidth, carAHeight, carBLength),
-      stainlessSteelMat
+      brushedStainlessMat
     );
     carBBody.position.set(0, bodyBaseY, carBZ);
     carBBody.castShadow = true;
@@ -690,7 +882,7 @@ export class Welcome3DScene {
     // Roof
     const carBRoof = new THREE.Mesh(
       new THREE.BoxGeometry(carAWidth - 0.08, 0.08, carBLength),
-      stainlessSteelMat
+      brushedStainlessMat
     );
     carBRoof.position.set(0, bodyBaseY + carAHeight / 2 + 0.035, carBZ);
     carB.add(carBRoof);
@@ -698,15 +890,15 @@ export class Welcome3DScene {
     // Dark Window Belt
     const windowBeltB = new THREE.Mesh(
       new THREE.BoxGeometry(carAWidth + 0.015, 0.38, carBLength - 0.15),
-      darkWindowFrameMat
+      windowPillarMat
     );
     windowBeltB.position.set(0, bodyBaseY + 0.08, carBZ);
     carB.add(windowBeltB);
 
     // Interior Warm Glow
     const interiorB = new THREE.Mesh(
-      new THREE.BoxGeometry(carAWidth - 0.14, carAHeight - 0.16, carBLength - 0.25),
-      interiorGlowMat
+      new THREE.BoxGeometry(carAWidth - 0.16, carAHeight - 0.16, carBLength - 0.25),
+      interiorPassengerMat
     );
     interiorB.position.set(0, bodyBaseY, carBZ);
     carB.add(interiorB);
@@ -724,9 +916,8 @@ export class Welcome3DScene {
     });
 
     // Car B Fluted Ribs
-    const bFluteRibGeom = new THREE.BoxGeometry(carAWidth + 0.02, 0.016, carBLength - 0.1);
     [-0.18, -0.23, -0.28].forEach((ry) => {
-      const rib = new THREE.Mesh(bFluteRibGeom, brushedFluteMat);
+      const rib = new THREE.Mesh(new THREE.BoxGeometry(carAWidth + 0.02, 0.016, carBLength - 0.1), corrugatedFluteMat);
       rib.position.set(0, bodyBaseY + ry, carBZ);
       carB.add(rib);
     });
@@ -750,9 +941,9 @@ export class Welcome3DScene {
     bStripe4.position.set(0, bodyBaseY - 0.33 - stripeThickness * 3, carBZ);
     carB.add(bStripe4);
 
-    // Car B HVAC & Bogies
-    carB.add(createRoofHVAC(carBZ - 0.5));
-    carB.add(createRoofHVAC(carBZ + 0.5));
+    // Car B Roof HVAC & Bogies
+    carB.add(createRoofHVAC(carBZ - 0.45));
+    carB.add(createRoofHVAC(carBZ + 0.45));
     carB.add(createBogie(carBZ - 0.65));
     carB.add(createBogie(carBZ + 0.65));
 
@@ -760,7 +951,7 @@ export class Welcome3DScene {
   }
 
   // =========================================================================
-  // VIEWPORT & RESIZE
+  // VIEWPORT RESIZE
   // =========================================================================
   private onResize = () => {
     this.updateSize();
@@ -777,82 +968,23 @@ export class Welcome3DScene {
   }
 
   // =========================================================================
-  // INTERACTIVE 360° TURNTABLE DRAG & PARALLAX
-  // =========================================================================
-  private onMouseDown = (e: MouseEvent) => {
-    this.isDragging = true;
-    this.previousMouseX = e.clientX;
-  };
-
-  private onMouseMove = (e: MouseEvent) => {
-    if (this.isDragging) {
-      const deltaX = e.clientX - this.previousMouseX;
-      this.targetRotationY += deltaX * 0.009;
-      this.previousMouseX = e.clientX;
-    } else {
-      // Subtle cursor parallax depth
-      const nx = e.clientX / window.innerWidth - 0.5;
-      const ny = e.clientY / window.innerHeight - 0.5;
-      this.targetMouseParallaxX = nx * 0.16;
-      this.targetMouseParallaxY = ny * 0.07;
-    }
-  };
-
-  private onMouseUp = () => {
-    this.isDragging = false;
-  };
-
-  private onTouchStart = (e: TouchEvent) => {
-    if (e.touches.length > 0) {
-      this.isDragging = true;
-      this.previousMouseX = e.touches[0].clientX;
-    }
-  };
-
-  private onTouchMove = (e: TouchEvent) => {
-    if (this.isDragging && e.touches.length > 0) {
-      const deltaX = e.touches[0].clientX - this.previousMouseX;
-      this.targetRotationY += deltaX * 0.009;
-      this.previousMouseX = e.touches[0].clientX;
-    }
-  };
-
-  private onTouchEnd = () => {
-    this.isDragging = false;
-  };
-
-  // =========================================================================
-  // ANIMATION LOOP
+  // ANIMATION LOOP (Smooth Arrival Glide & Gentle Idle Suspension Breathing)
   // =========================================================================
   private animate = () => {
     if (this.isDestroyed) return;
 
-    // 1. Entrance Roll-In Glide along track into station
+    // 1. Smooth Cinematic Arrival Glide into Station Platform (on initial load)
     if (this.rollInProgress < 1) {
-      this.rollInProgress += (1 - this.rollInProgress) * 0.045;
-      const rollOffset = (1 - this.rollInProgress) * -3.6;
+      this.rollInProgress += (1 - this.rollInProgress) * 0.042;
+      const rollOffset = (1 - this.rollInProgress) * -3.4;
       this.trainGroup.position.z = rollOffset;
     } else {
       this.trainGroup.position.z = 0;
     }
 
-    // 2. Gentle Auto-Turntable when idle
-    if (!this.isDragging) {
-      this.targetRotationY += this.autoRotateSpeed;
-    }
-
-    // 3. Smooth inertia & cursor parallax interpolation
-    this.currentRotationY += (this.targetRotationY - this.currentRotationY) * 0.08;
-    this.mouseParallaxX += (this.targetMouseParallaxX - this.mouseParallaxX) * 0.05;
-    this.mouseParallaxY += (this.targetMouseParallaxY - this.mouseParallaxY) * 0.05;
-
-    this.rootGroup.rotation.y = this.currentRotationY + this.mouseParallaxX;
-    this.rootGroup.rotation.x = this.mouseParallaxY;
-
-    // 4. Subtle suspension breathing idle motion
-    const time = Date.now() * 0.0022;
-    this.trainGroup.position.y = Math.sin(time) * 0.014;
-    this.trainGroup.rotation.z = Math.cos(time * 0.7) * 0.005;
+    // 2. Subtle Idle Suspension Breathing (Gentle vertical float, no rotation)
+    const time = Date.now() * 0.0018;
+    this.trainGroup.position.y = Math.sin(time) * 0.008;
 
     if (this.renderer) {
       this.renderer.render(this.scene, this.camera);
@@ -865,12 +997,11 @@ export class Welcome3DScene {
     this.isDestroyed = true;
     cancelAnimationFrame(this.animId);
     window.removeEventListener('resize', this.onResize);
-    window.removeEventListener('mousemove', this.onMouseMove);
-    window.removeEventListener('mouseup', this.onMouseUp);
-    window.removeEventListener('touchmove', this.onTouchMove);
-    window.removeEventListener('touchend', this.onTouchEnd);
     if (this.renderer) {
       this.renderer.dispose();
+    }
+    if (this.envTexture) {
+      this.envTexture.dispose();
     }
   }
 }

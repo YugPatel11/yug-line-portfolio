@@ -7,7 +7,9 @@ import Pictograms from './Pictograms.astro';
      - Single-screen 100vh / 100dvh spatial viewport (Zero awkward scrolling)
      - Matches site design: #0B0C0E dark canvas, crisp cream #EDEAE2 text,
        solid brutalist borders, and authentic 4-color transit line accents
-     - 3D Metro Train as the star on an illuminated architectural track plinth
+     - Ultra-realistic fixed-angle 3D Metro Train on an illuminated track plinth
+     - Atmospheric station concourse background with perspective tracks,
+       soft architectural light beams, and subtle ambient motion
      - Turnstile Gate / Magnetic Transit Pass action buttons with tactile feel
      - Live Solari flip departure telemetry
      - STRICTLY 100% silent until user clicks "Board with Sound"
@@ -21,18 +23,95 @@ import Pictograms from './Pictograms.astro';
   aria-labelledby="welcome-heading"
 >
   <!-- ========================================================
-       LAYER 0: CONCOURSE ARCHITECTURE & SUBTLE TRANSIT GRID
+       LAYER 0: ATMOSPHERIC METRO STATION & TUNNEL BACKGROUND
        ======================================================== -->
-  <!-- Subtle Transit Grid Floor -->
+  
+  <!-- 1. Subway Platform Ceramic Tile Pattern -->
   <div
-    class="absolute inset-0 pointer-events-none opacity-20"
-    style="background-image: linear-gradient(to right, rgba(255, 255, 255, 0.06) 1px, transparent 1px), linear-gradient(to bottom, rgba(255, 255, 255, 0.06) 1px, transparent 1px); background-size: 36px 36px;"
+    class="absolute inset-0 pointer-events-none opacity-25"
+    style="background-image: linear-gradient(to right, #1E2535 1px, transparent 1px), linear-gradient(to bottom, #1E2535 1px, transparent 1px); background-size: 48px 24px;"
   ></div>
 
-  <!-- Deep Concourse Vignette -->
+  <!-- 2. Overhead Concourse Steel Truss Girders -->
+  <div class="absolute top-0 inset-x-0 h-16 pointer-events-none border-b border-[#202738]/60 overflow-hidden opacity-30">
+    <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <pattern id="welcome-truss-pattern" width="60" height="40" patternUnits="userSpaceOnUse">
+          <line x1="0" y1="0" x2="60" y2="40" stroke="#8A9BB5" stroke-width="1.2" />
+          <line x1="60" y1="0" x2="0" y2="40" stroke="#8A9BB5" stroke-width="1.2" />
+          <line x1="0" y1="20" x2="60" y2="20" stroke="#8A9BB5" stroke-width="1" />
+        </pattern>
+      </defs>
+      <rect width="100%" height="100%" fill="url(#welcome-truss-pattern)" />
+    </svg>
+  </div>
+
+  <!-- 3. Soft Architectural Downlight Cones (Overhead Station Lanterns) -->
+  <div
+    class="absolute -top-10 left-[22%] w-[420px] h-[550px] pointer-events-none"
+    style="background: radial-gradient(ellipse at 50% 0%, rgba(237, 234, 226, 0.055) 0%, rgba(237, 234, 226, 0.015) 50%, transparent 75%); transform: rotate(6deg);"
+  ></div>
+  <div
+    class="absolute -top-10 right-[25%] w-[460px] h-[580px] pointer-events-none"
+    style="background: radial-gradient(ellipse at 50% 0%, rgba(242, 183, 5, 0.04) 0%, rgba(242, 183, 5, 0.01) 50%, transparent 75%); transform: rotate(-5deg);"
+  ></div>
+
+  <!-- 4. Perspective Subway Track Lines on Ground Floor -->
+  <div class="absolute bottom-0 inset-x-0 h-44 pointer-events-none overflow-hidden opacity-35">
+    <svg width="100%" height="100%" viewBox="0 0 1200 160" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- Converging Steel Running Rails -->
+      <line x1="450" y1="0" x2="150" y2="160" stroke="#7A8CA6" stroke-width="2.5" />
+      <line x1="530" y1="0" x2="350" y2="160" stroke="#7A8CA6" stroke-width="2.5" />
+      <line x1="670" y1="0" x2="850" y2="160" stroke="#7A8CA6" stroke-width="2.5" />
+      <line x1="750" y1="0" x2="1050" y2="160" stroke="#7A8CA6" stroke-width="2.5" />
+      <!-- Perspective Sleepers (Ties) -->
+      <line x1="440" y1="20" x2="540" y2="20" stroke="#364154" stroke-width="2.5" />
+      <line x1="410" y1="50" x2="570" y2="50" stroke="#364154" stroke-width="3" />
+      <line x1="360" y1="90" x2="620" y2="90" stroke="#364154" stroke-width="3.5" />
+      <line x1="280" y1="140" x2="700" y2="140" stroke="#364154" stroke-width="4" />
+      <line x1="660" y1="20" x2="760" y2="20" stroke="#364154" stroke-width="2.5" />
+      <line x1="630" y1="50" x2="790" y2="50" stroke="#364154" stroke-width="3" />
+      <line x1="580" y1="90" x2="840" y2="90" stroke="#364154" stroke-width="3.5" />
+      <line x1="500" y1="140" x2="920" y2="140" stroke="#364154" stroke-width="4" />
+    </svg>
+  </div>
+
+  <!-- 5. Architectural Station Flank Pillars with Transit Badges -->
+  <aside class="hidden xl:flex flex-col justify-between absolute left-5 top-20 bottom-16 w-8 pointer-events-none z-10 opacity-40">
+    <div class="h-28 border-l-2 border-[#283244] pl-2 flex flex-col justify-between font-mono text-[9px] text-[#A2AFBF]">
+      <span class="tracking-widest uppercase [writing-mode:vertical-lr] rotate-180">TERMINAL 00</span>
+      <span class="w-1.5 h-1.5 rounded-full bg-[#E4572E]"></span>
+    </div>
+    <div class="h-28 border-l-2 border-[#283244] pl-2 flex flex-col justify-between font-mono text-[9px] text-[#A2AFBF]">
+      <span class="w-1.5 h-1.5 rounded-full bg-[#F2B705]"></span>
+      <span class="tracking-widest uppercase [writing-mode:vertical-lr] rotate-180">PLATFORM 01-04</span>
+    </div>
+  </aside>
+
+  <aside class="hidden xl:flex flex-col justify-between absolute right-5 top-20 bottom-16 w-8 pointer-events-none z-10 opacity-40">
+    <div class="h-28 border-r-2 border-[#283244] pr-2 flex flex-col justify-between items-end font-mono text-[9px] text-[#A2AFBF]">
+      <span class="tracking-widest uppercase [writing-mode:vertical-lr]">TRACK 01 // DIRECT</span>
+      <span class="w-1.5 h-1.5 rounded-full bg-[#0B6E4F]"></span>
+    </div>
+    <div class="h-28 border-r-2 border-[#283244] pr-2 flex flex-col justify-between items-end font-mono text-[9px] text-[#A2AFBF]">
+      <span class="w-1.5 h-1.5 rounded-full bg-[#1B3A8A]"></span>
+      <span class="tracking-widest uppercase [writing-mode:vertical-lr]">SPEED: HIGH</span>
+    </div>
+  </aside>
+
+  <!-- 6. Floating Ambient Station Dust / Light Motes -->
+  <div class="ambient-motes-container absolute inset-0 pointer-events-none overflow-hidden z-10">
+    <span class="station-mote mote-1"></span>
+    <span class="station-mote mote-2"></span>
+    <span class="station-mote mote-3"></span>
+    <span class="station-mote mote-4"></span>
+    <span class="station-mote mote-5"></span>
+  </div>
+
+  <!-- Deep Concourse Edge Vignette -->
   <div
     class="absolute inset-0 pointer-events-none"
-    style="background: radial-gradient(ellipse 90% 70% at 50% 50%, rgba(15, 17, 21, 0) 40%, rgba(11, 12, 14, 0.85) 100%);"
+    style="background: radial-gradient(ellipse 95% 75% at 50% 50%, transparent 45%, rgba(11, 12, 14, 0.88) 100%);"
   ></div>
 
   <!-- ========================================================
@@ -109,13 +188,13 @@ import Pictograms from './Pictograms.astro';
           <span class="inline-flex items-center gap-1.5 px-2 py-0.5 bg-[#141720] border border-[#262D3D] text-[10px] font-mono font-bold text-[#EDEAE2]">
             <span class="w-2 h-2 rounded-xs bg-[#E4572E]"></span> FRONTEND
           </span>
-          <span class="inline-flex items-center gap-1.5 px-2 py-0.5 bg-[#141720] border border-[#262D3D] text-[10px] font-mono font-bold text-[#EDEAE2]">
+          <span class="inline-flex items-center gap-1.5 px-2 py-0.5 bg-[#141720] border border-[#262D3D] text-[10px] font-mono font-bold text-[#F2B705]">
             <span class="w-2 h-2 rounded-xs bg-[#F2B705]"></span> HARDWARE
           </span>
-          <span class="inline-flex items-center gap-1.5 px-2 py-0.5 bg-[#141720] border border-[#262D3D] text-[10px] font-mono font-bold text-[#EDEAE2]">
+          <span class="inline-flex items-center gap-1.5 px-2 py-0.5 bg-[#141720] border border-[#262D3D] text-[10px] font-mono font-bold text-[#0B6E4F]">
             <span class="w-2 h-2 rounded-xs bg-[#0B6E4F]"></span> BACKEND
           </span>
-          <span class="inline-flex items-center gap-1.5 px-2 py-0.5 bg-[#141720] border border-[#262D3D] text-[10px] font-mono font-bold text-[#EDEAE2]">
+          <span class="inline-flex items-center gap-1.5 px-2 py-0.5 bg-[#141720] border border-[#262D3D] text-[10px] font-mono font-bold text-[#1B3A8A]">
             <span class="w-2 h-2 rounded-xs bg-[#1B3A8A]"></span> AI SYSTEMS
           </span>
         </div>
@@ -212,28 +291,27 @@ import Pictograms from './Pictograms.astro';
       </div>
 
       <!-- ====================================================
-           RIGHT COLUMN: 3D METRO TRAIN HERO PLINTH (7 cols)
-           The Star of the Welcome Screen: elevated, interactive,
-           illuminated platform edge with tactile safety markings
+           RIGHT COLUMN: ULTRA-REALISTIC 3D METRO HERO PLINTH (7 cols)
+           Fixed Cinematic Angle · Accurate Proportions · Pantograph
            ==================================================== -->
       <div class="lg:col-span-7 flex flex-col items-center justify-center relative w-full">
         
         <!-- The Floating 3D Showcase Plinth Card -->
         <div
           id="welcome-3d-container"
-          class="w-full relative bg-[#0E1118] border-2 border-[#262D3D] shadow-[8px_8px_0_#000] rounded-xs overflow-hidden flex flex-col items-center justify-center cursor-grab active:cursor-grabbing group select-none"
+          class="w-full relative bg-[#0E1118] border-2 border-[#262D3D] shadow-[8px_8px_0_#000] rounded-xs overflow-hidden flex flex-col items-center justify-center cursor-default group select-none"
         >
           <!-- Plinth Top Status Beam -->
           <div class="w-full bg-[#141720] border-b-2 border-[#262D3D] px-3 sm:px-4 py-2 flex items-center justify-between font-mono text-[10px] select-none">
             <div class="flex items-center gap-2 text-[#EDEAE2] font-bold">
               <span class="w-2 h-2 rounded-full bg-[#E4572E]"></span>
-              <span class="tracking-wider uppercase">CAR NO. YR-01 // ROLLING STOCK 3D INSPECTOR</span>
+              <span class="tracking-wider uppercase">CAR NO. YR-01 // ROLLING STOCK CINEMATIC STAGE</span>
             </div>
             
-            <!-- Live Turntable Drag Indicator Badge -->
+            <!-- Live Platform Status Badge (Fixed Display) -->
             <div class="flex items-center gap-1.5 text-[#F2B705] bg-[#0E1118] px-2.5 py-0.5 border border-[#2B3242] rounded-xs font-bold shadow-inner">
-              <span class="text-xs">↺</span>
-              <span class="tracking-widest">DRAG TO ROTATE 360°</span>
+              <span class="w-1.5 h-1.5 rounded-full bg-[#2FB584] animate-pulse"></span>
+              <span class="tracking-widest uppercase">LIVE PLATFORM VIEW · BERTH 01</span>
             </div>
           </div>
 
@@ -316,6 +394,68 @@ import Pictograms from './Pictograms.astro';
     </div>
   </footer>
 </div>
+
+<style>
+  /* Subtle Ambient Floating Station Air Motes */
+  .station-mote {
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    border-radius: 9999px;
+    background-color: #EDEAE2;
+    opacity: 0.25;
+    pointer-events: none;
+  }
+
+  .mote-1 {
+    top: 25%;
+    left: 28%;
+    animation: moteDrift 14s infinite ease-in-out;
+  }
+  .mote-2 {
+    top: 40%;
+    left: 45%;
+    animation: moteDrift 18s infinite ease-in-out -4s;
+    width: 3px;
+    height: 3px;
+    opacity: 0.2;
+  }
+  .mote-3 {
+    top: 30%;
+    right: 32%;
+    animation: moteDrift 16s infinite ease-in-out -8s;
+  }
+  .mote-4 {
+    top: 60%;
+    left: 35%;
+    animation: moteDrift 20s infinite ease-in-out -2s;
+    opacity: 0.15;
+  }
+  .mote-5 {
+    top: 50%;
+    right: 20%;
+    animation: moteDrift 15s infinite ease-in-out -6s;
+    opacity: 0.3;
+  }
+
+  @keyframes moteDrift {
+    0%, 100% {
+      transform: translate(0, 0);
+      opacity: 0.1;
+    }
+    50% {
+      transform: translate(18px, -24px);
+      opacity: 0.35;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .station-mote {
+      animation: none !important;
+      display: none !important;
+    }
+  }
+</style>
 
 <script>
   document.addEventListener('DOMContentLoaded', async () => {
