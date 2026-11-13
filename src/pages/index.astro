@@ -3,7 +3,6 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import StationHeader from '../components/StationHeader.astro';
 import OverviewMap from '../components/OverviewMap.astro';
 import DeparturesBoard from '../components/DeparturesBoard.astro';
-import InterchangeGhumify from '../components/InterchangeGhumify.astro';
 import ProjectStop from '../components/ProjectStop.astro';
 import ProjectDossierModal from '../components/ProjectDossierModal.astro';
 import ExperienceTicket from '../components/ExperienceTicket.astro';
@@ -23,9 +22,6 @@ import GateScreen from '../components/GateScreen.astro';
 import JourneyControls from '../components/JourneyControls.astro';
 
 import { PROFILE, PROJECTS } from '../data/portfolio';
-
-const expandedProjects = PROJECTS.filter((p) => p.featured && p.id !== 'ghumify');
-const moreProjects = PROJECTS.filter((p) => !p.featured);
 ---
 
 <BaseLayout>
@@ -345,43 +341,19 @@ const moreProjects = PROJECTS.filter((p) => !p.featured);
     </section>
 
     <!-- ========================================================
-         STATION 02: GHUMIFY (FLAGSHIP)
+         STATION 02: ALL PROJECTS
          ======================================================== -->
-    <section id="station-02" aria-labelledby="heading-st-02" class="station-set subway-tile-wall wall-ai my-8 relative">
+    <section id="station-02" aria-labelledby="heading-st-02" class="station-set subway-tile-wall wall-frontend my-8 relative">
       <div class="station-architrave" aria-hidden="true"></div>
-      <MindTheGapDivider nextStopCode="ST-02" nextStopName="GHUMIFY INTERCHANGE" />
+      <a id="projects" class="sr-only">All Projects Anchor</a>
+      <MindTheGapDivider nextStopCode="ST-02" nextStopName="ALL PROJECTS" />
       <div class="p-4 sm:p-8 md:p-10">
         <StationHeader
           code="ST-02"
-          name="Ghumify — my flagship project"
-          category="AI travel companion & ground reality router"
-          lineVariant="ai"
-          id="heading-st-02"
-        />
-
-        <InterchangeGhumify />
-      </div>
-
-      <!-- Station Platform Floor -->
-      <div class="platform-floor-strip mt-6" aria-hidden="true">
-        <div class="platform-tactile-line"></div>
-        <div class="platform-edge-hazard"></div>
-      </div>
-    </section>
-
-    <!-- ========================================================
-         STATION 03: ALL PROJECTS
-         ======================================================== -->
-    <section id="station-03" aria-labelledby="heading-st-03" class="station-set subway-tile-wall wall-frontend my-8 relative">
-      <div class="station-architrave" aria-hidden="true"></div>
-      <MindTheGapDivider nextStopCode="ST-03" nextStopName="ALL PROJECTS" />
-      <div class="p-4 sm:p-8 md:p-10">
-        <StationHeader
-          code="ST-03"
           name="All projects"
           category="Curated production systems across 4 lines"
           lineVariant="frontend"
-          id="heading-st-03"
+          id="heading-st-02"
         />
 
         <!-- Station Platform Telemetry Board (LED Operations Matrix) -->
@@ -389,7 +361,7 @@ const moreProjects = PROJECTS.filter((p) => !p.featured);
           <div class="flex flex-wrap items-center justify-between gap-3 border-b border-rule/30 pb-3 mb-4">
             <div class="flex items-center gap-2 text-xs sm:text-sm">
               <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
-              <span class="font-bold uppercase tracking-wider text-white">PLATFORM 03 // DISPATCH BAY OPERATIONS</span>
+              <span class="font-bold uppercase tracking-wider text-white">PLATFORM 02 // DISPATCH BAY OPERATIONS</span>
             </div>
             <div class="flex items-center gap-4 text-xs font-mono text-ink-soft">
               <span>INTERLOCKING: <strong class="text-emerald-400">ACTIVE</strong></span>
@@ -400,23 +372,23 @@ const moreProjects = PROJECTS.filter((p) => !p.featured);
           <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
             <div class="p-3 bg-surface border border-rule/50">
               <div class="text-[10px] text-ink-soft uppercase tracking-wider font-bold">FLEET STRENGTH</div>
-              <div class="text-xl sm:text-2xl font-archivo font-black text-ink mt-0.5">7 BUILDS</div>
+              <div class="text-xl sm:text-2xl font-archivo font-black text-ink mt-0.5">8 BUILDS</div>
               <div class="text-[10px] text-ink-soft mt-1">Certified Production Ready</div>
             </div>
             <div class="p-3 bg-surface border border-rule/50">
               <div class="text-[10px] text-ink-soft uppercase tracking-wider font-bold">GOV'T SSIP GRANTS</div>
-              <div class="text-xl sm:text-2xl font-archivo font-black text-line-hardware mt-0.5">₹45,000+</div>
-              <div class="text-[10px] text-ink-soft mt-1">State Innovation Funding</div>
+              <div class="text-xl sm:text-2xl font-archivo font-black text-line-hardware mt-0.5">₹65,000</div>
+              <div class="text-[10px] text-ink-soft mt-1">3 State Innovation Grants</div>
             </div>
             <div class="p-3 bg-surface border border-rule/50">
-              <div class="text-[10px] text-ink-soft uppercase tracking-wider font-bold">TRANSIT LINES</div>
-              <div class="text-xl sm:text-2xl font-archivo font-black text-line-frontend mt-0.5">4 ARTERIES</div>
-              <div class="text-[10px] text-ink-soft mt-1">Frontend · Backend · AI · IoT</div>
+              <div class="text-[10px] text-ink-soft uppercase tracking-wider font-bold">IPR & PATENTS</div>
+              <div class="text-xl sm:text-2xl font-archivo font-black text-line-ai mt-0.5">1 IPR APPLIED</div>
+              <div class="text-[10px] text-ink-soft mt-1">EcoShortX Vision IP</div>
             </div>
             <div class="p-3 bg-surface border border-rule/50">
-              <div class="text-[10px] text-ink-soft uppercase tracking-wider font-bold">CORE CAPABILITY</div>
-              <div class="text-xl sm:text-2xl font-archivo font-black text-line-backend mt-0.5">FULL-STACK</div>
-              <div class="text-[10px] text-ink-soft mt-1">High Availability & Scale</div>
+              <div class="text-[10px] text-ink-soft uppercase tracking-wider font-bold">CAMPUS DEPLOYMENT</div>
+              <div class="text-xl sm:text-2xl font-archivo font-black text-line-backend mt-0.5">100% FACULTY</div>
+              <div class="text-[10px] text-ink-soft mt-1">EMS Sole Developer</div>
             </div>
           </div>
         </div>
@@ -433,7 +405,7 @@ const moreProjects = PROJECTS.filter((p) => !p.featured);
                 aria-pressed="true"
               >
                 <span class="w-2 h-2 rounded-full bg-paper"></span>
-                <span>ALL BERTHS (7)</span>
+                <span>ALL BERTHS (8)</span>
               </button>
               <button
                 type="button"
@@ -442,7 +414,7 @@ const moreProjects = PROJECTS.filter((p) => !p.featured);
                 aria-pressed="false"
               >
                 <span class="w-2 h-2 rounded-full bg-line-frontend"></span>
-                <span>FRONTEND (4)</span>
+                <span>FRONTEND (6)</span>
               </button>
               <button
                 type="button"
@@ -451,7 +423,7 @@ const moreProjects = PROJECTS.filter((p) => !p.featured);
                 aria-pressed="false"
               >
                 <span class="w-2 h-2 rounded-full bg-line-backend"></span>
-                <span>BACKEND (5)</span>
+                <span>BACKEND (7)</span>
               </button>
               <button
                 type="button"
@@ -477,7 +449,7 @@ const moreProjects = PROJECTS.filter((p) => !p.featured);
             <div class="font-mono text-xs text-ink-soft whitespace-nowrap flex items-center gap-1.5 self-end lg:self-auto">
               <span>DISPATCHING:</span>
               <span id="fleet-live-counter" class="font-bold text-ink bg-paper px-2 py-0.5 border border-rule">
-                7 OF 7 BERTHS
+                8 OF 8 BERTHS
               </span>
             </div>
           </div>
@@ -487,7 +459,7 @@ const moreProjects = PROJECTS.filter((p) => !p.featured);
             <input
               type="text"
               id="project-search-input"
-              placeholder="Search fleet by tech (e.g. Django, Flutter, Python, Firebase, Grant)..."
+              placeholder="Search fleet by tech (e.g. Django, Flutter, Python, Firebase, Grant, IPR, EMS)..."
               class="w-full px-4 py-2.5 bg-paper border-2 border-ink text-ink font-mono text-xs placeholder:text-ink-soft focus:outline-none focus:ring-2 focus:ring-line-frontend transition-all shadow-[2px_2px_0_var(--ink)]"
               aria-label="Search systems by tech or keyword"
             />
@@ -502,9 +474,9 @@ const moreProjects = PROJECTS.filter((p) => !p.featured);
           </div>
         </div>
 
-        <!-- Main Project Stops Grid (All 7 Production Systems) -->
+        <!-- Main Project Stops Grid (All 8 Production Systems in Exact User Order) -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="projects-grid">
-          {PROJECTS.filter((p) => p.id !== 'ghumify').map((project) => (
+          {PROJECTS.map((project) => (
             <ProjectStop project={project} />
           ))}
         </div>
@@ -512,7 +484,7 @@ const moreProjects = PROJECTS.filter((p) => !p.featured);
         <!-- Empty Search State -->
         <div id="projects-empty-state" class="hidden p-8 border-2 border-dashed border-ink bg-surface text-center font-mono my-6">
           <div class="text-sm font-bold text-ink mb-1">NO PRODUCTION SYSTEMS MATCH THIS TRACK QUERY</div>
-          <p class="text-xs text-ink-soft mb-4">Try checking spelling or clear search filters to view all 7 platform berths.</p>
+          <p class="text-xs text-ink-soft mb-4">Try checking spelling or clear search filters to view all 8 platform berths.</p>
           <button
             type="button"
             id="reset-project-filters-btn"
@@ -531,18 +503,19 @@ const moreProjects = PROJECTS.filter((p) => !p.featured);
     </section>
 
     <!-- ========================================================
-         STATION 04: EXPERIENCE
+         STATION 03: EXPERIENCE
          ======================================================== -->
-    <section id="station-04" aria-labelledby="heading-st-04" class="station-set subway-tile-wall wall-backend my-8 relative">
+    <section id="station-03" aria-labelledby="heading-st-03" class="station-set subway-tile-wall wall-backend my-8 relative">
       <div class="station-architrave" aria-hidden="true"></div>
-      <MindTheGapDivider nextStopCode="ST-04" nextStopName="EXPERIENCE" />
+      <a id="crew" class="sr-only">Experience Anchor</a>
+      <MindTheGapDivider nextStopCode="ST-03" nextStopName="EXPERIENCE" />
       <div class="p-4 sm:p-8 md:p-10">
         <StationHeader
-          code="ST-04"
+          code="ST-03"
           name="Experience"
           category="Work history & leadership"
           lineVariant="backend"
-          id="heading-st-04"
+          id="heading-st-03"
         />
 
         <ExperienceTicket />
@@ -556,18 +529,19 @@ const moreProjects = PROJECTS.filter((p) => !p.featured);
     </section>
 
     <!-- ========================================================
-         STATION 05: SKILLS AND TOOLS
+         STATION 04: SKILLS AND TOOLS
          ======================================================== -->
-    <section id="station-05" aria-labelledby="heading-st-05" class="station-set subway-tile-wall wall-hardware my-8 relative">
+    <section id="station-04" aria-labelledby="heading-st-04" class="station-set subway-tile-wall wall-hardware my-8 relative">
       <div class="station-architrave" aria-hidden="true"></div>
-      <MindTheGapDivider nextStopCode="ST-05" nextStopName="SKILLS AND TOOLS" />
+      <a id="legend" class="sr-only">Skills Anchor</a>
+      <MindTheGapDivider nextStopCode="ST-04" nextStopName="SKILLS AND TOOLS" />
       <div class="p-4 sm:p-8 md:p-10">
         <StationHeader
-          code="ST-05"
+          code="ST-04"
           name="Skills and tools"
           category="Technical capabilities"
           lineVariant="hardware"
-          id="heading-st-05"
+          id="heading-st-04"
         />
 
         <TechLegend />
@@ -581,18 +555,19 @@ const moreProjects = PROJECTS.filter((p) => !p.featured);
     </section>
 
     <!-- ========================================================
-         STATION 06: EDUCATION
+         STATION 05: EDUCATION
          ======================================================== -->
-    <section id="station-06" aria-labelledby="heading-st-06" class="station-set subway-tile-wall wall-ai my-8 relative">
+    <section id="station-05" aria-labelledby="heading-st-05" class="station-set subway-tile-wall wall-ai my-8 relative">
       <div class="station-architrave" aria-hidden="true"></div>
-      <MindTheGapDivider nextStopCode="ST-06" nextStopName="EDUCATION" />
+      <a id="education" class="sr-only">Education Anchor</a>
+      <MindTheGapDivider nextStopCode="ST-05" nextStopName="EDUCATION" />
       <div class="p-4 sm:p-8 md:p-10">
         <StationHeader
-          code="ST-06"
+          code="ST-05"
           name="Education"
           category="Degree & foundation"
           lineVariant="ai"
-          id="heading-st-06"
+          id="heading-st-05"
         />
 
         <EducationTicket />
@@ -606,19 +581,30 @@ const moreProjects = PROJECTS.filter((p) => !p.featured);
     </section>
 
     <!-- ========================================================
-         STATION 07: CONTACT ME
+         STATION 06: CONTACT ME
          ======================================================== -->
-    <section id="station-07" aria-labelledby="heading-st-07" class="station-set subway-tile-wall wall-neutral my-8 relative">
+    <section id="station-06" aria-labelledby="heading-st-06" class="station-set subway-tile-wall wall-neutral my-8 relative">
       <div class="station-architrave" aria-hidden="true"></div>
-      <MindTheGapDivider nextStopCode="ST-07" nextStopName="CONTACT ME (TERMINUS)" />
+      <a id="contact" class="sr-only">Contact Anchor</a>
+      <MindTheGapDivider nextStopCode="ST-06" nextStopName="CONTACT ME (TERMINUS)" />
       <div class="p-4 sm:p-8 md:p-10">
         <StationHeader
-          code="ST-07"
+          code="ST-06"
           name="Contact me"
           category="Get in touch"
           lineVariant="default"
-          id="heading-st-07"
+          id="heading-st-06"
         />
+
+        <TerminusContact />
+      </div>
+
+      <!-- Station Platform Floor -->
+      <div class="platform-floor-strip mt-6" aria-hidden="true">
+        <div class="platform-tactile-line"></div>
+        <div class="platform-edge-hazard"></div>
+      </div>
+    </section>
 
         <TerminusContact />
       </div>

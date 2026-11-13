@@ -22,3 +22,4 @@ try {
 } catch (e) {
   console.error('Mobile capture error:', e.message);
 }
+

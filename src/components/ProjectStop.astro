@@ -13,13 +13,15 @@ const { project } = Astro.props;
 const isDev = import.meta.env.DEV;
 
 const PROJECT_IMAGES: Record<string, string> = {
-  geobus: '/images/Geobus.jpg',
-  grantpilot: '/images/Grantpilot.jpg',
-  datamorfix: '/images/DataMorfix.png',
-  ecosortx: '/images/EcosortX.png',
+  ghumify: '/images/ghumify.png',
   ems: '/images/EMS.png',
-  clinic: '/images/clinic.png',
+  'exam-management-system': '/images/EMS.png',
+  ecosortx: '/images/EcosortX.png',
+  datamorphix: '/images/DataMorfix.png',
+  grantpilot: '/images/Grantpilot.jpg',
+  geobus: '/images/Geobus.jpg',
   cricktraker: '/images/cricktraker.jpeg',
+  'clinic-appointment': '/images/clinic.png',
 };
 
 const projectImg = PROJECT_IMAGES[project.id];

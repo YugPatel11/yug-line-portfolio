@@ -39,7 +39,7 @@ import Pictograms from './Pictograms.astro';
       <div class="text-right">
         <div class="text-[10px] text-ink-soft uppercase">NETWORK PROGRESS</div>
         <div class="font-black text-sm text-line-frontend" id="modal-stops-count">
-          1 / 8 STOPS
+          1 / 7 STOPS
         </div>
       </div>
     </div>
@@ -62,7 +62,7 @@ import Pictograms from './Pictograms.astro';
               </span>
               <!-- Stamp Icon -->
               <div class="stamp-icon-wrap w-8 h-8 rounded-full border border-rule flex items-center justify-center my-1 text-ink-soft">
-                <Pictograms name={st.id === 'station-02' ? 'route' : st.id === 'station-06' ? 'book' : st.id === 'station-04' ? 'briefcase' : 'arrow-up-right'} size={16} />
+                <Pictograms name={st.id === 'station-02' ? 'briefcase' : st.id === 'station-05' ? 'book' : st.id === 'station-03' ? 'briefcase' : 'arrow-up-right'} size={16} />
               </div>
               <!-- Status text / Tap & Go Button -->
               <button
@@ -81,12 +81,12 @@ import Pictograms from './Pictograms.astro';
     <!-- Finale Banner (Shown when all stops visited per Section 6.4) -->
     <div id="travel-card-finale" class="hidden p-4 bg-paper border-2 border-ink text-center mb-6">
       <div class="font-archivo text-lg font-black text-ink uppercase mb-1">
-        🎉 JOURNEY COMPLETE! 8 OF 8 STOPS
+        🎉 JOURNEY COMPLETE! 7 OF 7 STOPS
       </div>
       <p class="font-manrope text-xs text-ink-soft mb-3">
         "Every line explored, from backend logic to smooth UIs. Let's build something together."
       </p>
-      <a href="#station-07" class="btn-stub justify-center" id="finale-contact-btn">
+      <a href="#contact" class="btn-stub justify-center" id="finale-contact-btn">
         <span>Say Hello at Terminus</span>
         <Pictograms name="arrow-up-right" size={14} />
       </a>
@@ -118,11 +118,11 @@ import Pictograms from './Pictograms.astro';
       } catch (e) {}
 
       if (countDisplay) {
-        countDisplay.textContent = `${visitedList.length} / 8 STOPS`;
+        countDisplay.textContent = `${visitedList.length} / 7 STOPS`;
       }
 
       if (headerCardBtn) {
-        headerCardBtn.textContent = `CARD: ${visitedList.length}/8`;
+        headerCardBtn.textContent = `CARD: ${visitedList.length}/7`;
       }
 
       document.querySelectorAll('.passport-stamp-cell').forEach((cell) => {
@@ -143,7 +143,7 @@ import Pictograms from './Pictograms.astro';
         }
       });
 
-      if (visitedList.length >= 8 && finaleBanner) {
+      if (visitedList.length >= 7 && finaleBanner) {
         finaleBanner.classList.remove('hidden');
       }
     };

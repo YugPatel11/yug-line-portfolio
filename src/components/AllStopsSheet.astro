@@ -3,12 +3,11 @@ import Pictograms from './Pictograms.astro';
 
 const ALL_STOPS = [
   { id: 'station-01', code: 'ST-01', title: 'Achievements', desc: 'SIH 2026 Winner & awards' },
-  { id: 'station-02', code: 'ST-02', title: 'Ghumify — my flagship project', desc: 'AI travel planner' },
-  { id: 'station-03', code: 'ST-03', title: 'All projects', desc: '7 production systems' },
-  { id: 'station-04', code: 'ST-04', title: 'Experience', desc: 'Edverb, EBC Club & freelance' },
-  { id: 'station-05', code: 'ST-05', title: 'Skills and tools', desc: 'Technical arsenal' },
-  { id: 'station-06', code: 'ST-06', title: 'Education', desc: 'P P Savani University' },
-  { id: 'station-07', code: 'ST-07', title: 'Contact me', desc: 'Direct channels & socials' },
+  { id: 'station-02', code: 'ST-02', title: 'All projects', desc: '8 production systems' },
+  { id: 'station-03', code: 'ST-03', title: 'Experience', desc: 'Edverb, EBC Club & freelance' },
+  { id: 'station-04', code: 'ST-04', title: 'Skills and tools', desc: 'Technical arsenal' },
+  { id: 'station-05', code: 'ST-05', title: 'Education', desc: 'P P Savani University' },
+  { id: 'station-06', code: 'ST-06', title: 'Contact me', desc: 'Direct channels & socials' },
 ];
 ---
 
@@ -36,7 +35,7 @@ const ALL_STOPS = [
           All Stops
         </h2>
         <p id="all-stops-counter" class="font-mono text-xs font-bold text-line-frontend uppercase mt-1">
-          Stops visited: 1 of 7
+          Stops visited: 1 of 6
         </p>
       </div>
 
@@ -110,12 +109,12 @@ const ALL_STOPS = [
         if (stored) visited = JSON.parse(stored);
       } catch (e) {}
 
-      // Count stops 01 to 07
-      const validStops = ['station-01', 'station-02', 'station-03', 'station-04', 'station-05', 'station-06', 'station-07'];
+      // Count stops 01 to 06
+      const validStops = ['station-01', 'station-02', 'station-03', 'station-04', 'station-05', 'station-06'];
       const visitedCount = validStops.filter((s) => visited.includes(s)).length;
 
       if (counter) {
-        counter.textContent = `Stops visited: ${visitedCount} of 7`;
+        counter.textContent = `Stops visited: ${visitedCount} of 6`;
       }
 
       jumpBtns.forEach((btn) => {
