@@ -51,7 +51,7 @@ class SoundEngine {
       if (AudioCtx) {
         this.ctx = new AudioCtx();
         this.masterGain = this.ctx.createGain();
-        this.masterGain.gain.setValueAtTime(0.20, this.ctx.currentTime);
+        this.masterGain.gain.setValueAtTime(0.45, this.ctx.currentTime);
         this.masterGain.connect(this.ctx.destination);
       }
     }

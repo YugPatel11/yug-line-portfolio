@@ -819,8 +819,11 @@ const DESTINATIONS = [
     return voices.find((v) => v.lang.toLowerCase().startsWith('en')) || null;
   };
 
+  // Global reference to active utterance to prevent V8 garbage collection
+  let activeClerkUtterance: SpeechSynthesisUtterance | null = null;
+
   // Station Master Speech Synthesizer
-  const speakClerk = (rawText: string, onEnd?: () => void, onStart?: () => void) => {
+  const speakClerk = (rawText: string, onEnd?: () => void) => {
     if (!('speechSynthesis' in window)) {
       if (onEnd) setTimeout(onEnd, 1000);
       return;
@@ -829,7 +832,7 @@ const DESTINATIONS = [
     // Check mute preference
     try {
       const soundPref = localStorage.getItem('yugline_sound');
-      if (soundPref === 'off' || soundPref === 'false') {
+      if (soundPref === 'off') {
         if (onEnd) setTimeout(onEnd, 1000);
         return;
       }
@@ -839,7 +842,10 @@ const DESTINATIONS = [
       if (window.speechSynthesis.paused) {
         window.speechSynthesis.resume();
       }
-      window.speechSynthesis.cancel();
+      if (window.speechSynthesis.speaking || window.speechSynthesis.pending) {
+        window.speechSynthesis.cancel();
+      }
+
       const clean = rawText.replace(/^["'“]|["'”]$/g, '').trim();
       if (!clean) {
         if (onEnd) onEnd();
@@ -847,6 +853,7 @@ const DESTINATIONS = [
       }
 
       const utterance = new SpeechSynthesisUtterance(clean);
+      activeClerkUtterance = utterance; // Prevent garbage collection!
       utterance.rate = 1.0;
       utterance.pitch = 1.05;
       utterance.volume = 1.0;
@@ -856,11 +863,10 @@ const DESTINATIONS = [
         utterance.voice = voice;
         utterance.lang = voice.lang;
       } else {
-        utterance.lang = navigator.language || 'en-US';
+        utterance.lang = 'en-IN';
       }
 
       utterance.onstart = () => {
-        if (onStart) onStart();
         if (clerkMouth) clerkMouth.classList.add('clerk-mouth-talking');
         if (speechBubble) speechBubble.classList.add('ring-4', 'ring-line-hardware');
         if (speechBadge) {
@@ -874,6 +880,7 @@ const DESTINATIONS = [
         if (hasFinished) return;
         hasFinished = true;
         clearTimeout(safetyTimer);
+        activeClerkUtterance = null;
         if (clerkMouth) clerkMouth.classList.remove('clerk-mouth-talking');
         if (speechBubble) speechBubble.classList.remove('ring-4', 'ring-line-hardware');
         if (speechBadge) {
@@ -888,21 +895,18 @@ const DESTINATIONS = [
       const safetyTimer = setTimeout(finishSpeaking, 3500);
 
       utterance.onend = finishSpeaking;
-      utterance.onerror = (e) => {
-        if ((e as any).error === 'not-allowed') {
-          hasAnnouncedGreeting = false;
-        }
-        finishSpeaking();
-      };
+      utterance.onerror = finishSpeaking;
 
-      window.speechSynthesis.speak(utterance);
+      // Tiny 30ms tick avoids Chromium cancel() race deadlock
+      setTimeout(() => {
+        window.speechSynthesis.speak(utterance);
+      }, 30);
     } catch (err) {
       if (onEnd) setTimeout(onEnd, 800);
     }
   };
 
   const GREETING_TEXT = '"Namaste, welcome to Yug Lines Metro. There is something different at each station."';
-  let hasAnnouncedGreeting = false;
 
   // Station Master Welcome Announcement (Announces automatically on arrival each time)
   const triggerInitialGreeting = () => {
@@ -914,9 +918,7 @@ const DESTINATIONS = [
     if ('speechSynthesis' in window && window.speechSynthesis.paused) {
       window.speechSynthesis.resume();
     }
-    speakClerk(GREETING_TEXT, undefined, () => {
-      hasAnnouncedGreeting = true;
-    });
+    speakClerk(GREETING_TEXT);
   };
 
   // Click speech bubble or clerk avatar to replay current speech
@@ -938,45 +940,43 @@ const DESTINATIONS = [
     });
   }
 
-  // 2. Trigger automatically on page reload whenever on base station
-  const playGreetingOnReload = () => {
-    if (hasAnnouncedGreeting) return;
+  // 2. Trigger automatically on page load/reload if on base station
+  const checkInitialAnnouncement = () => {
     const welcomeEl = document.getElementById('scene-welcome');
     const isWelcomeVisible = welcomeEl && welcomeEl.style.display !== 'none';
     const hash = window.location.hash.toLowerCase();
     if (!isWelcomeVisible && (hash === '' || hash === '#base' || hash === '#station-00')) {
-      triggerInitialGreeting();
+      setTimeout(() => {
+        triggerInitialGreeting();
+      }, 500);
     }
   };
-
-  // Immediate attempt on reload
-  playGreetingOnReload();
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', playGreetingOnReload);
+  if (document.readyState === 'complete') {
+    checkInitialAnnouncement();
+  } else {
+    window.addEventListener('load', checkInitialAnnouncement);
   }
-  window.addEventListener('load', playGreetingOnReload);
 
   // Trigger when station entrance loader finishes opening
   window.addEventListener('yugline:loader_finish', () => {
     if (!selectedStationId) {
-      triggerInitialGreeting();
+      setTimeout(() => {
+        triggerInitialGreeting();
+      }, 300);
     }
   });
 
-  // If voices were loading asynchronously on reload, retry when available
+  // Pre-load voices if browser requires event
   if ('speechSynthesis' in window && window.speechSynthesis.onvoiceschanged !== undefined) {
     window.speechSynthesis.onvoiceschanged = () => {
       getClerkVoice();
-      if (!hasAnnouncedGreeting && !selectedStationId) {
-        playGreetingOnReload();
-      }
     };
   }
 
   // 3. Trigger automatically whenever returning to base station
   window.addEventListener('yugline:step_choose', () => {
     isTransitioningToMetro = false;
-    hasAnnouncedGreeting = false;
+    hasUserInteractedOnce = false;
     setTimeout(() => {
       triggerInitialGreeting();
     }, 300);
@@ -986,7 +986,7 @@ const DESTINATIONS = [
     const hash = window.location.hash.toLowerCase();
     if (hash === '#base' || hash === '' || hash === '#station-00') {
       isTransitioningToMetro = false;
-      hasAnnouncedGreeting = false;
+      hasUserInteractedOnce = false;
       setTimeout(() => {
         triggerInitialGreeting();
       }, 300);
@@ -994,7 +994,9 @@ const DESTINATIONS = [
   });
 
   // 4. Fallback user gesture to satisfy browser audio autoplay requirements on reload
+  let hasUserInteractedOnce = false;
   const onFirstInteraction = (e: Event) => {
+    if (hasUserInteractedOnce) return;
     if (
       (e.target as HTMLElement).closest('.destination-choice-btn') ||
       (e.target as HTMLElement).closest('#counter-bell-btn')
@@ -1002,13 +1004,12 @@ const DESTINATIONS = [
       return;
     }
     const chooseVisible = document.getElementById('journey-step-choose')?.style.display !== 'none';
-    const hash = window.location.hash.toLowerCase();
-    const isBase = hash === '' || hash === '#base' || hash === '#station-00';
-    if (chooseVisible && isBase && !selectedStationId && !hasAnnouncedGreeting) {
+    if (chooseVisible && !selectedStationId) {
+      hasUserInteractedOnce = true;
       triggerInitialGreeting();
     }
   };
-  ['pointerdown', 'touchstart', 'click', 'keydown'].forEach((evt) => {
+  ['click', 'touchstart', 'pointerdown'].forEach((evt) => {
     window.addEventListener(evt, onFirstInteraction, { passive: true });
   });
 
