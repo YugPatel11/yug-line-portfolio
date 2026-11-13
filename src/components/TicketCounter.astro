@@ -1,8 +1,8 @@
 ---
 // TicketCounter.astro
-// Signature 2.5D Ticket Counter with Clerk per Section 4 & Design Review
+// Signature Grand Central Concourse Ticket Counter with Station Master Clerk & Solari Fare Board
 import { PROFILE } from '../data/portfolio';
-import StationClock from './StationClock.astro';
+import Pictograms from './Pictograms.astro';
 
 const DESTINATIONS = [
   {
@@ -10,9 +10,11 @@ const DESTINATIONS = [
     code: 'ST-01',
     title: 'Achievements',
     desc: 'Smart India Hackathon 2026 win, awards and milestones',
-    dialogue: 'Wins and trophies? Platform 1.',
+    dialogue: '150+ teams defeated in SIH 2026! An incredible run. Platform 1.',
     line: 'hardware',
     lineColor: 'var(--line-hardware)',
+    statusBadge: 'BOARDING // PLT 1',
+    highlightTag: 'SIH 2026 WINNER',
   },
   {
     id: 'station-02',
@@ -22,51 +24,173 @@ const DESTINATIONS = [
     dialogue: 'Eight production builds including Ghumify & EMS. Platform 2.',
     line: 'frontend',
     lineColor: 'var(--line-frontend)',
+    statusBadge: 'READY // 8 BUILDS',
+    highlightTag: 'GHUMIFY & EMS',
   },
   {
     id: 'station-03',
     code: 'ST-03',
     title: 'Experience',
     desc: 'Frontend intern at Edverb, VP of EBC Club & freelance developer',
-    dialogue: 'Meet the crew. Good choice.',
+    dialogue: 'Meet the crew. Edverb frontend intern and student leadership. Platform 3.',
     line: 'backend',
     lineColor: 'var(--line-backend)',
+    statusBadge: 'CREW STATION',
+    highlightTag: 'EDVERB & EBC',
   },
   {
     id: 'station-04',
     code: 'ST-04',
     title: 'Skills and tools',
     desc: 'Full technical capability stack across all 4 transit tracks',
-    dialogue: 'Every tool, sorted by line.',
+    dialogue: 'Every weapon in the arsenal, sorted across 4 transit tracks. Platform 4.',
     line: 'hardware',
     lineColor: 'var(--line-hardware)',
+    statusBadge: 'FULL ARSENAL',
+    highlightTag: '4 TRANSIT TRACKS',
   },
   {
     id: 'station-05',
     code: 'ST-05',
     title: 'Education',
     desc: 'B.Tech CSE (AI/ML) at P P Savani University (2024–2028)',
-    dialogue: 'Quick stop: the classroom.',
+    dialogue: 'B.Tech in CSE (AI/ML) at P P Savani University. Quick stop: the classroom.',
     line: 'ai',
     lineColor: 'var(--line-ai)',
+    statusBadge: 'ACADEMIC BASE',
+    highlightTag: 'AI / ML DEGREE',
   },
   {
     id: 'station-06',
     code: 'ST-06',
     title: 'Contact me',
     desc: 'Direct communication channels, socials, and inquiry dispatch',
-    dialogue: 'End of the line. Say hello!',
+    dialogue: 'End of the line! Direct email, WhatsApp, and socials. Say hello!',
     line: 'central',
     lineColor: 'var(--ink)',
+    statusBadge: 'TERMINUS HUB',
+    highlightTag: 'SAY HELLO',
   },
 ];
 ---
 
-<div id="journey-step-choose" class="w-full">
-  <!-- Slim Identity Band & Proof Points (Rule 4.1.1) -->
-  <div class="mb-4 p-4 sm:p-5 bg-surface border-2 border-ink shadow-[4px_4px_0_var(--ink)] flex flex-wrap items-center justify-between gap-4">
-    <div class="flex items-center gap-3">
-      <div class="w-10 h-10 rounded-full border-2 border-ink bg-line-frontend text-paper font-black font-archivo flex items-center justify-center text-lg flex-shrink-0">
+<div id="journey-step-choose" class="w-full relative">
+  
+  <!-- ========================================================
+       CONCOURSE ARCHITECTURAL CANOPY & BACKGROUND ATMOSPHERE
+       ======================================================== -->
+  <div class="concourse-canopy-wrapper relative w-full mb-6 select-none">
+    
+    <!-- Top Industrial Riveted Steel Truss Girders -->
+    <div class="relative w-full h-8 sm:h-10 bg-[#0E1118] border-b-4 border-ink flex items-center justify-between px-4 sm:px-8 shadow-[0_4px_12px_rgba(0,0,0,0.4)] overflow-hidden">
+      <!-- Cross Truss SVG Pattern -->
+      <div class="absolute inset-0 opacity-25 pointer-events-none">
+        <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <pattern id="concourse-truss-pattern" width="40" height="40" patternUnits="userSpaceOnUse">
+              <line x1="0" y1="0" x2="40" y2="40" stroke="#FFFFFF" stroke-width="1.5" />
+              <line x1="40" y1="0" x2="0" y2="40" stroke="#FFFFFF" stroke-width="1.5" />
+              <line x1="0" y1="20" x2="40" y2="20" stroke="#FFFFFF" stroke-width="1" />
+            </pattern>
+          </defs>
+          <rect width="100%" height="100%" fill="url(#concourse-truss-pattern)" />
+        </svg>
+      </div>
+
+      <!-- Left Truss Identifier -->
+      <div class="relative z-10 flex items-center gap-2">
+        <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+        <span class="font-mono text-[10px] sm:text-xs font-black uppercase tracking-widest text-[#FFC933]">
+          CENTRAL TERMINAL // MAIN CONCOURSE · LEVEL 01
+        </span>
+      </div>
+
+      <!-- Right System Track Telemetry -->
+      <div class="relative z-10 flex items-center gap-3 font-mono text-[10px] sm:text-xs text-[#A2AEC4]">
+        <span class="hidden sm:inline">NETWORK: <strong class="text-emerald-400">100% OPERATIONAL</strong></span>
+        <span class="bg-[#181D2A] px-2 py-0.5 border border-[#2B3242] text-line-hardware font-bold">
+          TRACK SPEED: HIGH
+        </span>
+      </div>
+    </div>
+
+    <!-- Electronic Operations Ribbon Display (Amber & Emerald LED Ticker) -->
+    <div class="bg-[#0A0C12] border-x-4 border-b-2 border-ink px-4 py-2 flex flex-wrap items-center justify-between gap-3 font-mono text-xs shadow-[inset_0_2px_4px_rgba(0,0,0,0.6)]">
+      <div class="flex items-center gap-3 text-[#FFB000] tracking-wide">
+        <span class="px-1.5 py-0.5 bg-[#FFB000]/20 border border-[#FFB000]/40 text-[9px] font-bold uppercase animate-pulse">
+          DISPATCH ACTIVE
+        </span>
+        <span class="hidden md:inline text-xs">
+          ALL 6 TRANSIT STOPS OPEN • FREE PASSES (₹0) ISSUED AT WINDOW 01 • MIND THE GAP
+        </span>
+        <span class="md:hidden text-xs">
+          FREE TRANSIT PASSES AT COUNTER 01
+        </span>
+      </div>
+
+      <!-- Real-time Concourse Clock -->
+      <div class="flex items-center gap-2 text-paper ml-auto">
+        <span class="text-[10px] text-ink-soft uppercase hidden sm:inline">CONCOURSE TIME:</span>
+        <span id="concourse-live-clock" class="font-bold text-line-hardware bg-[#141824] px-2.5 py-0.5 border border-[#2B3242]">
+          12:00:00 IST
+        </span>
+      </div>
+    </div>
+
+    <!-- Ambient Clerestory Subway Tunnel Window with Passing Train Silhouette -->
+    <div class="concourse-ambient-window relative w-full h-8 sm:h-10 bg-[#12151E] border-x-4 border-b-4 border-ink overflow-hidden flex items-center">
+      <!-- Brick Arch Shadows -->
+      <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-transparent via-black/40 to-black/80 pointer-events-none"></div>
+      
+      <!-- Passing Silhouette Metro Train -->
+      <div class="concourse-passing-train absolute top-1/2 -translate-y-1/2 left-0 w-full pointer-events-none">
+        <svg viewBox="0 0 1200 24" class="w-[1200px] h-6 text-[#202534] fill-current" xmlns="http://www.w3.org/2000/svg">
+          <!-- Car 1 -->
+          <rect x="0" y="2" width="220" height="18" rx="3" />
+          <circle cx="35" cy="21" r="2.5" fill="#FFC933" />
+          <circle cx="70" cy="21" r="2.5" fill="#FFC933" />
+          <circle cx="150" cy="21" r="2.5" fill="#FFC933" />
+          <circle cx="185" cy="21" r="2.5" fill="#FFC933" />
+          <!-- Lit windows -->
+          <rect x="25" y="5" width="30" height="9" fill="#FFD98A" opacity="0.6" />
+          <rect x="75" y="5" width="30" height="9" fill="#FFD98A" opacity="0.6" />
+          <rect x="125" y="5" width="30" height="9" fill="#FFD98A" opacity="0.6" />
+          <rect x="175" y="5" width="30" height="9" fill="#FFD98A" opacity="0.6" />
+          <!-- Gangway -->
+          <rect x="220" y="5" width="12" height="13" fill="#111111" />
+          <!-- Car 2 -->
+          <rect x="232" y="2" width="220" height="18" rx="3" />
+          <circle cx="265" cy="21" r="2.5" fill="#FFC933" />
+          <circle cx="300" cy="21" r="2.5" fill="#FFC933" />
+          <circle cx="380" cy="21" r="2.5" fill="#FFC933" />
+          <circle cx="415" cy="21" r="2.5" fill="#FFC933" />
+          <rect x="255" y="5" width="30" height="9" fill="#FFD98A" opacity="0.6" />
+          <rect x="305" y="5" width="30" height="9" fill="#FFD98A" opacity="0.6" />
+          <rect x="355" y="5" width="30" height="9" fill="#FFD98A" opacity="0.6" />
+          <rect x="405" y="5" width="30" height="9" fill="#FFD98A" opacity="0.6" />
+          <!-- Gangway -->
+          <rect x="452" y="5" width="12" height="13" fill="#111111" />
+          <!-- Car 3 -->
+          <rect x="464" y="2" width="220" height="18" rx="3" />
+          <circle cx="495" cy="21" r="2.5" fill="#FFC933" />
+          <circle cx="530" cy="21" r="2.5" fill="#FFC933" />
+          <circle cx="610" cy="21" r="2.5" fill="#FFC933" />
+          <circle cx="645" cy="21" r="2.5" fill="#FFC933" />
+          <rect x="485" y="5" width="30" height="9" fill="#FFD98A" opacity="0.6" />
+          <rect x="535" y="5" width="30" height="9" fill="#FFD98A" opacity="0.6" />
+          <rect x="585" y="5" width="30" height="9" fill="#FFD98A" opacity="0.6" />
+          <rect x="635" y="5" width="30" height="9" fill="#FFD98A" opacity="0.6" />
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================
+       SLIM IDENTITY BAND & VERIFIED CREDENTIALS
+       ======================================================== -->
+  <div class="mb-5 p-4 sm:p-5 bg-surface border-4 border-ink shadow-[6px_6px_0_var(--ink)] flex flex-wrap items-center justify-between gap-4">
+    <div class="flex items-center gap-3.5">
+      <div class="w-11 h-11 rounded-full border-3 border-ink bg-line-frontend text-paper font-black font-archivo flex items-center justify-center text-xl flex-shrink-0 shadow-[2px_2px_0_var(--ink)]">
         YR
       </div>
       <div>
@@ -74,84 +198,99 @@ const DESTINATIONS = [
           <h2 class="font-archivo text-xl sm:text-2xl font-black text-ink uppercase tracking-tight">
             {PROFILE.name}
           </h2>
-          <span class="hidden sm:inline-block font-mono text-[10px] font-bold px-2 py-0.5 bg-paper border border-ink text-line-frontend uppercase">
-            ARCHITECT
+          <span class="font-mono text-[10px] font-bold px-2 py-0.5 bg-paper border border-ink text-line-frontend uppercase shadow-[1px_1px_0_var(--ink)]">
+            ARCHITECT & DEVELOPER
           </span>
         </div>
         <p class="font-mono text-xs text-ink-soft">
-          // {PROFILE.role}
+          // {PROFILE.role} • {PROFILE.status}
         </p>
       </div>
     </div>
 
-    <!-- Proof Chips -->
+    <!-- Proof Badges -->
     <div class="flex flex-wrap items-center gap-2 font-mono text-xs">
       <span class="px-2.5 py-1 bg-paper border border-ink text-ink font-bold inline-flex items-center gap-1.5 shadow-[2px_2px_0_var(--ink)]">
         <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
         {PROFILE.grantTotal} SSIP Grants
       </span>
-      <span class="px-2.5 py-1 bg-paper border border-rule text-ink hidden md:inline-flex">
-        SIH 2026 Winner
+      <span class="px-2.5 py-1 bg-paper border border-ink text-ink font-bold shadow-[2px_2px_0_var(--ink)]">
+        🏆 SIH 2026 Winner
       </span>
-      <span class="px-2.5 py-1 bg-paper border border-rule text-ink hidden lg:inline-flex">
-        {PROFILE.leadershipRole}
+      <span class="px-2.5 py-1 bg-paper border border-ink text-ink font-bold shadow-[2px_2px_0_var(--ink)] hidden sm:inline-flex">
+        🎖️ {PROFILE.leadershipRole}
+      </span>
+      <span class="px-2.5 py-1 bg-[#15171C] text-line-hardware border border-ink font-bold shadow-[2px_2px_0_var(--ink)] hidden md:inline-flex">
+        100% EMS Deployment
       </span>
     </div>
   </div>
 
-  <!-- Step Header & Progress -->
-  <div class="mb-6 p-3 bg-surface border-2 border-ink shadow-[3px_3px_0_var(--ink)] flex items-center justify-between">
-    <div class="flex items-center gap-2">
+  <!-- Step Bar Indicator -->
+  <div class="mb-6 p-3 bg-surface border-2 border-ink shadow-[3px_3px_0_var(--ink)] flex items-center justify-between font-mono">
+    <div class="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-ink">
       <span class="w-2.5 h-2.5 rounded-full bg-line-frontend animate-pulse"></span>
-      <span class="font-mono text-xs font-bold uppercase tracking-wider text-ink">
-        Step 1 of 3 · Buy a ticket
-      </span>
+      <span>Step 1 of 3 · Buy your boarding ticket</span>
     </div>
 
-    <div class="flex items-center gap-1.5" aria-hidden="true">
-      <span class="w-2.5 h-2.5 rounded-full bg-line-frontend border border-ink"></span>
-      <span class="w-2.5 h-2.5 rounded-full bg-paper border border-ink"></span>
-      <span class="w-2.5 h-2.5 rounded-full bg-paper border border-ink"></span>
+    <div class="flex items-center gap-2" aria-hidden="true">
+      <span class="w-3 h-3 rounded-full bg-line-frontend border-2 border-ink"></span>
+      <span class="w-3 h-3 rounded-full bg-paper border-2 border-ink"></span>
+      <span class="w-3 h-3 rounded-full bg-paper border-2 border-ink"></span>
+      <span class="text-xs text-ink-soft ml-1 hidden sm:inline">WINDOW NO. 1</span>
     </div>
   </div>
 
-  <!-- Main 2.5D Ticket Counter + Fare Board Layout -->
+  <!-- ========================================================
+       MAIN 2.5D TICKET BOOTH + SOLARI FARE BOARD LAYOUT
+       ======================================================== -->
   <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
     
-    <!-- LEFT: 2.5D Ticket Booth with Clerk (5 cols on lg) -->
+    <!-- LEFT 6 COLS: 2.5D TICKET BOOTH WITH STATION MASTER CLERK -->
     <div class="lg:col-span-6 space-y-4">
       
       <!-- The 2.5D Physical Window Container -->
       <div class="ticket-booth-stage relative w-full bg-paper border-4 border-ink shadow-[8px_8px_0_var(--ink)] overflow-hidden select-none">
         
-        <!-- LAYER 1: BACK WALL (Subway Tiles, Lamp, Timetable, Clock) -->
-        <div class="booth-back-layer relative w-full h-[360px] sm:h-[420px] bg-[#14171E] subway-tile-wall p-4 flex flex-col justify-between overflow-hidden">
+        <!-- LAYER 1: BACK WALL (Subway Tiles, Enamel Sign, Lamp, Clock, Timetable) -->
+        <div class="booth-back-layer relative w-full h-[380px] sm:h-[430px] bg-[#14171E] subway-tile-wall p-4 flex flex-col justify-between overflow-hidden">
           
           <!-- Top Beam: Enamel Sign & Lamp -->
           <div class="flex items-start justify-between z-10">
             <!-- TICKETS Blade Sign -->
-            <div class="px-3 py-1 bg-[#111111] border-2 border-[#FFC933] shadow-[3px_3px_0_#000] flex items-center gap-2">
-              <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-              <span class="font-mono text-xs font-black tracking-widest text-[#FFC933] uppercase">
-                TICKETS // COUNTER 01
-              </span>
+            <div class="px-3.5 py-1.5 bg-[#101218] border-2 border-[#FFC933] shadow-[3px_3px_0_#000] flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+              <div>
+                <span class="font-mono text-xs font-black tracking-widest text-[#FFC933] uppercase block">
+                  TICKETS // COUNTER 01
+                </span>
+                <span class="font-mono text-[8px] text-[#A6AFBF] uppercase tracking-wider block">
+                  STATION MASTER ON DUTY
+                </span>
+              </div>
             </div>
 
-            <!-- Warm Lamp Cone -->
+            <!-- Warm Lamp Cone with Cast Light -->
             <div class="relative flex flex-col items-center">
-              <div class="w-12 h-3 bg-[#2A2E39] border border-black"></div>
-              <div class="w-8 h-4 bg-[#FFC933] border border-black" style="clip-path: polygon(20% 0%, 80% 0%, 100% 100%, 0% 100%);"></div>
-              <div class="w-24 h-16 bg-[#FFD98A]/15 pointer-events-none" style="clip-path: polygon(35% 0%, 65% 0%, 100% 100%, 0% 100%);"></div>
+              <div class="w-14 h-3 bg-[#2A2E39] border border-black shadow-[1px_1px_0_#000]"></div>
+              <div class="w-10 h-4 bg-[#FFC933] border border-black" style="clip-path: polygon(15% 0%, 85% 0%, 100% 100%, 0% 100%);"></div>
+              <!-- Light Glow Beam -->
+              <div class="w-32 h-24 bg-[#FFD98A]/20 pointer-events-none" style="clip-path: polygon(30% 0%, 70% 0%, 100% 100%, 0% 100%);"></div>
             </div>
           </div>
 
-          <!-- Wall Posters: Timetable & Small Clock -->
-          <div class="absolute top-16 right-4 z-10 opacity-80 pointer-events-none hidden sm:block">
-            <div class="p-2 bg-paper/90 border border-ink shadow-[2px_2px_0_#000] w-24 text-[8px] font-mono text-ink">
-              <div class="font-bold border-b border-ink/40 pb-0.5 mb-1 uppercase">TIMETABLE</div>
-              <div>ST-01 ➔ 09:00</div>
-              <div>ST-02 ➔ 09:15</div>
-              <div>ST-03 ➔ 09:30</div>
+          <!-- Wall Clock & Timetable Board -->
+          <div class="absolute top-16 right-4 z-10 opacity-90 pointer-events-none hidden sm:block font-mono">
+            <!-- Timetable Box -->
+            <div class="p-2.5 bg-paper/95 border-2 border-ink shadow-[3px_3px_0_#000] w-28 text-[9px] text-ink">
+              <div class="font-bold border-b border-ink/40 pb-0.5 mb-1 uppercase text-line-frontend flex items-center justify-between">
+                <span>TIMETABLE</span>
+                <span>EXP</span>
+              </div>
+              <div class="flex justify-between py-0.5"><span>ST-01</span><span class="font-bold">ON TIME</span></div>
+              <div class="flex justify-between py-0.5"><span>ST-02</span><span class="font-bold">BOARDING</span></div>
+              <div class="flex justify-between py-0.5"><span>ST-03</span><span class="font-bold">ACTIVE</span></div>
+              <div class="flex justify-between py-0.5"><span>ST-04</span><span class="font-bold">NORMAL</span></div>
             </div>
           </div>
 
@@ -160,7 +299,7 @@ const DESTINATIONS = [
             <svg
               id="clerk-svg"
               viewBox="0 0 240 240"
-              class="w-56 sm:w-64 h-56 sm:h-64 select-none"
+              class="w-60 sm:w-68 h-60 sm:h-68 select-none"
               xmlns="http://www.w3.org/2000/svg"
               aria-label="Friendly Ticket Clerk"
               role="img"
@@ -175,77 +314,80 @@ const DESTINATIONS = [
               <!-- Torso & Transit Uniform Vest -->
               <g id="clerk-torso">
                 <!-- Shirt Base -->
-                <path d="M 60 170 Q 120 160 180 170 L 195 240 L 45 240 Z" fill="#F4F1EA" stroke="#111111" stroke-width="2.5" />
+                <path d="M 55 168 Q 120 156 185 168 L 200 240 L 40 240 Z" fill="#F4F1EA" stroke="#111111" stroke-width="2.5" />
                 <!-- Line Livery Vest -->
-                <path d="M 75 170 L 100 240 L 140 240 L 165 170 Q 120 185 75 170 Z" fill="#FFC933" stroke="#111111" stroke-width="2.5" />
+                <path d="M 70 168 L 96 240 L 144 240 L 170 168 Q 120 184 70 168 Z" fill="#FFC933" stroke="#111111" stroke-width="2.5" />
                 <!-- Halftone Shadow on Vest -->
-                <path d="M 120 180 L 100 240 L 140 240 L 165 170 Q 120 185 120 180 Z" fill="url(#halftone-dots)" />
+                <path d="M 120 180 L 96 240 L 144 240 L 170 168 Q 120 184 120 180 Z" fill="url(#halftone-dots)" />
                 <!-- Tie / Collar -->
-                <polygon points="112,168 128,168 123,205 117,205" fill="#E4572E" stroke="#111111" stroke-width="1.5" />
-                <polygon points="106,164 120,172 112,175" fill="#FFFFFF" stroke="#111111" stroke-width="1.5" />
-                <polygon points="134,164 120,172 128,175" fill="#FFFFFF" stroke="#111111" stroke-width="1.5" />
-                <!-- "TICKETS" Badge -->
-                <rect x="142" y="195" width="22" height="9" rx="1.5" fill="#111111" stroke="#FFC933" stroke-width="1" />
-                <text x="153" y="202" font-family="'IBM Plex Mono', monospace" font-size="5" font-weight="bold" fill="#FFC933" text-anchor="middle">PASS</text>
+                <polygon points="112,166 128,166 123,205 117,205" fill="#E4572E" stroke="#111111" stroke-width="1.5" />
+                <polygon points="104,162 120,170 112,174" fill="#FFFFFF" stroke="#111111" stroke-width="1.5" />
+                <polygon points="136,162 120,170 128,174" fill="#FFFFFF" stroke="#111111" stroke-width="1.5" />
+                <!-- Gold Conductor Buttons -->
+                <circle cx="120" cy="215" r="2.5" fill="#FFFFFF" stroke="#111111" stroke-width="1" />
+                <circle cx="120" cy="230" r="2.5" fill="#FFFFFF" stroke="#111111" stroke-width="1" />
+                <!-- Name Badge -->
+                <rect x="144" y="194" width="24" height="10" rx="1.5" fill="#111111" stroke="#FFC933" stroke-width="1" />
+                <text x="156" y="201.5" font-family="'IBM Plex Mono', monospace" font-size="5" font-weight="bold" fill="#FFC933" text-anchor="middle">YR PASS</text>
               </g>
 
               <!-- Animated Head & Face Group (Nods & Blinks) -->
               <g id="clerk-head" class="clerk-head-motion origin-bottom">
                 <!-- Neck -->
-                <rect x="110" y="145" width="20" height="24" fill="#F5CBA7" stroke="#111111" stroke-width="2" />
+                <rect x="110" y="144" width="20" height="24" fill="#F5CBA7" stroke="#111111" stroke-width="2" />
                 <!-- Ears -->
-                <circle cx="86" cy="126" r="6" fill="#F5CBA7" stroke="#111111" stroke-width="2" />
-                <circle cx="154" cy="126" r="6" fill="#F5CBA7" stroke="#111111" stroke-width="2" />
+                <circle cx="85" cy="125" r="6" fill="#F5CBA7" stroke="#111111" stroke-width="2" />
+                <circle cx="155" cy="125" r="6" fill="#F5CBA7" stroke="#111111" stroke-width="2" />
                 <!-- Head Base -->
-                <ellipse cx="120" cy="125" rx="30" ry="34" fill="#F5CBA7" stroke="#111111" stroke-width="2.5" />
+                <ellipse cx="120" cy="124" rx="31" ry="34" fill="#F5CBA7" stroke="#111111" stroke-width="2.5" />
                 
                 <!-- Hair -->
-                <path d="M 88 120 Q 90 98 120 98 Q 150 98 152 120 Q 146 106 120 106 Q 94 106 88 120 Z" fill="#2C221E" />
+                <path d="M 87 119 Q 90 96 120 96 Q 150 96 153 119 Q 146 104 120 104 Q 94 104 87 119 Z" fill="#2C221E" />
 
                 <!-- Eyes (Blinking CSS keyframe) -->
                 <g id="clerk-eyes" class="clerk-blink-motion">
-                  <ellipse cx="109" cy="125" rx="3.5" ry="4.5" fill="#111111" />
-                  <circle cx="110.5" cy="123.5" r="1.2" fill="#FFFFFF" />
-                  <ellipse cx="131" cy="125" rx="3.5" ry="4.5" fill="#111111" />
-                  <circle cx="132.5" cy="123.5" r="1.2" fill="#FFFFFF" />
+                  <ellipse cx="108" cy="124" rx="3.5" ry="4.5" fill="#111111" />
+                  <circle cx="109.5" cy="122.5" r="1.2" fill="#FFFFFF" />
+                  <ellipse cx="132" cy="124" rx="3.5" ry="4.5" fill="#111111" />
+                  <circle cx="133.5" cy="122.5" r="1.2" fill="#FFFFFF" />
                 </g>
 
                 <!-- Eyebrows -->
-                <path d="M 103 117 Q 109 114 115 117" stroke="#2C221E" stroke-width="2" stroke-linecap="round" fill="none" />
-                <path d="M 125 117 Q 131 114 137 117" stroke="#2C221E" stroke-width="2" stroke-linecap="round" fill="none" />
+                <path d="M 102 116 Q 108 113 114 116" stroke="#2C221E" stroke-width="2" stroke-linecap="round" fill="none" />
+                <path d="M 126 116 Q 132 113 138 116" stroke="#2C221E" stroke-width="2" stroke-linecap="round" fill="none" />
 
                 <!-- Nose -->
-                <path d="M 120 123 L 118 132 L 123 132" stroke="#111111" stroke-width="1.8" stroke-linecap="round" fill="none" />
+                <path d="M 120 122 L 117 131 L 123 131" stroke="#111111" stroke-width="1.8" stroke-linecap="round" fill="none" />
 
                 <!-- Friendly Smile -->
-                <path id="clerk-mouth" d="M 112 140 Q 120 147 128 140" stroke="#111111" stroke-width="2" stroke-linecap="round" fill="none" />
+                <path id="clerk-mouth" d="M 112 139 Q 120 146 128 139" stroke="#111111" stroke-width="2.2" stroke-linecap="round" fill="none" />
 
                 <!-- Conductor Peaked Cap -->
                 <g id="clerk-cap">
                   <!-- Cap Crown -->
-                  <path d="M 85 106 Q 120 86 155 106 L 158 100 Q 120 78 82 100 Z" fill="#171A24" stroke="#111111" stroke-width="2.5" />
+                  <path d="M 84 105 Q 120 84 156 105 L 159 99 Q 120 76 81 99 Z" fill="#171A24" stroke="#111111" stroke-width="2.5" />
                   <!-- Gold Livery Band -->
-                  <path d="M 85 106 Q 120 96 155 106 L 154 110 Q 120 100 86 110 Z" fill="#FFC933" stroke="#111111" stroke-width="1.2" />
+                  <path d="M 84 105 Q 120 95 156 105 L 155 109 Q 120 99 85 109 Z" fill="#FFC933" stroke="#111111" stroke-width="1.5" />
                   <!-- Metro Cockade / Badge -->
-                  <circle cx="120" cy="101" r="4" fill="#E4572E" stroke="#FFC933" stroke-width="1.2" />
-                  <circle cx="120" cy="101" r="1.5" fill="#FFFFFF" />
+                  <circle cx="120" cy="99" r="4.5" fill="#E4572E" stroke="#FFC933" stroke-width="1.5" />
+                  <circle cx="120" cy="99" r="1.8" fill="#FFFFFF" />
                   <!-- Visor / Peak -->
-                  <path d="M 84 109 Q 120 116 156 109 Q 120 120 84 109 Z" fill="#111111" />
+                  <path d="M 83 108 Q 120 115 157 108 Q 120 120 83 108 Z" fill="#111111" />
                 </g>
               </g>
 
               <!-- Left Arm / Typing / Handover Arm -->
               <g id="clerk-left-arm">
-                <path d="M 68 180 Q 55 210 90 220" stroke="#111111" stroke-width="14" stroke-linecap="round" fill="none" />
-                <path d="M 68 180 Q 55 210 90 220" stroke="#FFC933" stroke-width="10" stroke-linecap="round" fill="none" />
-                <circle cx="92" cy="220" r="7" fill="#F5CBA7" stroke="#111111" stroke-width="2" />
+                <path d="M 66 178 Q 52 210 88 220" stroke="#111111" stroke-width="14" stroke-linecap="round" fill="none" />
+                <path d="M 66 178 Q 52 210 88 220" stroke="#FFC933" stroke-width="10" stroke-linecap="round" fill="none" />
+                <circle cx="90" cy="220" r="7" fill="#F5CBA7" stroke="#111111" stroke-width="2" />
               </g>
 
               <!-- Right Arm / Waving / Stamping Arm -->
               <g id="clerk-right-arm" class="clerk-wave-motion origin-[175px_180px]">
-                <path d="M 172 180 Q 195 200 170 220" stroke="#111111" stroke-width="14" stroke-linecap="round" fill="none" />
-                <path d="M 172 180 Q 195 200 170 220" stroke="#FFC933" stroke-width="10" stroke-linecap="round" fill="none" />
-                <circle cx="168" cy="220" r="7" fill="#F5CBA7" stroke="#111111" stroke-width="2" />
+                <path d="M 174 178 Q 198 200 172 220" stroke="#111111" stroke-width="14" stroke-linecap="round" fill="none" />
+                <path d="M 174 178 Q 198 200 172 220" stroke="#FFC933" stroke-width="10" stroke-linecap="round" fill="none" />
+                <circle cx="170" cy="220" r="7" fill="#F5CBA7" stroke="#111111" stroke-width="2" />
               </g>
             </svg>
           </div>
@@ -253,93 +395,99 @@ const DESTINATIONS = [
           <!-- LAYER 3: GLASS WINDOW (Steel Frame, Reflection Bars, Speaker Grill) -->
           <div class="booth-glass-layer absolute inset-0 pointer-events-none z-20">
             <!-- Diagonal White Reflection Glare Bars -->
-            <div class="absolute -inset-x-12 top-10 h-10 bg-white/10 transform -rotate-12 pointer-events-none"></div>
-            <div class="absolute -inset-x-12 top-28 h-6 bg-white/5 transform -rotate-12 pointer-events-none"></div>
+            <div class="absolute -inset-x-12 top-10 h-12 bg-white/10 transform -rotate-12 pointer-events-none"></div>
+            <div class="absolute -inset-x-12 top-32 h-6 bg-white/5 transform -rotate-12 pointer-events-none"></div>
 
-            <!-- Perforated Speaking Grill (Circular dots in glass) -->
-            <div class="absolute top-[48%] left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center gap-1 opacity-40">
+            <!-- Perforated Brass Speaking Grill (Circular dots in glass) -->
+            <div class="absolute top-[48%] left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center gap-1 opacity-50">
               <div class="flex gap-1.5">
-                <span class="w-1.5 h-1.5 rounded-full bg-ink"></span>
-                <span class="w-1.5 h-1.5 rounded-full bg-ink"></span>
-                <span class="w-1.5 h-1.5 rounded-full bg-ink"></span>
+                <span class="w-1.5 h-1.5 rounded-full bg-[#FFC933] border border-ink"></span>
+                <span class="w-1.5 h-1.5 rounded-full bg-[#FFC933] border border-ink"></span>
+                <span class="w-1.5 h-1.5 rounded-full bg-[#FFC933] border border-ink"></span>
               </div>
               <div class="flex gap-1.5">
-                <span class="w-1.5 h-1.5 rounded-full bg-ink"></span>
-                <span class="w-1.5 h-1.5 rounded-full bg-ink"></span>
-                <span class="w-1.5 h-1.5 rounded-full bg-ink"></span>
-                <span class="w-1.5 h-1.5 rounded-full bg-ink"></span>
+                <span class="w-1.5 h-1.5 rounded-full bg-[#FFC933] border border-ink"></span>
+                <span class="w-1.5 h-1.5 rounded-full bg-[#FFC933] border border-ink"></span>
+                <span class="w-1.5 h-1.5 rounded-full bg-[#FFC933] border border-ink"></span>
+                <span class="w-1.5 h-1.5 rounded-full bg-[#FFC933] border border-ink"></span>
               </div>
               <div class="flex gap-1.5">
-                <span class="w-1.5 h-1.5 rounded-full bg-ink"></span>
-                <span class="w-1.5 h-1.5 rounded-full bg-ink"></span>
-                <span class="w-1.5 h-1.5 rounded-full bg-ink"></span>
+                <span class="w-1.5 h-1.5 rounded-full bg-[#FFC933] border border-ink"></span>
+                <span class="w-1.5 h-1.5 rounded-full bg-[#FFC933] border border-ink"></span>
+                <span class="w-1.5 h-1.5 rounded-full bg-[#FFC933] border border-ink"></span>
               </div>
             </div>
 
             <!-- Glass Window Bottom Pass-Through Cutout Slot -->
-            <div class="absolute bottom-12 left-1/2 -translate-x-1/2 w-48 h-4 border-2 border-ink bg-transparent flex items-center justify-center">
-              <span class="w-40 h-1 bg-ink/60 block"></span>
+            <div class="absolute bottom-12 left-1/2 -translate-x-1/2 w-52 h-4 border-2 border-ink bg-transparent flex items-center justify-center">
+              <span class="w-44 h-1 bg-ink/70 block"></span>
             </div>
           </div>
 
-          <!-- LAYER 4: COUNTER SLAB (Foreground, Desk Bell, Printer, Stamp) -->
-          <div class="booth-counter-layer absolute inset-x-0 bottom-0 h-12 bg-[#2D241E] border-t-3 border-ink z-25 flex items-center justify-between px-4 sm:px-6">
+          <!-- LAYER 4: HEAVY WOOD & BRASS COUNTER SLAB -->
+          <div class="booth-counter-layer absolute inset-x-0 bottom-0 h-14 bg-[#231A14] border-t-4 border-ink z-25 flex items-center justify-between px-3 sm:px-6 shadow-[inset_0_2px_4px_rgba(255,200,50,0.2)]">
             
             <!-- Mechanical Ticket Printer Unit -->
             <div class="flex items-center gap-2">
-              <div class="w-14 h-8 bg-[#1A1D24] border-2 border-ink shadow-[2px_2px_0_#000] flex flex-col justify-center px-1.5 relative">
+              <div class="w-16 h-9 bg-[#1A1D24] border-2 border-ink shadow-[2px_2px_0_#000] flex flex-col justify-center px-1.5 relative">
+                <div class="flex items-center justify-between mb-1">
+                  <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                  <span class="font-mono text-[6px] text-ink-soft">FEED</span>
+                </div>
                 <span class="w-full h-1 bg-[#111111] mb-1"></span>
-                <span class="font-mono text-[7px] text-[#FFC933] font-bold">PRINTER</span>
+                <span class="font-mono text-[7px] text-[#FFC933] font-black tracking-widest">PRINTER 01</span>
               </div>
             </div>
 
-            <!-- Recessed Ticket Tray in Counter Center -->
-            <div class="relative w-44 h-7 bg-[#111111] border-2 border-ink flex items-center justify-center overflow-visible">
-              <span class="font-mono text-[8px] text-ink-soft uppercase tracking-wider">
+            <!-- Recessed Brass Ticket Dispatch Tray in Counter Center -->
+            <div class="relative w-48 h-8 bg-[#111111] border-2 border-ink flex items-center justify-center overflow-visible shadow-[inset_0_2px_4px_#000]">
+              <span class="font-mono text-[8px] text-[#A6AFBF] uppercase tracking-wider font-bold">
                 // TICKET DISPATCH TRAY
               </span>
 
-              <!-- THE PHYSICAL TICKET (Travels between printer, clerk & tray) -->
+              <!-- THE PHYSICAL EXTRUDED TICKET -->
               <div
                 id="counter-ticket-element"
-                class="absolute -top-7 w-44 p-2.5 bg-paper border-2 border-ink shadow-[4px_4px_0_var(--ink)] opacity-0 pointer-events-none transition-all duration-300 will-change-transform z-30 cursor-pointer hover:scale-105"
+                class="absolute -top-8 w-48 p-2.5 bg-paper border-3 border-ink shadow-[6px_6px_0_var(--ink)] opacity-0 pointer-events-none transition-all duration-300 will-change-transform z-30 cursor-pointer hover:scale-105 active:scale-95"
                 style="transform: translateY(-24px) scale(0.9);"
-                title="Click to take ticket and board!"
+                title="Click to take your ticket and board!"
               >
+                <!-- Line Strip -->
+                <div class="h-1.5 w-full bg-line-frontend mb-1.5"></div>
                 <div class="flex items-center justify-between border-b border-rule pb-1 mb-1">
-                  <span id="ticket-strip-code" class="font-mono text-[9px] font-black text-line-frontend">ST-01</span>
-                  <span class="font-mono text-[8px] font-bold uppercase bg-line-hardware/30 px-1 text-ink">FREE PASS</span>
+                  <span id="ticket-strip-code" class="font-mono text-[10px] font-black text-line-frontend">ST-01</span>
+                  <span class="font-mono text-[8px] font-black uppercase bg-emerald-100 text-emerald-800 border border-emerald-500 px-1">FREE PASS</span>
                 </div>
                 <div id="ticket-strip-title" class="font-archivo text-xs font-black text-ink uppercase truncate">
                   ACHIEVEMENTS
                 </div>
                 <div class="mt-1 flex items-center justify-between font-mono text-[7px] text-ink-soft">
-                  <span>FARE: ₹0</span>
+                  <span>FARE: ₹0.00</span>
                   <span class="font-bold text-emerald-600">VALID TODAY</span>
                 </div>
-                <div class="mt-1.5 pt-1 border-t border-rule bg-ink text-paper text-[8px] font-mono font-bold uppercase text-center py-0.5 flex items-center justify-center gap-1">
-                  <span>TAKE TICKET</span>
+                <div class="mt-1.5 pt-1 border-t border-rule bg-ink text-paper text-[8px] font-mono font-bold uppercase text-center py-1 flex items-center justify-center gap-1 shadow-[2px_2px_0_#000]">
+                  <span>TAKE TICKET & BOARD</span>
                   <span>➔</span>
                 </div>
               </div>
             </div>
 
-            <!-- Brass Service Desk Bell (Interactive!) -->
-            <div class="flex items-center gap-3">
+            <!-- Brass Service Desk Bell (Interactive Sound) -->
+            <div class="flex items-center gap-2 sm:gap-3">
               <button
                 type="button"
                 id="counter-bell-btn"
-                class="w-8 h-8 rounded-full bg-[#E5B53A] border-2 border-ink shadow-[2px_2px_0_#000] flex items-center justify-center cursor-pointer hover:scale-105 active:scale-95 transition-transform"
-                title="Ring Counter Bell"
+                class="w-8 sm:w-9 h-8 sm:h-9 rounded-full bg-[#E5B53A] border-2 border-ink shadow-[2px_2px_0_#000] flex items-center justify-center cursor-pointer hover:scale-110 active:scale-90 transition-transform"
+                title="Ring Service Desk Bell"
                 aria-label="Ring service bell"
               >
-                <span class="w-2 h-2 rounded-full bg-white/70 block"></span>
+                <span class="w-2.5 h-2.5 rounded-full bg-white/80 block shadow-inner"></span>
               </button>
 
-              <!-- Stamp & Ink Pad -->
-              <div class="hidden sm:flex items-center gap-1.5 opacity-80">
-                <div class="w-6 h-4 bg-[#8C2D19] border border-ink shadow-[1px_1px_0_#000]"></div>
-                <div class="w-4 h-6 bg-[#6E5034] border border-ink shadow-[1px_1px_0_#000]"></div>
+              <!-- Rubber Stamp & Ink Pad -->
+              <div class="hidden sm:flex items-center gap-1.5 opacity-90">
+                <div class="w-6 h-4 bg-[#8C2D19] border border-ink shadow-[1px_1px_0_#000]" title="Official Stamp Pad"></div>
+                <div class="w-4 h-7 bg-[#6E5034] border border-ink shadow-[1px_1px_0_#000]" title="Validation Stamp"></div>
               </div>
             </div>
           </div>
@@ -348,26 +496,29 @@ const DESTINATIONS = [
         <!-- SPEECH BUBBLE (Polite Live Region per Section 4.2) -->
         <div
           id="clerk-speech-bubble"
-          class="absolute top-12 sm:top-14 left-1/2 -translate-x-1/2 max-w-sm w-[88%] p-2.5 sm:p-3.5 bg-paper border-2 border-ink shadow-[4px_4px_0_var(--ink)] z-40"
+          class="absolute top-12 sm:top-14 left-1/2 -translate-x-1/2 max-w-sm w-[90%] p-3 sm:p-4 bg-paper border-3 border-ink shadow-[6px_6px_0_var(--ink)] z-40 transition-transform duration-300"
           role="status"
           aria-live="polite"
         >
-          <div class="flex items-center gap-2 mb-1">
-            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-            <span class="font-mono text-[10px] font-bold uppercase tracking-wider text-ink-soft">
-              STATION MASTER // COUNTER 01
-            </span>
+          <div class="flex items-center justify-between mb-1 border-b border-rule pb-1">
+            <div class="flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+              <span class="font-mono text-[10px] font-black uppercase tracking-wider text-ink">
+                STATION MASTER // COUNTER 01
+              </span>
+            </div>
+            <span class="font-mono text-[9px] text-ink-soft">LIVE</span>
           </div>
           <p id="clerk-speech-text" class="font-manrope text-sm sm:text-base font-bold text-ink leading-snug">
-            "Namaste! Where to today?"
+            "Namaste! Where to today? Select any stop on the fare board."
           </p>
           <!-- Speech Bubble Downward Tail -->
-          <div class="absolute -bottom-2.5 left-1/2 -translate-x-1/2 w-4 h-4 bg-paper border-r-2 border-b-2 border-ink transform rotate-45"></div>
+          <div class="absolute -bottom-2.5 left-1/2 -translate-x-1/2 w-4 h-4 bg-paper border-r-3 border-b-3 border-ink transform rotate-45"></div>
         </div>
       </div>
 
       <!-- Action Button Area Below Counter -->
-      <div class="p-4 bg-surface border-2 border-ink shadow-[4px_4px_0_var(--ink)] space-y-3">
+      <div class="p-4 sm:p-5 bg-surface border-4 border-ink shadow-[6px_6px_0_var(--ink)] space-y-3">
         <!-- Main State Action Button -->
         <button
           type="button"
@@ -375,71 +526,83 @@ const DESTINATIONS = [
           class="btn-stub btn-stub--primary w-full !min-h-[58px] sm:!min-h-[64px] text-base sm:text-lg font-black justify-center shadow-[4px_4px_0_var(--ink)] cursor-pointer"
           disabled
         >
-          <span>1. Select a stop on the right ➔</span>
+          <span>1. Select a Destination on the Right ➔</span>
         </button>
 
-        <div class="flex items-center justify-between pt-1">
-          <!-- Quick Ticket Button (Rule 4.1: skips clerk animation for repeat/fast visitors) -->
+        <div class="flex flex-wrap items-center justify-between gap-2 pt-1 font-mono text-xs">
+          <!-- Quick Ticket Button -->
           <button
             type="button"
             id="counter-quick-ticket-btn"
-            class="font-mono text-xs text-ink-soft hover:text-ink underline uppercase tracking-wider"
+            class="text-ink-soft hover:text-ink underline uppercase tracking-wider font-bold"
           >
-            Quick ticket (skip wait)
+            Quick Ticket (Instant Pass ➔)
           </button>
 
           <!-- Skip to Express Mode -->
           <button
             type="button"
-            class="day-pass-toggle-btn font-mono text-xs text-ink-soft hover:text-ink underline uppercase tracking-wider"
+            class="day-pass-toggle-btn text-ink-soft hover:text-ink underline uppercase tracking-wider font-bold"
           >
-            Skip the metro · see everything
+            Skip the metro · see all stops
           </button>
         </div>
       </div>
     </div>
 
-    <!-- RIGHT: THE FARE BOARD (7 Destination Buttons) -->
-    <div class="lg:col-span-6">
-      <div class="mb-3 flex items-center justify-between">
+    <!-- RIGHT 6 COLS: THE SOLARI FARE BOARD (6 Stops) -->
+    <div class="lg:col-span-6 space-y-3">
+      
+      <!-- Fare Board Header -->
+      <div class="p-4 bg-[#0D0F14] border-4 border-ink shadow-[6px_6px_0_var(--ink)] text-paper flex items-center justify-between">
         <div>
-          <h3 class="font-archivo text-xl sm:text-2xl font-black text-ink uppercase tracking-tight">
-            Fare Board · Destinations
-          </h3>
-          <p class="font-manrope text-xs sm:text-sm text-ink-soft mt-0.5">
-            Tap any destination to request your boarding ticket.
+          <div class="flex items-center gap-2">
+            <span class="w-3 h-3 rounded-full bg-line-hardware animate-pulse"></span>
+            <h3 class="font-archivo text-xl sm:text-2xl font-black uppercase text-[#F1EEE6] tracking-tight">
+              FARE BOARD · LINE DESTINATIONS
+            </h3>
+          </div>
+          <p class="font-mono text-xs text-[#8C96AA] mt-0.5">
+            TAP ANY DESTINATION TO DISPATCH YOUR BOARDING PASS
           </p>
         </div>
-        <span class="font-mono text-xs font-bold uppercase tracking-wider px-2.5 py-1 bg-line-hardware text-ink border border-ink shadow-[2px_2px_0_var(--ink)]">
+        <span class="font-mono text-xs font-black uppercase tracking-wider px-3 py-1 bg-line-hardware text-ink border-2 border-ink shadow-[2px_2px_0_#000]">
           FARE: ₹0 FREE
         </span>
       </div>
 
-      <!-- 7 Roomy Destination Buttons List (Min 72px Tall) -->
+      <!-- 6 Roomy Destination Cards -->
       <div class="space-y-2.5" role="list">
         {DESTINATIONS.map((dest) => (
           <button
             type="button"
-            class="destination-choice-btn w-full min-h-[68px] sm:min-h-[72px] p-3.5 sm:p-4 bg-surface border-2 border-ink shadow-[3px_3px_0_var(--ink)] hover:shadow-[5px_5px_0_var(--ink)] hover:-translate-y-0.5 text-left flex items-center justify-between gap-4 transition-all group cursor-pointer"
+            class="destination-choice-btn w-full min-h-[72px] sm:min-h-[76px] p-3.5 sm:p-4 bg-surface border-3 border-ink shadow-[4px_4px_0_var(--ink)] hover:shadow-[6px_6px_0_var(--ink)] hover:-translate-y-0.5 text-left flex items-center justify-between gap-4 transition-all group cursor-pointer relative overflow-hidden"
             data-station-id={dest.id}
             data-station-code={dest.code}
             data-station-title={dest.title}
             data-station-line={dest.line}
             data-dialogue={dest.dialogue}
           >
-            <div class="flex items-center gap-3">
-              <span
-                class="w-3.5 h-3.5 rounded-full border-2 border-ink flex-shrink-0 group-hover:scale-125 transition-transform"
-                style={`background-color: ${dest.lineColor};`}
-              ></span>
+            <!-- Left Line Accent Bar -->
+            <div
+              class="absolute left-0 inset-y-0 w-2.5 transition-all group-hover:w-3.5"
+              style={`background-color: ${dest.lineColor};`}
+            ></div>
+
+            <div class="flex items-center gap-3.5 pl-3">
+              <!-- Solari Flap Code Badge -->
+              <div class="w-10 h-10 bg-[#161B26] border-2 border-ink flex items-center justify-center font-mono font-black text-xs text-line-hardware shadow-[2px_2px_0_#000] relative overflow-hidden flex-shrink-0">
+                <span>{dest.code}</span>
+                <div class="absolute inset-x-0 top-1/2 h-[1px] bg-[#0A0C10] z-20"></div>
+              </div>
 
               <div>
-                <div class="flex items-center gap-2">
-                  <span class="font-archivo text-base sm:text-lg font-bold text-ink group-hover:text-line-frontend transition-colors">
+                <div class="flex flex-wrap items-center gap-2">
+                  <span class="font-archivo text-base sm:text-lg font-black text-ink group-hover:text-line-frontend transition-colors">
                     {dest.title}
                   </span>
-                  <span class="font-mono text-xs uppercase px-1.5 py-0.5 bg-paper border border-rule text-ink-soft">
-                    {dest.code}
+                  <span class="font-mono text-[9px] uppercase px-1.5 py-0.5 bg-paper border border-ink text-ink font-bold">
+                    {dest.statusBadge}
                   </span>
                 </div>
                 <p class="font-manrope text-xs text-ink-soft mt-0.5 line-clamp-1">
@@ -448,23 +611,81 @@ const DESTINATIONS = [
               </div>
             </div>
 
+            <!-- Price & Arrow Action -->
             <div class="flex items-center gap-2.5 flex-shrink-0">
-              <span class="hidden sm:inline-block font-mono text-[11px] font-bold px-2 py-0.5 bg-paper border border-rule text-emerald-600">
-                ₹0
+              <span class="font-mono text-xs font-bold px-2 py-0.5 bg-paper border border-rule text-emerald-600">
+                ₹0 FREE
               </span>
-              <span class="font-mono text-base font-bold text-ink group-hover:translate-x-1 transition-transform">
+              <span class="font-mono text-base font-bold text-ink group-hover:translate-x-1.5 transition-transform">
                 ➔
               </span>
             </div>
           </button>
         ))}
       </div>
+
     </div>
   </div>
+
+  <!-- ========================================================
+       CONCOURSE CONTINUOUS CARRIER ROUTE STRIP
+       ======================================================== -->
+  <div class="p-4 sm:p-5 bg-surface border-4 border-ink shadow-[6px_6px_0_var(--ink)] mt-6">
+    <div class="font-mono text-xs text-ink-soft uppercase mb-3 flex items-center justify-between font-bold">
+      <span class="text-ink">// THE YUG LINE · MASTER TRANSIT SCHEMATIC</span>
+      <span class="text-line-frontend font-black">CENTRAL DEPARTURE (YOU ARE HERE)</span>
+    </div>
+    
+    <div class="relative py-2">
+      <!-- SVG Track -->
+      <svg viewBox="0 0 700 50" class="w-full h-12" xmlns="http://www.w3.org/2000/svg">
+        <!-- Main Line Track -->
+        <line x1="30" y1="25" x2="670" y2="25" stroke="var(--ink)" stroke-width="6" />
+        <line x1="30" y1="25" x2="670" y2="25" stroke="var(--line-frontend)" stroke-width="3" />
+        
+        <!-- ST-00 Central Departure (Active) -->
+        <circle cx="50" cy="25" r="11" fill="var(--paper)" stroke="var(--ink)" stroke-width="3" />
+        <circle cx="50" cy="25" r="5" fill="var(--line-frontend)" class="animate-ping" />
+        <circle cx="50" cy="25" r="5" fill="var(--line-frontend)" />
+        <text x="50" y="44" font-family="'IBM Plex Mono', monospace" font-size="8" fill="var(--ink)" font-weight="bold" text-anchor="middle">ST-00 BASE</text>
+
+        <!-- ST-01 Achievements -->
+        <circle cx="160" cy="25" r="9" fill="var(--paper)" stroke="var(--ink)" stroke-width="2.5" />
+        <circle cx="160" cy="25" r="4" fill="var(--line-hardware)" />
+        <text x="160" y="44" font-family="'IBM Plex Mono', monospace" font-size="8" fill="var(--ink)" font-weight="bold" text-anchor="middle">ST-01 AWARDS</text>
+
+        <!-- ST-02 Projects -->
+        <circle cx="280" cy="25" r="9" fill="var(--paper)" stroke="var(--ink)" stroke-width="2.5" />
+        <circle cx="280" cy="25" r="4" fill="var(--line-frontend)" />
+        <text x="280" y="44" font-family="'IBM Plex Mono', monospace" font-size="8" fill="var(--ink)" font-weight="bold" text-anchor="middle">ST-02 BUILDS</text>
+
+        <!-- ST-03 Experience -->
+        <circle cx="400" cy="25" r="9" fill="var(--paper)" stroke="var(--ink)" stroke-width="2.5" />
+        <circle cx="400" cy="25" r="4" fill="var(--line-backend)" />
+        <text x="400" y="44" font-family="'IBM Plex Mono', monospace" font-size="8" fill="var(--ink)" font-weight="bold" text-anchor="middle">ST-03 CREW</text>
+
+        <!-- ST-04 Skills -->
+        <circle cx="510" cy="25" r="9" fill="var(--paper)" stroke="var(--ink)" stroke-width="2.5" />
+        <circle cx="510" cy="25" r="4" fill="var(--line-hardware)" />
+        <text x="510" y="44" font-family="'IBM Plex Mono', monospace" font-size="8" fill="var(--ink)" font-weight="bold" text-anchor="middle">ST-04 TOOLS</text>
+
+        <!-- ST-05 Education -->
+        <circle cx="600" cy="25" r="9" fill="var(--paper)" stroke="var(--ink)" stroke-width="2.5" />
+        <circle cx="600" cy="25" r="4" fill="var(--line-ai)" />
+        <text x="600" y="44" font-family="'IBM Plex Mono', monospace" font-size="8" fill="var(--ink)" font-weight="bold" text-anchor="middle">ST-05 EDU</text>
+
+        <!-- ST-06 Terminus -->
+        <circle cx="670" cy="25" r="9" fill="var(--paper)" stroke="var(--ink)" stroke-width="2.5" />
+        <circle cx="670" cy="25" r="4" fill="var(--ink)" />
+        <text x="670" y="44" font-family="'IBM Plex Mono', monospace" font-size="8" fill="var(--ink)" font-weight="bold" text-anchor="middle">ST-06 END</text>
+      </svg>
+    </div>
+  </div>
+
 </div>
 
 <style>
-  /* CSS Animations for 2D Clerk (Rule 4.3 & 6: transform & opacity only) */
+  /* CSS Animations for 2D Clerk & Concourse Ambient (Rule 4.3 & 6: transform & opacity only) */
   @keyframes clerkBlink {
     0%, 94%, 98%, 100% { transform: scaleY(1); }
     96% { transform: scaleY(0.1); }
@@ -472,19 +693,24 @@ const DESTINATIONS = [
 
   @keyframes clerkWave {
     0%, 100% { transform: rotate(0deg); }
-    25% { transform: rotate(-12deg); }
-    75% { transform: rotate(8deg); }
+    25% { transform: rotate(-14deg); }
+    75% { transform: rotate(10deg); }
   }
 
   @keyframes clerkHeadNod {
     0%, 100% { transform: translateY(0) rotate(0deg); }
-    40% { transform: translateY(3px) rotate(1deg); }
+    40% { transform: translateY(3px) rotate(1.5deg); }
     70% { transform: translateY(-1px) rotate(-0.5deg); }
   }
 
   @keyframes clerkTypeHands {
     0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-4px); }
+    50% { transform: translateY(-5px); }
+  }
+
+  @keyframes concourseTrainSlide {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(250%); }
   }
 
   .clerk-blink-motion {
@@ -501,14 +727,19 @@ const DESTINATIONS = [
   }
 
   .clerk-typing {
-    animation: clerkTypeHands 0.15s ease-in-out infinite alternate !important;
+    animation: clerkTypeHands 0.12s ease-in-out infinite alternate !important;
+  }
+
+  .concourse-passing-train {
+    animation: concourseTrainSlide 18s linear infinite;
   }
 
   @media (prefers-reduced-motion: reduce) {
     .clerk-blink-motion,
     .clerk-wave-motion,
     .clerk-head-motion,
-    .clerk-typing {
+    .clerk-typing,
+    .concourse-passing-train {
       animation: none !important;
     }
   }
@@ -525,6 +756,16 @@ const DESTINATIONS = [
   let isReadyForTake = false;
   let idleTimer: any = null;
 
+  // Live Concourse Clock
+  const clockEl = document.getElementById('concourse-live-clock');
+  const updateConcourseClock = () => {
+    if (!clockEl) return;
+    const now = new Date();
+    clockEl.textContent = now.toLocaleTimeString('en-GB', { hour12: false }) + ' IST';
+  };
+  setInterval(updateConcourseClock, 1000);
+  updateConcourseClock();
+
   const speechText = document.getElementById('clerk-speech-text');
   const primaryBtn = document.getElementById('counter-primary-action-btn') as HTMLButtonElement | null;
   const quickBtn = document.getElementById('counter-quick-ticket-btn');
@@ -540,16 +781,16 @@ const DESTINATIONS = [
   if (bellBtn) {
     bellBtn.addEventListener('click', () => {
       sound.counterBell();
-      if (speechText) speechText.textContent = '"Ding! Yes, right here! Where to today?"';
+      if (speechText) speechText.textContent = '"Ding! Yes, right here! Select any destination on the right."';
     });
   }
 
-  // Idle timer for 8s no interaction per Section 4.5
+  // Idle timer for 8s no interaction
   const resetIdleTimer = () => {
     clearTimeout(idleTimer);
     idleTimer = setTimeout(() => {
       if (!selectedStationId && speechText) {
-        speechText.textContent = '"Take your time. Any stop is a good stop."';
+        speechText.textContent = '"Take your time! Every line has something special."';
       }
     }, 8000);
   };
@@ -597,13 +838,13 @@ const DESTINATIONS = [
 
       // Highlight active button on the fare board with bright transit line border
       document.querySelectorAll('.destination-choice-btn').forEach((b) => {
-        b.classList.remove('ring-2', 'ring-line-hardware', 'border-line-hardware', 'bg-surface');
+        b.classList.remove('ring-4', 'ring-line-hardware', 'border-line-hardware', 'bg-surface');
       });
-      btn.classList.add('ring-2', 'ring-line-hardware', 'border-line-hardware', 'bg-surface');
+      btn.classList.add('ring-4', 'ring-line-hardware', 'border-line-hardware', 'bg-surface');
 
       // 1. Clerk nods head
       if (clerkHead) {
-        clerkHead.style.transform = 'translateY(4px) rotate(2deg)';
+        clerkHead.style.transform = 'translateY(5px) rotate(2deg)';
         setTimeout(() => { clerkHead.style.transform = 'translateY(0) rotate(0deg)'; }, 350);
       }
 
@@ -619,7 +860,7 @@ const DESTINATIONS = [
       if (stripCode) stripCode.textContent = stCode;
       if (stripTitle) stripTitle.textContent = stTitle.toUpperCase();
 
-      // 4. IMMEDIATELY issue and hand over ticket! (User request)
+      // 4. Issue and hand over ticket!
       executeBuyTicket();
     });
   });
@@ -632,40 +873,40 @@ const DESTINATIONS = [
 
     if (primaryBtn) {
       primaryBtn.disabled = true;
-      primaryBtn.innerHTML = `<span>Issuing Ticket for ${selectedCode}...</span>`;
+      primaryBtn.innerHTML = `<span>Printing Pass for ${selectedCode}...</span>`;
     }
 
     // Step A: Typing clatter
     if (clerkLeftArm) clerkLeftArm.classList.add('clerk-typing');
     sound.keyboardClick();
-    await new Promise((r) => setTimeout(r, 250));
+    await new Promise((r) => setTimeout(r, 220));
     if (clerkLeftArm) clerkLeftArm.classList.remove('clerk-typing');
 
     // Step B: Printer extrusion
     sound.printer();
     if (ticketEl) {
       ticketEl.style.opacity = '0.7';
-      ticketEl.style.transform = 'translateY(-12px) scale(0.95)';
+      ticketEl.style.transform = 'translateY(-14px) scale(0.95)';
       ticketEl.style.pointerEvents = 'auto';
     }
-    await new Promise((r) => setTimeout(r, 250));
+    await new Promise((r) => setTimeout(r, 220));
 
     // Step C: Rubber Stamp impact thunk
     if (clerkRightArm) {
-      clerkRightArm.style.transform = 'translateY(8px) rotate(-15deg)';
+      clerkRightArm.style.transform = 'translateY(10px) rotate(-18deg)';
     }
     sound.stampThunk();
     if (ticketEl) {
       ticketEl.style.opacity = '1';
       ticketEl.style.transform = 'translateY(0) scale(1)';
     }
-    await new Promise((r) => setTimeout(r, 200));
+    await new Promise((r) => setTimeout(r, 180));
     if (clerkRightArm) clerkRightArm.style.transform = 'translateY(0) rotate(0deg)';
 
     // Step D: Slide ticket into tray
     sound.paperSlide();
     if (speechText) {
-      speechText.textContent = `"Here is your pass for ${selectedCode}! Take it and enter."`;
+      speechText.textContent = `"Here is your transit pass for ${selectedCode}! Take it and head to the gate."`;
     }
 
     // Step E: Ready in tray!
@@ -691,7 +932,7 @@ const DESTINATIONS = [
     });
   }
 
-  // Quick ticket (Rule 4.1: Instant ticket handover without clerk wait)
+  // Quick ticket (Instant ticket handover without clerk wait)
   if (quickBtn) {
     quickBtn.addEventListener('click', () => {
       if (!selectedStationId) {
@@ -706,6 +947,7 @@ const DESTINATIONS = [
       }
     });
   }
+
   // 3D Parallax Tilt for Ticket Booth Stage
   const boothStage = document.querySelector('.ticket-booth-stage') as HTMLElement | null;
   if (boothStage && !document.documentElement.classList.contains('reduce-motion')) {
