@@ -50,7 +50,7 @@ import Pictograms from './Pictograms.astro';
   <!-- LAYER 1: FAR WALL (Tunnel / Station Depth) -->
   <div
     id="layer-far-wall"
-    class="cinematic-layer layer-far-wall absolute inset-0 pointer-events-none transition-transform duration-700 ease-out bg-[#0D0F14] subway-tile-wall overflow-hidden"
+    class="cinematic-layer layer-far-wall absolute inset-0 pointer-events-none bg-[#0D0F14] subway-tile-wall overflow-hidden"
     style="z-index: 10;"
   >
     <!-- Structural Steel Ceiling I-Beams & Girders -->
@@ -90,7 +90,7 @@ import Pictograms from './Pictograms.astro';
   <!-- LAYER 2: MID PILLARS & OVERHEAD SIGN -->
   <div
     id="layer-mid-pillars"
-    class="absolute inset-0 pointer-events-none transition-transform duration-700 ease-out"
+    class="absolute inset-0 pointer-events-none"
     style="z-index: 15;"
   >
     <!-- Architectural Pillars -->
@@ -121,7 +121,7 @@ import Pictograms from './Pictograms.astro';
   <!-- LAYER 2.5: STATION WAYFINDING FRIEZE (Mounted ON TOP of pillars so pillars never cut text) -->
   <div
     id="metro-wall-watermark-container"
-    class="absolute top-[32%] sm:top-[30%] left-0 right-0 pointer-events-none transition-transform duration-700 ease-out"
+    class="absolute top-[32%] sm:top-[30%] left-0 right-0 pointer-events-none"
     style="z-index: 18;"
   >
     <div
@@ -434,6 +434,7 @@ import Pictograms from './Pictograms.astro';
 
 <script>
   import { metroSound } from '../scripts/sound/metroSound';
+  import { sound } from '../scripts/sound';
   import { STATIONS } from '../scripts/journey/constants';
   import type { StationCode } from '../scripts/journey/types';
 
@@ -591,14 +592,6 @@ import Pictograms from './Pictograms.astro';
       if (rightDoor) rightDoor.style.transform = 'translateX(0)';
       if (doorSeam) doorSeam.style.opacity = '1';
 
-      // Reset pillars & wall
-      const wall = document.getElementById('layer-far-wall');
-      const pillars = document.getElementById('layer-mid-pillars');
-      const watermarkContainer = document.getElementById('metro-wall-watermark-container');
-      if (wall) wall.style.transform = 'translateX(0)';
-      if (pillars) pillars.style.transform = 'translateX(0)';
-      if (watermarkContainer) watermarkContainer.style.transform = 'translateX(0)';
-
       const { startX, stopX } = calculatePositions();
       lastStopX = stopX;
 
@@ -677,6 +670,24 @@ import Pictograms from './Pictograms.astro';
       isBoarding = true;
       clearTimeout(idleTimer);
 
+      // Ticket person validation & stamp sound effect
+      sound.stampThunk();
+      setTimeout(() => {
+        sound.gateGreen();
+      }, 70);
+
+      // Conductor voice announcement if Web Speech API available
+      if ('speechSynthesis' in window && metroSound.isEnabled()) {
+        try {
+          window.speechSynthesis.cancel();
+          const msg = new SpeechSynthesisUtterance("Ticket validated. Mind the gap!");
+          msg.rate = 1.05;
+          msg.pitch = 1.0;
+          msg.volume = 0.85;
+          window.speechSynthesis.speak(msg);
+        } catch (e) {}
+      }
+
       if (boardBtn) {
         boardBtn.innerHTML = '<span class="flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full bg-line-frontend animate-pulse"></span><span>DOORS CLOSING...</span></span>';
         boardBtn.classList.remove('animate-pulse');
@@ -708,7 +719,7 @@ import Pictograms from './Pictograms.astro';
 
         const { departX } = calculatePositions();
 
-        // Train accelerates off to the right with torque pitch
+        // Train accelerates off to the right with torque pitch (only the train moves)
         if (trainWrapper) {
           currentAnim = trainWrapper.animate(
             [
@@ -723,14 +734,6 @@ import Pictograms from './Pictograms.astro';
             }
           );
         }
-
-        // Slide pillars, wall, and wayfinding frieze in opposite direction
-        const wall = document.getElementById('layer-far-wall');
-        const pillars = document.getElementById('layer-mid-pillars');
-        const watermarkContainer = document.getElementById('metro-wall-watermark-container');
-        if (wall) wall.style.transform = 'translateX(-15%)';
-        if (pillars) pillars.style.transform = 'translateX(-30%)';
-        if (watermarkContainer) watermarkContainer.style.transform = 'translateX(-22%)';
 
         // Reveal stop underneath at ~0.9s into departure (Section 3.6)
         setTimeout(() => {

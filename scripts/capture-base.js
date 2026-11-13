@@ -34,3 +34,4 @@ try {
 } catch (e) {
   console.error('Capture error:', e.message);
 }
+
