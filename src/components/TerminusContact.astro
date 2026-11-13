@@ -1,111 +1,307 @@
 ---
+// TerminusContact.astro
+// Phase U6: Commemorative transit voucher ticket with tear-off contact stubs,
+// security guilloche borders, and interactive completion stamp.
 import { PROFILE } from '../data/portfolio';
 import Pictograms from './Pictograms.astro';
 
 const { contacts } = PROFILE;
 ---
 
-<div class="ticket p-6 md:p-10 bg-surface border-2 border-ink shadow-[8px_8px_0_var(--ink)] relative">
-  <!-- Terminus Header -->
-  <div class="flex items-center justify-between border-b-2 border-ink pb-4 mb-6">
-    <div class="flex items-center gap-3">
-      <span class="w-4 h-4 rounded-full bg-ink"></span>
-      <span class="font-mono text-xs uppercase tracking-widest text-ink font-bold">
-        STATION 07 // TERMINUS & CONNECTIVITY HUB
-      </span>
+<div class="terminus-voucher-container max-w-4xl mx-auto my-6 select-none relative">
+  <!-- Outer Commemorative Ticket Voucher -->
+  <div class="ticket ticket-notched bg-surface border-3 border-ink shadow-[8px_8px_0_var(--ink)] p-6 sm:p-10 relative overflow-hidden">
+    
+    <!-- Security Guilloche Top Border (Hand-crafted SVG) -->
+    <div class="w-full h-4 mb-6 opacity-30 overflow-hidden pointer-events-none" aria-hidden="true">
+      <svg class="w-full h-4" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" viewBox="0 0 800 16">
+        <path
+          d="M0,8 Q25,0 50,8 T100,8 T150,8 T200,8 T250,8 T300,8 T350,8 T400,8 T450,8 T500,8 T550,8 T600,8 T650,8 T700,8 T750,8 T800,8"
+          fill="none"
+          stroke="var(--ink)"
+          stroke-width="1.5"
+        />
+        <path
+          d="M0,8 Q25,16 50,8 T100,8 T150,8 T200,8 T250,8 T300,8 T350,8 T400,8 T450,8 T500,8 T550,8 T600,8 T650,8 T700,8 T750,8 T800,8"
+          fill="none"
+          stroke="var(--ink)"
+          stroke-width="1.5"
+        />
+      </svg>
     </div>
-    <span class="font-mono text-xs font-bold uppercase tracking-wider bg-line-frontend text-paper px-2.5 py-0.5">
-      FINAL STOP
-    </span>
-  </div>
 
-  <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-    <div class="lg:col-span-7">
-      <h3 class="font-archivo text-3xl md:text-5xl font-extrabold text-ink tracking-tight mb-3">
-        END OF THE LINE?
-      </h3>
-      <p class="font-manrope text-base md:text-lg text-ink-soft leading-relaxed mb-6">
-        Let's start the next journey. Available for high-impact software internships, part-time engineering roles, and innovative freelance builds.
-      </p>
+    <!-- Header Authority Strip -->
+    <div class="flex flex-wrap items-center justify-between gap-4 border-b-2 border-ink pb-4 mb-8">
+      <div class="flex items-center gap-3">
+        <span class="w-3.5 h-3.5 rounded-full bg-ink inline-block" aria-hidden="true"></span>
+        <div>
+          <span class="font-mono text-xs uppercase tracking-widest text-ink font-bold block">
+            STATION 07 // TERMINUS & CONNECTIVITY HUB
+          </span>
+          <span class="font-mono text-[10px] text-ink-soft uppercase tracking-wider">
+            PASSENGER COMMEMORATIVE CERTIFICATE · SERIES 2026-OWC
+          </span>
+        </div>
+      </div>
 
-      <!-- Direct Connection Buttons (no raw emails/phones in plain text) -->
-      <div class="flex flex-wrap gap-4">
-        <a
-          href={contacts.emailLink}
-          target="_blank"
-          rel="noopener noreferrer"
-          class="btn-stub"
-        >
-          <span>Send Direct Email</span>
-          <Pictograms name="arrow-up-right" size={14} />
-        </a>
-
-        <a
-          href={contacts.whatsappLink}
-          target="_blank"
-          rel="noopener noreferrer"
-          class="btn-stub !bg-surface !text-ink hover:!bg-paper"
-        >
-          <span>Connect via WhatsApp</span>
-          <Pictograms name="arrow-up-right" size={14} />
-        </a>
+      <div class="flex items-center gap-2">
+        <span class="font-mono text-xs font-bold uppercase tracking-wider bg-ink text-paper px-3 py-1">
+          FINAL STOP // TERMINUS
+        </span>
       </div>
     </div>
 
-    <!-- Network Channels & Social Hub -->
-    <div class="lg:col-span-5 bg-paper border-2 border-ink p-5">
-      <div class="font-mono text-xs font-bold text-ink uppercase tracking-wider border-b border-rule pb-2 mb-4">
-        // Verified Digital Channels
+    <!-- Main Certificate Hero Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start mb-10">
+      <div class="lg:col-span-8">
+        <span class="mono-label block mb-1">CONGRATULATIONS PASSENGER</span>
+        <h3 class="font-archivo text-3xl sm:text-5xl lg:text-6xl font-black text-ink uppercase tracking-tight leading-[0.95] mb-4">
+          END OF THE LINE?
+        </h3>
+        <p class="font-manrope text-base sm:text-lg text-ink-soft leading-relaxed max-w-[55ch] mb-6">
+          You've journeyed through every track, from real-time school bus GPS to national hackathon-winning architectures. Ready to build the next breakthrough together?
+        </p>
+
+        <!-- Availability Badges -->
+        <div class="flex flex-wrap gap-2.5 font-mono text-xs mb-8">
+          <span class="px-3 py-1 bg-paper border border-ink text-ink font-bold inline-flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+            OPEN FOR SDE INTERNSHIPS
+          </span>
+          <span class="px-3 py-1 bg-paper border border-rule text-ink font-medium">
+            FREELANCE SYSTEMS
+          </span>
+          <span class="px-3 py-1 bg-paper border border-rule text-ink font-medium">
+            HIGH-IMPACT COLLABS
+          </span>
+        </div>
+
+        <!-- Interactive Ticket Stamping Control -->
+        <div class="flex items-center gap-4">
+          <button
+            type="button"
+            id="stamp-terminus-btn"
+            class="px-4 py-2.5 bg-paper hover:bg-surface border-2 border-ink font-mono text-xs font-bold uppercase text-ink flex items-center gap-2 shadow-[3px_3px_0_var(--ink)] active:translate-x-0.5 active:translate-y-0.5 transition-all"
+            aria-label="Stamp completion of journey"
+          >
+            <span class="w-2.5 h-2.5 rounded-full bg-[#D8362B] inline-block"></span>
+            <span>STAMP TRANSIT COMPLETION</span>
+          </button>
+          <span id="stamp-status-msg" class="font-mono text-xs text-ink-soft italic">
+            Click to apply official transit stamp.
+          </span>
+        </div>
       </div>
-      <div class="space-y-3 font-mono text-xs">
-        <a
-          href={contacts.linkedin}
-          target="_blank"
-          rel="noopener noreferrer"
-          class="flex items-center justify-between p-2.5 bg-surface border border-rule hover:border-ink transition-colors group"
+
+      <!-- Right Side: Official Transit Wax Seal / Completion Badge -->
+      <div class="lg:col-span-4 flex flex-col items-center justify-center p-4 relative">
+        <!-- Interactive Red Completion Rubber Stamp (Appears stamped) -->
+        <div
+          id="terminus-rubber-stamp"
+          class="w-36 h-36 rounded-full border-4 border-dashed border-[#D8362B] p-2 flex flex-col items-center justify-center text-center transform -rotate-12 transition-all duration-300 opacity-30 hover:opacity-100 select-none cursor-pointer"
+          title="Click to stamp!"
         >
-          <span class="font-bold text-ink group-hover:text-line-frontend">LinkedIn Profile</span>
+          <div class="w-full h-full rounded-full border-2 border-[#D8362B] flex flex-col items-center justify-center p-2 text-[#D8362B] font-mono">
+            <span class="text-[9px] font-black tracking-widest uppercase">★ THE YUG LINE ★</span>
+            <span class="font-archivo text-xs font-black uppercase my-0.5">COMPLETED</span>
+            <span class="text-[8px] font-bold tracking-wider">ALL 7 STOPS</span>
+            <span class="text-[8px] tracking-widest mt-0.5">2026-OWC</span>
+          </div>
+        </div>
+
+        <div class="mt-4 font-mono text-[11px] text-ink-soft text-center">
+          <div>TRANSIT CODE: YUG-7OF7</div>
+          <div>INSPECTION: PASSED</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Perforation Strip Separator (Tear-off Stubs) -->
+    <div class="ticket-perforation my-8 relative flex items-center justify-between text-ink-soft font-mono text-[11px]">
+      <span class="bg-surface px-2">✂ TEAR-OFF CONTACT STUBS</span>
+      <span class="bg-surface px-2 hidden sm:inline">VALID ON ALL PLATFORMS</span>
+    </div>
+
+    <!-- 4 Physical Tear-off Ticket Stubs Grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-2">
+      <!-- Stub 1: Direct Email -->
+      <a
+        href={contacts.emailLink}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="tear-stub group p-4 bg-paper border-2 border-dashed border-ink hover:border-solid hover:bg-surface transition-all flex flex-col justify-between shadow-[3px_3px_0_var(--ink)] hover:translate-x-0.5 hover:-translate-y-0.5"
+      >
+        <div>
+          <div class="flex items-center justify-between border-b border-rule pb-1.5 mb-2 font-mono text-[10px] text-ink-soft font-bold">
+            <span>STUB 01</span>
+            <span class="text-line-frontend font-black">MAIL // ➔</span>
+          </div>
+          <div class="font-archivo font-black text-sm uppercase text-ink group-hover:text-line-frontend transition-colors">
+            Direct Email
+          </div>
+          <p class="font-manrope text-xs text-ink-soft mt-1">
+            Dispatch urgent inquiries and role proposals.
+          </p>
+        </div>
+        <div class="mt-4 pt-2 border-t border-rule font-mono text-[11px] font-bold text-ink flex items-center justify-between">
+          <span>COMPOSE</span>
           <Pictograms name="arrow-up-right" size={12} />
-        </a>
-
-        <a
-          href={contacts.github}
-          target="_blank"
-          rel="noopener noreferrer"
-          class="flex items-center justify-between p-2.5 bg-surface border border-rule hover:border-ink transition-colors group"
-        >
-          <span class="font-bold text-ink group-hover:text-line-frontend">GitHub Workspaces</span>
-          <Pictograms name="arrow-up-right" size={12} />
-        </a>
-
-        <a
-          href={contacts.instagram}
-          target="_blank"
-          rel="noopener noreferrer"
-          class="flex items-center justify-between p-2.5 bg-surface border border-rule hover:border-ink transition-colors group"
-        >
-          <span class="font-bold text-ink group-hover:text-line-frontend">Instagram Social</span>
-          <Pictograms name="arrow-up-right" size={12} />
-        </a>
-      </div>
-
-      <div class="mt-4 pt-3 border-t border-rule flex items-center justify-between text-[11px] font-mono text-ink-soft">
-        <span>PASSPORT NO: YUG-2026</span>
-        <span>VALID NATIONWIDE</span>
-      </div>
-    </div>
-  </div>
-
-  <!-- Footer Copyright and Back to Top -->
-  <div class="ticket-perforation mt-10 pt-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 font-mono text-xs text-ink-soft">
-    <div>
-      © 2026 Yug Rojivadiya • The Yug Line Portfolio
-    </div>
-    <div class="flex items-center gap-4">
-      <span>Static Build: Astro + Tailwind</span>
-      <a href="#station-00" class="hover:text-ink font-bold uppercase underline">
-        Return to Departure ↑
+        </div>
       </a>
+
+      <!-- Stub 2: WhatsApp Quick Chat -->
+      <a
+        href={contacts.whatsappLink}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="tear-stub group p-4 bg-paper border-2 border-dashed border-ink hover:border-solid hover:bg-surface transition-all flex flex-col justify-between shadow-[3px_3px_0_var(--ink)] hover:translate-x-0.5 hover:-translate-y-0.5"
+      >
+        <div>
+          <div class="flex items-center justify-between border-b border-rule pb-1.5 mb-2 font-mono text-[10px] text-ink-soft font-bold">
+            <span>STUB 02</span>
+            <span class="text-emerald-500 font-black">CHAT // ➔</span>
+          </div>
+          <div class="font-archivo font-black text-sm uppercase text-ink group-hover:text-emerald-600 transition-colors">
+            WhatsApp
+          </div>
+          <p class="font-manrope text-xs text-ink-soft mt-1">
+            Instant technical discussions and quick queries.
+          </p>
+        </div>
+        <div class="mt-4 pt-2 border-t border-rule font-mono text-[11px] font-bold text-ink flex items-center justify-between">
+          <span>CONNECT</span>
+          <Pictograms name="arrow-up-right" size={12} />
+        </div>
+      </a>
+
+      <!-- Stub 3: LinkedIn Network -->
+      <a
+        href={contacts.linkedin}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="tear-stub group p-4 bg-paper border-2 border-dashed border-ink hover:border-solid hover:bg-surface transition-all flex flex-col justify-between shadow-[3px_3px_0_var(--ink)] hover:translate-x-0.5 hover:-translate-y-0.5"
+      >
+        <div>
+          <div class="flex items-center justify-between border-b border-rule pb-1.5 mb-2 font-mono text-[10px] text-ink-soft font-bold">
+            <span>STUB 03</span>
+            <span class="text-[#0A66C2] font-black">LINK // ➔</span>
+          </div>
+          <div class="font-archivo font-black text-sm uppercase text-ink group-hover:text-[#0A66C2] transition-colors">
+            LinkedIn
+          </div>
+          <p class="font-manrope text-xs text-ink-soft mt-1">
+            Professional recommendations and endorsements.
+          </p>
+        </div>
+        <div class="mt-4 pt-2 border-t border-rule font-mono text-[11px] font-bold text-ink flex items-center justify-between">
+          <span>VIEW PROFILE</span>
+          <Pictograms name="arrow-up-right" size={12} />
+        </div>
+      </a>
+
+      <!-- Stub 4: GitHub Repositories -->
+      <a
+        href={contacts.github}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="tear-stub group p-4 bg-paper border-2 border-dashed border-ink hover:border-solid hover:bg-surface transition-all flex flex-col justify-between shadow-[3px_3px_0_var(--ink)] hover:translate-x-0.5 hover:-translate-y-0.5"
+      >
+        <div>
+          <div class="flex items-center justify-between border-b border-rule pb-1.5 mb-2 font-mono text-[10px] text-ink-soft font-bold">
+            <span>STUB 04</span>
+            <span class="text-line-ai font-black">CODE // ➔</span>
+          </div>
+          <div class="font-archivo font-black text-sm uppercase text-ink group-hover:text-line-ai transition-colors">
+            GitHub
+          </div>
+          <p class="font-manrope text-xs text-ink-soft mt-1">
+            Inspect source repositories, commits, and packages.
+          </p>
+        </div>
+        <div class="mt-4 pt-2 border-t border-rule font-mono text-[11px] font-bold text-ink flex items-center justify-between">
+          <span>INSPECT CODE</span>
+          <Pictograms name="arrow-up-right" size={12} />
+        </div>
+      </a>
+    </div>
+
+    <!-- Bottom Security Barcode & Action Buttons -->
+    <div class="mt-10 pt-6 border-t-2 border-ink flex flex-col sm:flex-row items-center justify-between gap-6 font-mono text-xs">
+      <!-- Faux Barcode Strip -->
+      <div class="flex items-center gap-1.5 opacity-80" aria-hidden="true">
+        {Array.from({ length: 32 }).map((_, i) => (
+          <div
+            class="h-8 bg-ink"
+            style={`width: ${i % 3 === 0 ? '4px' : i % 2 === 0 ? '2px' : '1px'};`}
+          ></div>
+        ))}
+        <span class="text-[10px] ml-2 text-ink-soft">PASSPORT: YUG-2026-OWC</span>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="flex flex-wrap items-center gap-3">
+        <a
+          href={contacts.resumeUrl}
+          download
+          class="btn-stub !min-h-[42px] !px-4 text-xs"
+        >
+          <span>Download Résumé</span>
+          <Pictograms name="arrow-up-right" size={12} />
+        </a>
+
+        <button
+          type="button"
+          id="terminus-back-start-btn"
+          class="px-4 py-2 bg-surface hover:bg-paper border-2 border-rule hover:border-ink font-bold text-xs uppercase text-ink transition-colors"
+        >
+          Back to Start ↺
+        </button>
+      </div>
     </div>
   </div>
 </div>
+
+<script>
+  import { metroSound } from '../scripts/sound/metroSound';
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const stampBtn = document.getElementById('stamp-terminus-btn');
+    const rubberStamp = document.getElementById('terminus-rubber-stamp');
+    const statusMsg = document.getElementById('stamp-status-msg');
+    const restartBtn = document.getElementById('terminus-back-start-btn');
+
+    let stamped = false;
+
+    const applyStamp = () => {
+      if (!rubberStamp) return;
+      stamped = true;
+      metroSound.stamp();
+      rubberStamp.classList.remove('opacity-30', 'border-dashed');
+      rubberStamp.classList.add('opacity-100', 'border-solid', 'scale-110');
+      rubberStamp.style.borderColor = '#D8362B';
+      rubberStamp.style.boxShadow = 'inset 0 0 0 2px rgba(216,54,43,0.3)';
+
+      if (statusMsg) {
+        statusMsg.textContent = '✓ Commemorative transit stamp applied!';
+        statusMsg.classList.add('text-emerald-500', 'font-bold');
+      }
+    };
+
+    if (stampBtn) {
+      stampBtn.addEventListener('click', applyStamp);
+    }
+    if (rubberStamp) {
+      rubberStamp.addEventListener('click', applyStamp);
+    }
+
+    if (restartBtn) {
+      restartBtn.addEventListener('click', () => {
+        if ((window as any).__yugline) {
+          (window as any).__yugline.backToStart();
+        } else {
+          window.location.hash = '#base';
+        }
+      });
+    }
+  });
+</script>

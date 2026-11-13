@@ -1,78 +1,254 @@
 ---
+// ExperienceTicket.astro
+// Signature Staff ID Badges on Lanyards with 3D Card Flip & Route Timeline (Section 5)
 import { EXPERIENCES, SERVICE_TAGS } from '../data/portfolio';
 import Pictograms from './Pictograms.astro';
+
+const BADGE_CONFIG = [
+  {
+    badgeId: 'edverb',
+    securityLevel: 'LEVEL 01 // TECH CREW',
+    dept: 'FRONTEND ARCHITECTURE',
+    photo: '/images/yug-profile.jpg',
+    barcode: '||| | |||| | ||||| || |',
+    accentColor: 'var(--line-frontend)',
+    proofLink: '/images/lor.png',
+    proofText: 'Inspect Verified LOR ➔',
+  },
+  {
+    badgeId: 'ebc',
+    securityLevel: 'LEVEL 02 // LEADERSHIP',
+    dept: 'EXECUTIVE COMMITTEE',
+    photo: '/images/yug-profile.jpg',
+    barcode: '||||| || | ||| |||| | |',
+    accentColor: 'var(--line-hardware)',
+    proofLink: 'https://iec.ppsu.ac.in/',
+    proofText: 'Inspect Club Records ➔',
+  },
+  {
+    badgeId: 'freelance',
+    securityLevel: 'LEVEL 03 // INDEPENDENT',
+    dept: 'FULL-STACK DELIVERY',
+    photo: '/images/yug-profile.jpg',
+    barcode: '|| | ||||| || ||| | |||',
+    accentColor: 'var(--line-backend)',
+    proofLink: 'https://edverb.in',
+    proofText: 'Inspect Live Client Build ➔',
+  },
+];
 ---
 
-<div class="space-y-6">
+<div class="space-y-8 select-none" id="experience-crew-station">
   <!-- Service Tags Bar (What I Do) -->
-  <div class="flex flex-wrap items-center gap-3 p-4 bg-surface border-2 border-ink">
-    <span class="font-mono text-xs uppercase tracking-wider text-ink-soft">
-      // AUTHORIZED SERVICE ROLES:
-    </span>
-    {SERVICE_TAGS.map((tag) => (
-      <span class="font-mono text-xs font-bold uppercase tracking-wider px-3 py-1 bg-paper border border-rule text-ink">
-        {tag}
+  <div class="flex flex-wrap items-center justify-between gap-3 p-4 bg-surface border-2 border-ink shadow-[4px_4px_0_var(--ink)]">
+    <div class="flex items-center gap-2">
+      <span class="w-2.5 h-2.5 rounded-full bg-line-backend animate-pulse"></span>
+      <span class="font-mono text-xs uppercase tracking-wider text-ink font-bold">
+        // AUTHORIZED SERVICE ROLES:
       </span>
-    ))}
+    </div>
+    <div class="flex flex-wrap gap-2">
+      {SERVICE_TAGS.map((tag) => (
+        <span class="font-mono text-xs font-bold uppercase tracking-wider px-3 py-1 bg-paper border border-ink text-ink shadow-[2px_2px_0_var(--ink)]">
+          {tag}
+        </span>
+      ))}
+    </div>
   </div>
 
-  <!-- Timeline Cards -->
-  <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-    {EXPERIENCES.map((exp, idx) => (
-      <div class="ticket p-5 md:p-6 bg-surface border-2 border-ink shadow-[4px_4px_0_var(--ink)] flex flex-col justify-between">
-        <div>
-          <!-- Header -->
-          <div class="flex items-center justify-between border-b border-rule pb-2 mb-3">
-            <span class="font-mono text-[11px] uppercase tracking-wider text-ink-soft">
-              RECORD 0{idx + 1}
-            </span>
-            <span class="font-mono text-[11px] font-bold text-ink uppercase bg-paper px-2 py-0.5 border border-rule">
-              {exp.type}
-            </span>
+  <!-- Physical Lanyard Badges Grid -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-8 pt-4">
+    {EXPERIENCES.map((exp, idx) => {
+      const cfg = BADGE_CONFIG[idx] || BADGE_CONFIG[0];
+      return (
+        <div class="lanyard-station-wrapper flex flex-col items-center">
+          
+          <!-- Lanyard Strap (Fabric Ribbon with clips) -->
+          <div class="flex flex-col items-center pointer-events-none mb-[-8px] z-10">
+            <!-- Woven Ribbon Loop -->
+            <div
+              class="w-8 h-12 border-x-2 border-t-2 border-ink"
+              style={`background: repeating-linear-gradient(45deg, #111111, #111111 4px, ${cfg.accentColor} 4px, ${cfg.accentColor} 8px);`}
+            ></div>
+            <!-- Metallic Swivel Clasp / Clip -->
+            <div class="w-6 h-5 bg-[#C5CBD8] border-2 border-ink rounded-sm shadow-[1px_1px_0_#000] flex items-center justify-center">
+              <span class="w-2 h-2 rounded-full bg-ink"></span>
+            </div>
+            <!-- Metal Ring Through Badge Slot -->
+            <div class="w-3 h-3 border-2 border-ink rounded-full bg-transparent -mt-1"></div>
           </div>
 
-          <h3 class="font-archivo text-xl font-bold text-ink">
-            {exp.role}
-          </h3>
-          <p class="font-mono text-xs text-ink-soft uppercase tracking-wider mt-0.5 mb-4">
-            {exp.organization}
-          </p>
+          <!-- 3D Flip Card Container -->
+          <div
+            class="badge-flip-container w-full max-w-[340px] h-[480px] cursor-pointer group"
+            tabindex="0"
+            role="button"
+            aria-label={`Staff ID Badge for ${exp.role} at ${exp.organization}. Press to flip badge.`}
+            data-badge-index={idx}
+          >
+            <div class="badge-flipper relative w-full h-full transition-transform duration-700 [transform-style:preserve-3d]">
+              
+              <!-- ==============================================
+                   BADGE FRONT: PHYSICAL STAFF CREDENTIAL
+                   ============================================== -->
+              <div class="badge-front absolute inset-0 [backface-visibility:hidden] p-6 bg-surface border-4 border-ink shadow-[8px_8px_0_var(--ink)] flex flex-col justify-between rounded-lg">
+                <!-- Top Badge Slot Hole -->
+                <div class="w-12 h-2.5 bg-paper border-2 border-ink rounded-full mx-auto -mt-2 mb-2 flex items-center justify-center">
+                  <span class="w-8 h-0.5 bg-ink/40"></span>
+                </div>
 
-          <!-- Bullet Points -->
-          <ul class="space-y-2 text-xs md:text-sm font-manrope text-ink leading-relaxed">
-            {exp.highlights.map((item) => (
-              <li class="flex items-start gap-2">
-                <span class="font-mono text-line-frontend font-bold mt-0.5">•</span>
-                <span>{item}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
+                <!-- Header Security Strip -->
+                <div class="flex items-center justify-between border-b-2 border-ink pb-2 mb-3">
+                  <span class="font-mono text-[9px] font-black uppercase tracking-widest text-ink">
+                    {cfg.securityLevel}
+                  </span>
+                  <span class="w-3 h-3 rounded-full border border-ink" style={`background-color: ${cfg.accentColor};`}></span>
+                </div>
 
-        <!-- Links or status -->
-        <div class="ticket-perforation pt-3 mt-4">
-          {exp.links ? (
-            <div class="flex flex-wrap items-center gap-2">
-              <span class="font-mono text-[10px] text-ink-soft uppercase">Live Works:</span>
-              {exp.links.map((link) => (
-                <a
-                  href={link.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="font-mono text-xs font-bold uppercase tracking-wider text-ink hover:text-line-frontend inline-flex items-center gap-1 border border-rule px-2 py-0.5 bg-paper"
-                >
-                  <span>{link.label}</span>
-                  <Pictograms name="arrow-up-right" size={10} />
-                </a>
-              ))}
+                <!-- Badge Portrait & Role Identity -->
+                <div class="text-center my-auto">
+                  <!-- Photo Frame -->
+                  <div class="w-24 h-24 mx-auto mb-3 border-3 border-ink p-1 bg-paper shadow-[3px_3px_0_var(--ink)] relative">
+                    <img
+                      src={cfg.photo}
+                      alt="Yug Rojivadiya"
+                      class="w-full h-full object-cover filter contrast-110"
+                    />
+                    <!-- Hologram Corner Watermark -->
+                    <span class="absolute bottom-1 right-1 px-1 bg-[#111111] text-[7px] font-mono text-line-hardware font-bold">
+                      VERIFIED
+                    </span>
+                  </div>
+
+                  <h3 class="font-archivo text-xl font-black text-ink uppercase tracking-tight leading-tight">
+                    {exp.role}
+                  </h3>
+                  <p class="font-mono text-xs font-bold text-line-frontend uppercase tracking-wider mt-1">
+                    {exp.organization}
+                  </p>
+                  <p class="font-mono text-[10px] text-ink-soft uppercase mt-0.5">
+                    DEPT: {cfg.dept}
+                  </p>
+                </div>
+
+                <!-- Bottom Credential Barcode & Flip Hint -->
+                <div class="border-t-2 border-ink pt-3">
+                  <div class="font-mono text-center text-xs tracking-widest text-ink opacity-80 mb-1 select-none font-bold">
+                    {cfg.barcode}
+                  </div>
+                  <div class="flex items-center justify-between text-[10px] font-mono font-bold text-ink">
+                    <span class="text-ink-soft">PASSHOLDER #0{idx + 1}</span>
+                    <span class="text-line-frontend flex items-center gap-1 group-hover:translate-x-1 transition-transform">
+                      <span>FLIP TO REVEAL DUTIES</span>
+                      <span>➔</span>
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- ==============================================
+                   BADGE BACK: VERIFIED DUTIES & PROOFS
+                   ============================================== -->
+              <div class="badge-back absolute inset-0 [backface-visibility:hidden] [transform:rotateY(180deg)] p-6 bg-paper border-4 border-ink shadow-[8px_8px_0_var(--ink)] flex flex-col justify-between rounded-lg">
+                <!-- Top Badge Slot Hole -->
+                <div class="w-12 h-2.5 bg-surface border-2 border-ink rounded-full mx-auto -mt-2 mb-2 flex items-center justify-center">
+                  <span class="w-8 h-0.5 bg-ink/40"></span>
+                </div>
+
+                <div>
+                  <div class="flex items-center justify-between border-b-2 border-ink pb-2 mb-3">
+                    <span class="font-mono text-[9px] font-black uppercase tracking-widest text-line-frontend">
+                      // OPERATIONAL RESPONSIBILITIES
+                    </span>
+                    <span class="font-mono text-[9px] text-ink-soft uppercase font-bold">CONFIDENTIAL</span>
+                  </div>
+
+                  <!-- Highlights List -->
+                  <ul class="space-y-2.5 text-xs font-manrope text-ink leading-relaxed">
+                    {exp.highlights.map((item) => (
+                      <li class="flex items-start gap-2">
+                        <span class="font-mono text-line-frontend font-black text-sm leading-none mt-0.5">➔</span>
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                <!-- Verified Proof Link -->
+                <div class="border-t-2 border-ink pt-3 space-y-2">
+                  <a
+                    href={cfg.proofLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="btn-stub !bg-surface !text-ink w-full justify-center !min-h-[40px] text-xs font-mono font-bold uppercase shadow-[3px_3px_0_var(--ink)] hover:!bg-paper"
+                    onclick="event.stopPropagation();"
+                  >
+                    <span>{cfg.proofText}</span>
+                    <Pictograms name="arrow-up-right" size={12} />
+                  </a>
+
+                  <div class="text-center font-mono text-[9px] text-ink-soft">
+                    Tap anywhere to flip front ➔
+                  </div>
+                </div>
+              </div>
+
             </div>
-          ) : (
-            <span class="font-mono text-[10px] text-ink-soft uppercase">
-              STATUS // VERIFIED LOG
-            </span>
-          )}
+          </div>
         </div>
-      </div>
-    ))}
+      );
+    })}
+  </div>
+
+  <!-- Subway Route Timeline Connecting the 3 Nodes -->
+  <div class="p-4 bg-surface border-2 border-ink shadow-[4px_4px_0_var(--ink)] mt-6">
+    <div class="font-mono text-xs text-ink-soft uppercase mb-3 flex items-center justify-between font-bold">
+      <span>// Career Transit Timeline</span>
+      <span class="text-line-backend font-black">CONTINUOUS ENGINEERING TRACK</span>
+    </div>
+    <svg viewBox="0 0 600 50" class="w-full h-12" xmlns="http://www.w3.org/2000/svg">
+      <!-- Main Route Track -->
+      <line x1="40" y1="25" x2="560" y2="25" stroke="var(--line-backend)" stroke-width="4" />
+      
+      <!-- Station 1 Node -->
+      <circle cx="100" cy="25" r="9" fill="var(--paper)" stroke="var(--ink)" stroke-width="3" />
+      <circle cx="100" cy="25" r="4" fill="var(--line-frontend)" />
+      <text x="100" y="44" font-family="'IBM Plex Mono', monospace" font-size="9" fill="var(--ink)" font-weight="bold" text-anchor="middle">EDVERB</text>
+
+      <!-- Station 2 Node -->
+      <circle cx="300" cy="25" r="9" fill="var(--paper)" stroke="var(--ink)" stroke-width="3" />
+      <circle cx="300" cy="25" r="4" fill="var(--line-hardware)" />
+      <text x="300" y="44" font-family="'IBM Plex Mono', monospace" font-size="9" fill="var(--ink)" font-weight="bold" text-anchor="middle">EBC CLUB</text>
+
+      <!-- Station 3 Node -->
+      <circle cx="500" cy="25" r="9" fill="var(--paper)" stroke="var(--ink)" stroke-width="3" />
+      <circle cx="500" cy="25" r="4" fill="var(--line-backend)" />
+      <text x="500" y="44" font-family="'IBM Plex Mono', monospace" font-size="9" fill="var(--ink)" font-weight="bold" text-anchor="middle">FREELANCE</text>
+    </svg>
   </div>
 </div>
+
+<style>
+  .badge-flip-container.flipped .badge-flipper {
+    transform: rotateY(180deg);
+  }
+</style>
+
+<script>
+  import { sound } from '../scripts/sound';
+
+  document.querySelectorAll('.badge-flip-container').forEach((container) => {
+    const flipCard = () => {
+      sound.paperSlide();
+      container.classList.toggle('flipped');
+    };
+
+    container.addEventListener('click', flipCard);
+    container.addEventListener('keydown', (e: any) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        flipCard();
+      }
+    });
+  });
+</script>

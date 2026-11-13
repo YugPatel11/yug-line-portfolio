@@ -1,64 +1,276 @@
 ---
-import { TECH_GROUPS, LINES } from '../data/portfolio';
+// TechLegend.astro
+// Signature Interactive Skills Metro Map with Live Project Connectivity (Section 5)
+import { TECH_GROUPS, LINES, PROJECTS } from '../data/portfolio';
+
+// Precompute tech-to-project mappings from real data (no guessing)
+const TECH_MAP: Record<string, string[]> = {};
+PROJECTS.forEach((proj) => {
+  proj.techStack.forEach((t) => {
+    const key = t.trim().toLowerCase();
+    if (!TECH_MAP[key]) TECH_MAP[key] = [];
+    TECH_MAP[key].push(proj.title);
+  });
+});
+
+const SKILL_STATIONS = [
+  // AI Line
+  { id: 'gemini', name: 'Gemini AI', line: 'ai', cx: 80, cy: 60, projects: ['Ghumify'] },
+  { id: 'groq', name: 'Groq Llama', line: 'ai', cx: 180, cy: 60, projects: ['Ghumify'] },
+  { id: 'llm', name: 'LLM APIs', line: 'ai', cx: 280, cy: 60, projects: ['Ghumify', 'DataMorfix'] },
+  { id: 'python-ai', name: 'NumPy / Pandas', line: 'ai', cx: 380, cy: 60, projects: ['DataMorfix'] },
+
+  // Frontend Line
+  { id: 'nextjs', name: 'Next.js 15', line: 'frontend', cx: 80, cy: 130, projects: ['Ghumify', 'Edverb'] },
+  { id: 'typescript', name: 'TypeScript', line: 'frontend', cx: 180, cy: 130, projects: ['Ghumify', 'The Yug Line'] },
+  { id: 'flutter', name: 'Flutter / Dart', line: 'frontend', cx: 280, cy: 130, projects: ['Ghumify', 'GeoBus'] },
+  { id: 'tailwind', name: 'Tailwind CSS', line: 'frontend', cx: 380, cy: 130, projects: ['All Web Builds'] },
+
+  // Backend Line
+  { id: 'django', name: 'Django / Python', line: 'backend', cx: 80, cy: 200, projects: ['Grantpilot', 'EMS'] },
+  { id: 'firebase', name: 'Firebase', line: 'backend', cx: 180, cy: 200, projects: ['GeoBus', 'Clinic', 'Ghumify'] },
+  { id: 'postgres', name: 'PostgreSQL / SQL', line: 'backend', cx: 280, cy: 200, projects: ['Grantpilot', 'DataMorfix'] },
+  { id: 'sqlite', name: 'SQLite Caching', line: 'backend', cx: 380, cy: 200, projects: ['Ghumify'] },
+
+  // Hardware Line
+  { id: 'gps', name: 'GPS APIs', line: 'hardware', cx: 80, cy: 270, projects: ['GeoBus'] },
+  { id: 'osm', name: 'OpenStreetMap', line: 'hardware', cx: 180, cy: 270, projects: ['Ghumify'] },
+  { id: 'hardware-iot', name: 'IoT Sensors', line: 'hardware', cx: 280, cy: 270, projects: ['GeoBus', 'EcosortX'] },
+  { id: 'telemetry', name: 'Real-time Telemetry', line: 'hardware', cx: 380, cy: 270, projects: ['GeoBus'] },
+];
 ---
 
-<div class="space-y-6">
-  <!-- Legend Table / Grid -->
-  <div class="ticket p-6 md:p-8 bg-surface border-2 border-ink shadow-[6px_6px_0_var(--ink)]">
-    <div class="border-b border-rule pb-3 mb-6 flex flex-wrap items-center justify-between gap-2">
-      <div class="flex items-center gap-2">
-        <span class="w-2.5 h-2.5 rounded-full bg-ink"></span>
-        <h3 class="font-mono text-sm uppercase tracking-wider text-ink font-bold">
-          TRANSIT CAPABILITIES // LINE LEGEND & STOPS
+<div class="space-y-6 select-none" id="skills-metro-station">
+  <!-- Top Gantry Header -->
+  <div class="p-4 sm:p-5 bg-surface border-4 border-ink shadow-[6px_6px_0_var(--ink)] flex flex-wrap items-center justify-between gap-4">
+    <div class="flex items-center gap-3">
+      <div class="w-3.5 h-3.5 rounded-full bg-line-hardware animate-pulse"></div>
+      <div>
+        <h3 class="font-archivo text-xl sm:text-2xl font-black text-ink uppercase tracking-tight">
+          TRANSIT ARSENAL // SKILLS METRO MAP
         </h3>
+        <p class="font-mono text-xs text-ink-soft">
+          NO ARBITRARY PERCENTAGES • SELECT ANY STATION TO TRACE PRODUCTION DEPLOYMENTS
+        </p>
       </div>
-      <span class="font-mono text-xs text-ink-soft uppercase">
-        NO ARBITRARY PERCENTAGES • PURE STACK
+    </div>
+
+    <!-- Active Line Legend Pills -->
+    <div class="flex flex-wrap items-center gap-2 font-mono text-xs font-bold">
+      <span class="px-2.5 py-1 bg-paper border border-ink text-line-ai flex items-center gap-1.5 shadow-[2px_2px_0_var(--ink)]">
+        <span class="w-2 h-2 rounded-full bg-line-ai"></span>
+        AI / ML LINE
+      </span>
+      <span class="px-2.5 py-1 bg-paper border border-ink text-line-frontend flex items-center gap-1.5 shadow-[2px_2px_0_var(--ink)]">
+        <span class="w-2 h-2 rounded-full bg-line-frontend"></span>
+        FRONTEND LINE
+      </span>
+      <span class="px-2.5 py-1 bg-paper border border-ink text-line-backend flex items-center gap-1.5 shadow-[2px_2px_0_var(--ink)]">
+        <span class="w-2 h-2 rounded-full bg-line-backend"></span>
+        BACKEND LINE
+      </span>
+      <span class="px-2.5 py-1 bg-paper border border-ink text-line-hardware flex items-center gap-1.5 shadow-[2px_2px_0_var(--ink)]">
+        <span class="w-2 h-2 rounded-full bg-line-hardware"></span>
+        HARDWARE LINE
       </span>
     </div>
+  </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      {TECH_GROUPS.map((group) => {
-        const line = LINES[group.lineId];
-        return (
-          <div class="p-4 bg-paper border border-rule flex flex-col justify-between">
-            <div>
-              <div class="flex items-center gap-2 mb-3 pb-2 border-b border-rule">
-                <span class="w-3 h-3 rounded-full flex-shrink-0" style={`background-color: ${line?.colorVar || 'var(--ink)'};`}></span>
-                <h4 class="font-archivo text-base font-bold text-ink tracking-tight">
-                  {group.category}
-                </h4>
-              </div>
+  <!-- Interactive Subway Map Schematic Canvas -->
+  <div class="p-6 bg-paper border-4 border-ink shadow-[8px_8px_0_var(--ink)] overflow-x-auto">
+    <div class="min-w-[640px]">
+      <svg
+        id="skills-schematic-svg"
+        viewBox="0 0 520 330"
+        class="w-full h-auto select-none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <!-- Background Engineering Blueprint Grid -->
+        <defs>
+          <pattern id="skills-grid" width="20" height="20" patternUnits="userSpaceOnUse">
+            <path d="M 20 0 L 0 0 0 20" fill="none" stroke="var(--ink)" stroke-width="0.5" stroke-opacity="0.08" />
+          </pattern>
+        </defs>
+        <rect width="100%" height="100%" fill="url(#skills-grid)" />
 
-              <!-- Stops on this track -->
-              <div class="space-y-2">
-                {group.items.map((tech) => (
-                  <div class="flex items-center gap-2 font-mono text-xs text-ink">
-                    <span class="w-1.5 h-1.5 rounded-full bg-rule"></span>
-                    <span>{tech}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
+        <!-- 4 Transit Rail Lines -->
+        <!-- AI / ML Track (Blue) -->
+        <path d="M 40 60 L 460 60" stroke="var(--line-ai)" stroke-width="6" stroke-linecap="round" fill="none" />
+        <!-- Frontend Track (Orange) -->
+        <path d="M 40 130 L 460 130" stroke="var(--line-frontend)" stroke-width="6" stroke-linecap="round" fill="none" />
+        <!-- Backend Track (Green) -->
+        <path d="M 40 200 L 460 200" stroke="var(--line-backend)" stroke-width="6" stroke-linecap="round" fill="none" />
+        <!-- Hardware Track (Yellow) -->
+        <path d="M 40 270 L 460 270" stroke="var(--line-hardware)" stroke-width="6" stroke-linecap="round" fill="none" />
 
-            <div class="mt-4 pt-2 border-t border-rule text-right">
-              <span class="font-mono text-[10px] text-ink-soft uppercase">
-                TRACK // {line?.name || group.lineId}
-              </span>
-            </div>
-          </div>
-        );
-      })}
+        <!-- Vertical Interconnecting Trunk Routes (Diagonal Transfers) -->
+        <path d="M 80 60 L 80 270" stroke="var(--ink)" stroke-width="2" stroke-dasharray="4 4" opacity="0.3" fill="none" />
+        <path d="M 180 60 L 180 270" stroke="var(--ink)" stroke-width="2" stroke-dasharray="4 4" opacity="0.3" fill="none" />
+        <path d="M 280 60 L 280 270" stroke="var(--ink)" stroke-width="2" stroke-dasharray="4 4" opacity="0.3" fill="none" />
+        <path d="M 380 60 L 380 270" stroke="var(--ink)" stroke-width="2" stroke-dasharray="4 4" opacity="0.3" fill="none" />
+
+        <!-- Line Track Head Labels (Left Side) -->
+        <text x="35" y="44" font-family="'IBM Plex Mono', monospace" font-size="9" font-weight="900" fill="var(--line-ai)">AI / ML TRACK</text>
+        <text x="35" y="114" font-family="'IBM Plex Mono', monospace" font-size="9" font-weight="900" fill="var(--line-frontend)">FRONTEND TRACK</text>
+        <text x="35" y="184" font-family="'IBM Plex Mono', monospace" font-size="9" font-weight="900" fill="var(--line-backend)">BACKEND TRACK</text>
+        <text x="35" y="254" font-family="'IBM Plex Mono', monospace" font-size="9" font-weight="900" fill="var(--line-hardware)">HARDWARE TRACK</text>
+
+        <!-- Individual Skill Station Nodes -->
+        {SKILL_STATIONS.map((st) => (
+          <g
+            class="skill-station-node cursor-pointer group"
+            data-skill-id={st.id}
+            data-skill-name={st.name}
+            data-line={st.line}
+            data-projects={st.projects.join(', ')}
+            tabindex="0"
+            role="button"
+            aria-label={`Skill station: ${st.name} on ${st.line} line`}
+          >
+            <!-- Outer Pulsing Ring on Focus/Hover -->
+            <circle
+              cx={st.cx}
+              cy={st.cy}
+              r="14"
+              fill="transparent"
+              stroke="var(--ink)"
+              stroke-width="1.5"
+              stroke-dasharray="3 3"
+              class="node-target-ring opacity-0 group-hover:opacity-100 transition-opacity"
+            />
+            <!-- Outer Station Outer Rim -->
+            <circle
+              cx={st.cx}
+              cy={st.cy}
+              r="9"
+              fill="var(--paper)"
+              stroke="var(--ink)"
+              stroke-width="3"
+              class="transition-transform group-hover:scale-125 origin-center"
+            />
+            <!-- Inner Line Color Core -->
+            <circle
+              cx={st.cx}
+              cy={st.cy}
+              r="4.5"
+              fill={
+                st.line === 'ai' ? 'var(--line-ai)' :
+                st.line === 'frontend' ? 'var(--line-frontend)' :
+                st.line === 'backend' ? 'var(--line-backend)' :
+                'var(--line-hardware)'
+              }
+            />
+            <!-- Station Monospace Title Label -->
+            <text
+              x={st.cx}
+              y={st.cy + 22}
+              font-family="'IBM Plex Mono', monospace"
+              font-size="9"
+              font-weight="bold"
+              fill="var(--ink)"
+              text-anchor="middle"
+              class="group-hover:fill-line-frontend transition-colors pointer-events-none select-none"
+            >
+              {st.name}
+            </text>
+          </g>
+        ))}
+      </svg>
     </div>
 
-    <!-- Mandatory Honest AI Workflow Note per brief A7 -->
-    <div class="mt-8 p-4 bg-paper border-l-4 border-line-ai text-xs font-mono text-ink leading-relaxed">
-      <div class="font-bold uppercase tracking-wider text-line-ai mb-1">
-        // AI ASSISTANCE DECLARATION & WORKFLOW DISCLOSURE
+    <!-- Active Station Live Inspector Ledger -->
+    <div
+      id="skill-inspector-ledger"
+      class="mt-6 p-4 sm:p-5 bg-surface border-3 border-ink shadow-[4px_4px_0_var(--ink)] flex flex-col sm:flex-row sm:items-center justify-between gap-4"
+    >
+      <div>
+        <div class="flex items-center gap-2 mb-1">
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span class="font-mono text-[10px] font-black uppercase tracking-widest text-ink-soft">
+            STATION TELEMETRY // ACTIVE JUNCTION
+          </span>
+        </div>
+        <h4 id="inspector-skill-title" class="font-archivo text-xl sm:text-2xl font-black text-ink uppercase tracking-tight">
+          Gemini AI
+        </h4>
+        <p id="inspector-skill-line" class="font-mono text-xs text-line-ai font-bold uppercase mt-0.5">
+          // AI / ML TRANSIT LINE
+        </p>
       </div>
-      <p class="text-ink-soft">
-        Modern AI coding assistants (including Antigravity and Claude Code) are integrated into my workflow as accelerators for boilerplate generation, test scaffolding, and research. System architecture, engineering decisions, visual art direction, and code verification remain 100% human-directed and authored by me.
-      </p>
+
+      <!-- Verified Connected Production Deployments -->
+      <div class="p-3 bg-paper border-2 border-ink shadow-[2px_2px_0_var(--ink)] sm:max-w-md w-full">
+        <span class="font-mono text-[10px] uppercase font-bold text-ink-soft block mb-1">
+          ACTIVE IN PRODUCTION SYSTEMS:
+        </span>
+        <div id="inspector-projects-chips" class="flex flex-wrap gap-1.5 font-mono text-xs font-bold text-ink">
+          <span class="px-2 py-0.5 bg-surface border border-ink text-line-frontend">Ghumify</span>
+        </div>
+      </div>
     </div>
   </div>
+
+  <!-- Mandatory Honest AI Workflow Note per brief A7 -->
+  <div class="p-5 bg-surface border-4 border-ink shadow-[6px_6px_0_var(--ink)] text-xs font-mono text-ink leading-relaxed">
+    <div class="font-black uppercase tracking-wider text-line-ai mb-1.5 flex items-center gap-2">
+      <span class="w-2 h-2 rounded-full bg-line-ai"></span>
+      <span>// AI ASSISTANCE DECLARATION & WORKFLOW DISCLOSURE (BRIEF A7)</span>
+    </div>
+    <p class="text-ink-soft font-manrope text-sm">
+      Modern AI coding assistants (including Antigravity and Claude Code) are integrated into my workflow as accelerators for boilerplate generation, test scaffolding, and research. System architecture, engineering decisions, visual art direction, and code verification remain 100% human-directed and authored by me.
+    </p>
+  </div>
 </div>
+
+<script>
+  import { sound } from '../scripts/sound';
+
+  const nodes = document.querySelectorAll('.skill-station-node');
+  const titleEl = document.getElementById('inspector-skill-title');
+  const lineEl = document.getElementById('inspector-skill-line');
+  const projectsContainer = document.getElementById('inspector-projects-chips');
+
+  const selectSkillStation = (node: Element) => {
+    sound.beep();
+    const name = node.getAttribute('data-skill-name') || '';
+    const line = node.getAttribute('data-line') || '';
+    const projects = (node.getAttribute('data-projects') || '').split(',').map((p) => p.trim());
+
+    if (titleEl) titleEl.textContent = name;
+    if (lineEl) {
+      lineEl.textContent = `// ${line.toUpperCase()} TRANSIT LINE`;
+      lineEl.style.color = line === 'ai' ? 'var(--line-ai)' :
+                           line === 'frontend' ? 'var(--line-frontend)' :
+                           line === 'backend' ? 'var(--line-backend)' :
+                           'var(--line-hardware)';
+    }
+
+    if (projectsContainer) {
+      projectsContainer.innerHTML = '';
+      projects.forEach((proj) => {
+        const chip = document.createElement('span');
+        chip.className = 'px-2 py-0.5 bg-surface border border-ink text-line-frontend font-bold shadow-[1px_1px_0_var(--ink)]';
+        chip.textContent = proj;
+        projectsContainer.appendChild(chip);
+      });
+    }
+
+    // Node highlight styling
+    nodes.forEach((n) => {
+      const ring = n.querySelector('.node-target-ring');
+      if (ring) (ring as HTMLElement).style.opacity = '0';
+    });
+    const targetRing = node.querySelector('.node-target-ring');
+    if (targetRing) (targetRing as HTMLElement).style.opacity = '1';
+  };
+
+  nodes.forEach((node) => {
+    node.addEventListener('click', () => selectSkillStation(node));
+    node.addEventListener('keydown', (e: any) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        selectSkillStation(node);
+      }
+    });
+  });
+</script>

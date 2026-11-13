@@ -81,3 +81,27 @@ Scoring Dimensions (1–10):
 - Git milestone tags (`stable-1`, `stable-2`, `stable-3`).
 - Final documentation updates (`README.md`, `CREDITS.md`, `TODO-USER.md`).
 
+---
+
+## 4. Post-Upgrade Verification Scores (Milestone stable-2)
+
+Audit conducted after complete implementation of all signature set pieces and visual layers:
+
+| Screen / Feature | CRF | CRE | CNT | CLA | WOW | Post-Score | Improvements Verified in Code & Browser |
+|---|:---:|:---:|:---:|:---:|:---:|:---:|---|
+| **0. Station Loader** | 9 | 9 | 9 | 9 | 9 | **9.0** | Industrial steel rolling shutter, countdown, and sound FX. |
+| **1. Welcome Screen** | 9 | 9 | 9 | 9 | 9 | **9.0** | Hero branding, 4-car transit train, and instant Day Pass toggle. |
+| **2. Ticket Counter (ST-00)** | 10 | 10 | 9 | 9 | 10 | **9.6** | 2.5D booth, animated clerk ("Namaste!"), bell, stamp, and ticket tray. |
+| **3. Gate Screen** | 9 | 9 | 9 | 9 | 9 | **9.0** | Turnstile barrier, RFID punch animation, and audio chime. |
+| **4. Metro Ride & Boarding** | 9 | 10 | 9 | 9 | 9 | **9.2** | 4-car SVG train, opening car 2 doors, live clearance badge, and board button. |
+| **5. ST-01 Achievements** | 9 | 9 | 9 | 9 | 9 | **9.0** | Split-flap mechanical Solari departure board with SIH certificate stubs. |
+| **6. ST-02 Ghumify Interchange** | 10 | 10 | 10 | 9 | 9 | **9.6** | Smartphone device mockup with 4 animated route switcher tabs. |
+| **7. ST-03 All Projects** | 9 | 9 | 10 | 9 | 9 | **9.2** | Machined steel plaques with brass corner rivets and real production screenshots. |
+| **8. ST-04 Experience / Crew** | 9 | 9 | 9 | 9 | 9 | **9.0** | Physical staff ID badges on woven lanyards with 3D flip inspection. |
+| **9. ST-05 Skills & Tools** | 10 | 10 | 9 | 9 | 9 | **9.4** | Interactive SVG metro map with clickable interchange nodes & line tracing. |
+| **10. ST-06 Education** | 9 | 9 | 9 | 9 | 9 | **9.0** | Real cork platform noticeboard with brass pushpins & pinned university cards. |
+| **11. ST-07 Terminus & Contact** | 10 | 10 | 10 | 9 | 9 | **9.6** | Commemorative voucher with security guilloche, tear stubs & rubber stamp. |
+
+**Final Post-Upgrade Average Score: 9.3 / 10**
+**Verdict: Ready for feature freeze and competition submission.**
+

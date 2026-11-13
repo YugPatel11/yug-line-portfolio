@@ -67,6 +67,52 @@ const ogImage = `${canonicalURL}og-image.svg`;
     })} />
   </head>
   <body class="transit-grid-bg paper-grain bg-paper text-ink font-manrope antialiased overflow-x-hidden min-h-screen">
+    <!-- Ambient Passing Train Tunnel Window (Rule 2.6) -->
+    <div class="ambient-tunnel-window" aria-hidden="true">
+      <div class="ambient-passing-train">
+        <svg viewBox="0 0 800 36" class="w-full h-full text-ink fill-current" xmlns="http://www.w3.org/2000/svg">
+          <!-- Lead Car 1 -->
+          <rect x="0" y="4" width="180" height="26" rx="4" />
+          <polygon points="0,10 0,26 -20,26" />
+          <circle cx="35" cy="33" r="3" />
+          <circle cx="65" cy="33" r="3" />
+          <circle cx="120" cy="33" r="3" />
+          <circle cx="150" cy="33" r="3" />
+          <rect x="20" y="8" width="30" height="12" fill="var(--paper)" opacity="0.3" />
+          <rect x="80" y="8" width="30" height="12" fill="var(--paper)" opacity="0.3" />
+          <!-- Gangway -->
+          <rect x="180" y="10" width="10" height="18" fill="var(--ink)" opacity="0.5" />
+          <!-- Car 2 -->
+          <rect x="190" y="4" width="180" height="26" rx="4" />
+          <circle cx="225" cy="33" r="3" />
+          <circle cx="255" cy="33" r="3" />
+          <circle cx="310" cy="33" r="3" />
+          <circle cx="340" cy="33" r="3" />
+          <rect x="210" y="8" width="30" height="12" fill="var(--paper)" opacity="0.3" />
+          <rect x="270" y="8" width="30" height="12" fill="var(--paper)" opacity="0.3" />
+          <!-- Gangway -->
+          <rect x="370" y="10" width="10" height="18" fill="var(--ink)" opacity="0.5" />
+          <!-- Car 3 -->
+          <rect x="380" y="4" width="180" height="26" rx="4" />
+          <circle cx="415" cy="33" r="3" />
+          <circle cx="445" cy="33" r="3" />
+          <circle cx="500" cy="33" r="3" />
+          <circle cx="530" cy="33" r="3" />
+          <rect x="400" y="8" width="30" height="12" fill="var(--paper)" opacity="0.3" />
+          <rect x="460" y="8" width="30" height="12" fill="var(--paper)" opacity="0.3" />
+          <!-- Gangway -->
+          <rect x="560" y="10" width="10" height="18" fill="var(--ink)" opacity="0.5" />
+          <!-- Car 4 -->
+          <rect x="570" y="4" width="180" height="26" rx="4" />
+          <circle cx="605" cy="33" r="3" />
+          <circle cx="635" cy="33" r="3" />
+          <circle cx="690" cy="33" r="3" />
+          <circle cx="720" cy="33" r="3" />
+          <rect x="590" y="8" width="30" height="12" fill="var(--paper)" opacity="0.3" />
+          <rect x="650" y="8" width="30" height="12" fill="var(--paper)" opacity="0.3" />
+        </svg>
+      </div>
+    </div>
     <slot />
   </body>
 </html>

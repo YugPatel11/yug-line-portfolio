@@ -1,8 +1,9 @@
 ---
+// ProjectStop.astro
+// Machined Platform Plaque with Real Media Screenshots & Focus-Trapped Inspection
 import type { ProjectItem } from '../data/types';
 import Pictograms from './Pictograms.astro';
 import LineChip from './LineChip.astro';
-import ProjectMediaPlaceholder from './ProjectMediaPlaceholder.astro';
 
 interface Props {
   project: ProjectItem;
@@ -10,11 +11,24 @@ interface Props {
 
 const { project } = Astro.props;
 const isDev = import.meta.env.DEV;
+
+const PROJECT_IMAGES: Record<string, string> = {
+  geobus: '/images/Geobus.jpg',
+  grantpilot: '/images/Grantpilot.jpg',
+  datamorfix: '/images/DataMorfix.png',
+  ecosortx: '/images/EcosortX.png',
+  ems: '/images/EMS.png',
+  clinic: '/images/clinic.png',
+  cricktraker: '/images/cricktraker.jpeg',
+};
+
+const projectImg = PROJECT_IMAGES[project.id];
 ---
 
 <div
   class="station-plaque p-6 sm:p-8 bg-surface flex flex-col justify-between project-card transition-all"
   data-lines={project.lines.join(' ')}
+  data-project-id={project.id}
 >
   <!-- Machined Metallic Corner Rivets -->
   <span class="plaque-rivet plaque-rivet-tl" aria-hidden="true"></span>
@@ -28,14 +42,14 @@ const isDev = import.meta.env.DEV;
       <span class="w-1.5 h-1.5 rounded-full bg-line-frontend inline-block"></span>
       SPEC // TRANSIT SYSTEM PLAQUE
     </span>
-    <span>PROD · CERTIFIED</span>
+    <span class="font-bold text-ink">PROD · CERTIFIED</span>
   </div>
 
   <div>
     <!-- Ticket Header: Pictogram, Lines & Fare -->
     <div class="flex items-start justify-between gap-3 border-b border-rule pb-3 mb-4">
       <div class="flex items-center gap-3">
-        <div class="w-10 h-10 border border-ink bg-paper flex items-center justify-center text-ink flex-shrink-0">
+        <div class="w-10 h-10 border border-ink bg-paper flex items-center justify-center text-ink flex-shrink-0 shadow-[2px_2px_0_var(--ink)]">
           <Pictograms name={project.pictogram} size={22} />
         </div>
         <div>
@@ -54,7 +68,7 @@ const isDev = import.meta.env.DEV;
       {project.grantAmount && (
         <div class="text-right flex-shrink-0">
           <span class="font-mono text-[10px] text-ink-soft uppercase block">GRANT FARE</span>
-          <span class="font-mono text-xs font-bold text-ink bg-line-hardware/20 px-2 py-0.5 border border-line-hardware/50 inline-block">
+          <span class="font-mono text-xs font-bold text-ink bg-line-hardware/30 px-2 py-0.5 border border-line-hardware inline-block shadow-[1px_1px_0_var(--ink)]">
             {project.grantAmount}
           </span>
         </div>
@@ -63,7 +77,7 @@ const isDev = import.meta.env.DEV;
 
     <!-- Project Purpose & Description -->
     <div class="mb-4">
-      <p class="font-mono text-xs text-ink-soft uppercase tracking-wider mb-2">
+      <p class="font-mono text-xs text-line-frontend font-bold uppercase tracking-wider mb-2">
         {project.tagline}
       </p>
       <p class="font-manrope text-sm sm:text-base text-ink leading-relaxed max-w-[65ch]">
@@ -71,10 +85,10 @@ const isDev = import.meta.env.DEV;
       </p>
     </div>
 
-    <!-- Tech Stack Chips (Limited to max 3 per card, Section 5.2) -->
+    <!-- Tech Stack Chips (Section 5.2) -->
     <div class="flex flex-wrap gap-1.5 mb-4">
       {project.techStack.slice(0, 3).map((tech) => (
-        <span class="font-mono text-xs uppercase tracking-wider px-2.5 py-1 bg-paper border border-rule text-ink">
+        <span class="font-mono text-xs uppercase tracking-wider px-2.5 py-1 bg-paper border border-rule text-ink shadow-[1px_1px_0_var(--ink)]">
           {tech}
         </span>
       ))}
@@ -89,14 +103,25 @@ const isDev = import.meta.env.DEV;
   <div>
     <!-- Perforation and Verification Slot -->
     <div class="ticket-perforation pt-3 mt-2">
-      <!-- Designed Media Frame (Rule 12) -->
-      <div class="mb-3">
-        <ProjectMediaPlaceholder
-          title={project.title}
-          pictogram={project.pictogram}
-          techChips={project.techStack}
-          aspectRatio="aspect-[16/7]"
-        />
+      <!-- Real Production Screenshot Vitrine Frame -->
+      <div class="mb-3 border-2 border-ink bg-paper p-1.5 shadow-[3px_3px_0_var(--ink)] overflow-hidden">
+        {projectImg ? (
+          <div class="relative w-full aspect-[16/8] overflow-hidden bg-black/5 group">
+            <img
+              src={projectImg}
+              alt={`${project.title} Interface Screenshot`}
+              class="w-full h-full object-cover filter contrast-105 group-hover:scale-105 transition-transform duration-500"
+              loading="lazy"
+            />
+            <span class="absolute bottom-1 right-1 px-1.5 py-0.5 bg-black/80 font-mono text-[9px] text-[#FFC933] font-bold uppercase">
+              AUTHENTICATED BUILD
+            </span>
+          </div>
+        ) : (
+          <div class="w-full aspect-[16/8] bg-surface flex items-center justify-center font-mono text-xs text-ink-soft">
+            SCHEMATIC BLUEPRINT // PROD
+          </div>
+        )}
       </div>
 
       <!-- Action Links -->
@@ -107,14 +132,14 @@ const isDev = import.meta.env.DEV;
               href={project.liveUrl}
               target="_blank"
               rel="noopener noreferrer"
-              class="font-mono text-xs font-bold uppercase tracking-wider text-ink hover:text-line-frontend inline-flex items-center gap-1"
+              class="font-mono text-xs font-bold uppercase tracking-wider text-ink hover:text-line-frontend inline-flex items-center gap-1 border border-ink px-2.5 py-1 bg-paper shadow-[2px_2px_0_var(--ink)]"
             >
               <span>Visit Project</span>
               <Pictograms name="arrow-up-right" size={12} />
             </a>
           ) : (
             <span class="font-mono text-[10px] text-ink-soft uppercase tracking-wider">
-              {isDev ? '[DEV: TODO-USER Live Link]' : 'Demo: Pending'}
+              {isDev ? '[DEV: TODO-USER Live Link]' : 'Demo: On Request'}
             </span>
           )}
 
@@ -124,15 +149,21 @@ const isDev = import.meta.env.DEV;
                 {isDev ? '[DEV: TODO-USER Repo]' : 'Source: Private'}
               </span>
             ) : (
-              <a href={project.repoUrl} target="_blank" rel="noopener noreferrer" class="font-mono text-xs text-ink hover:underline">
-                Repo
+              <a
+                href={project.repoUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="font-mono text-xs font-bold text-ink hover:underline uppercase"
+              >
+                Repo ➔
               </a>
             )
           )}
         </div>
 
-        <span class="font-mono text-[10px] text-ink-soft uppercase">
-          ZONE 03 // STOP
+        <span class="font-mono text-[10px] font-bold uppercase text-emerald-600 flex items-center gap-1">
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+          ACTIVE ON LINE
         </span>
       </div>
     </div>
