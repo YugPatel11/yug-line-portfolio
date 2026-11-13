@@ -1,6 +1,6 @@
 ---
 // ProjectStop.astro
-// Machined Platform Plaque with Real Media Screenshots & Focus-Trapped Inspection
+// Precision Machined Platform Plaque with Dual View (Vitrine / Blueprint) & Full Spec Inspection
 import type { ProjectItem } from '../data/types';
 import Pictograms from './Pictograms.astro';
 import LineChip from './LineChip.astro';
@@ -23,12 +23,16 @@ const PROJECT_IMAGES: Record<string, string> = {
 };
 
 const projectImg = PROJECT_IMAGES[project.id];
+const primaryLine = project.lines[0] || 'frontend';
+const lineVar = `var(--line-${primaryLine})`;
 ---
 
 <div
-  class="station-plaque p-6 sm:p-8 bg-surface flex flex-col justify-between project-card transition-all"
+  class="station-plaque p-5 sm:p-7 bg-surface flex flex-col justify-between project-card transition-all relative border-2 border-ink hover:border-ink shadow-[5px_5px_0_var(--ink)] hover:shadow-[8px_8px_0_var(--ink)] hover:-translate-y-1"
   data-lines={project.lines.join(' ')}
   data-project-id={project.id}
+  data-title={project.title}
+  data-tech={project.techStack.join(' ')}
 >
   <!-- Machined Metallic Corner Rivets -->
   <span class="plaque-rivet plaque-rivet-tl" aria-hidden="true"></span>
@@ -37,23 +41,25 @@ const projectImg = PROJECT_IMAGES[project.id];
   <span class="plaque-rivet plaque-rivet-br" aria-hidden="true"></span>
 
   <!-- Plaque Specification Header Bar -->
-  <div class="flex items-center justify-between font-mono text-[10px] text-ink-soft uppercase tracking-widest border-b border-rule pb-2 mb-3">
+  <div class="flex items-center justify-between font-mono text-[10px] text-ink-soft uppercase tracking-widest border-b border-rule pb-2.5 mb-3.5">
     <span class="flex items-center gap-1.5">
-      <span class="w-1.5 h-1.5 rounded-full bg-line-frontend inline-block"></span>
-      SPEC // TRANSIT SYSTEM PLAQUE
+      <span class="w-2 h-2 rounded-full inline-block" style={`background-color: ${lineVar}`}></span>
+      <span class="font-bold text-ink">SPEC // BERTH {project.id.toUpperCase()}</span>
     </span>
-    <span class="font-bold text-ink">PROD · CERTIFIED</span>
+    <span class="px-1.5 py-0.5 bg-paper border border-rule font-bold text-ink text-[9px] shadow-[1px_1px_0_var(--ink)]">
+      PROD · CERTIFIED
+    </span>
   </div>
 
   <div>
     <!-- Ticket Header: Pictogram, Lines & Fare -->
-    <div class="flex items-start justify-between gap-3 border-b border-rule pb-3 mb-4">
+    <div class="flex items-start justify-between gap-3 border-b border-rule pb-3.5 mb-3.5">
       <div class="flex items-center gap-3">
-        <div class="w-10 h-10 border border-ink bg-paper flex items-center justify-center text-ink flex-shrink-0 shadow-[2px_2px_0_var(--ink)]">
-          <Pictograms name={project.pictogram} size={22} />
+        <div class="w-11 h-11 border-2 border-ink bg-paper flex items-center justify-center text-ink flex-shrink-0 shadow-[2px_2px_0_var(--ink)]">
+          <Pictograms name={project.pictogram} size={24} />
         </div>
         <div>
-          <h3 class="font-archivo text-xl font-bold text-ink">
+          <h3 class="font-archivo text-xl sm:text-2xl font-black text-ink tracking-tight">
             {project.title}
           </h3>
           <div class="flex flex-wrap gap-1.5 mt-1">
@@ -67,7 +73,7 @@ const projectImg = PROJECT_IMAGES[project.id];
       <!-- Fare / Grant Badge -->
       {project.grantAmount && (
         <div class="text-right flex-shrink-0">
-          <span class="font-mono text-[10px] text-ink-soft uppercase block">GRANT FARE</span>
+          <span class="font-mono text-[9px] text-ink-soft uppercase block font-bold">GRANT FARE</span>
           <span class="font-mono text-xs font-bold text-ink bg-line-hardware/30 px-2 py-0.5 border border-line-hardware inline-block shadow-[1px_1px_0_var(--ink)]">
             {project.grantAmount}
           </span>
@@ -77,95 +83,160 @@ const projectImg = PROJECT_IMAGES[project.id];
 
     <!-- Project Purpose & Description -->
     <div class="mb-4">
-      <p class="font-mono text-xs text-line-frontend font-bold uppercase tracking-wider mb-2">
+      <p class="font-mono text-xs font-bold uppercase tracking-wider mb-1.5" style={`color: ${lineVar}`}>
         {project.tagline}
       </p>
-      <p class="font-manrope text-sm sm:text-base text-ink leading-relaxed max-w-[65ch]">
+      <p class="font-manrope text-sm text-ink leading-relaxed max-w-[65ch]">
         {project.description}
       </p>
     </div>
 
-    <!-- Tech Stack Chips (Section 5.2) -->
+    <!-- Tech Stack Chips -->
     <div class="flex flex-wrap gap-1.5 mb-4">
-      {project.techStack.slice(0, 3).map((tech) => (
-        <span class="font-mono text-xs uppercase tracking-wider px-2.5 py-1 bg-paper border border-rule text-ink shadow-[1px_1px_0_var(--ink)]">
+      {project.techStack.map((tech) => (
+        <span class="font-mono text-[11px] uppercase tracking-wider px-2 py-0.5 bg-paper border border-rule text-ink shadow-[1px_1px_0_var(--ink)]">
           {tech}
         </span>
       ))}
-      {project.techStack.length > 3 && (
-        <span class="font-mono text-xs uppercase tracking-wider px-2 py-1 bg-surface border border-rule text-ink-soft">
-          +{project.techStack.length - 3}
-        </span>
-      )}
     </div>
   </div>
 
   <div>
-    <!-- Perforation and Verification Slot -->
-    <div class="ticket-perforation pt-3 mt-2">
-      <!-- Real Production Screenshot Vitrine Frame -->
-      <div class="mb-3 border-2 border-ink bg-paper p-1.5 shadow-[3px_3px_0_var(--ink)] overflow-hidden">
+    <!-- Dual View Switcher (Vitrine vs Blueprint) -->
+    <div class="flex items-center justify-between mb-2 font-mono text-[10px] text-ink-soft border-t border-rule pt-2.5">
+      <span class="uppercase font-bold flex items-center gap-1">
+        <span class="w-1.5 h-1.5 rounded-full bg-line-frontend"></span>
+        SYSTEM TELEMETRY
+      </span>
+      <div class="flex items-center gap-1" role="tablist" aria-label="Plaque view mode">
+        <button
+          type="button"
+          class="plaque-tab-btn px-2 py-0.5 border border-ink bg-ink text-paper font-bold uppercase transition-all shadow-[1px_1px_0_var(--paper)]"
+          data-mode="vitrine"
+          data-id={project.id}
+          aria-selected="true"
+        >
+          Vitrine
+        </button>
+        <button
+          type="button"
+          class="plaque-tab-btn px-2 py-0.5 border border-rule bg-surface text-ink-soft hover:text-ink font-bold uppercase transition-all"
+          data-mode="blueprint"
+          data-id={project.id}
+          aria-selected="false"
+        >
+          Blueprint
+        </button>
+      </div>
+    </div>
+
+    <!-- Vitrine View (Interface Screenshot) -->
+    <div id={`view-vitrine-${project.id}`} class="plaque-view-vitrine mb-3">
+      <div class="border-2 border-ink bg-paper p-1 shadow-[3px_3px_0_var(--ink)] overflow-hidden relative group cursor-pointer project-lightbox-trigger" data-project-id={project.id}>
         {projectImg ? (
-          <div class="relative w-full aspect-[16/8] overflow-hidden bg-black/5 group">
+          <div class="relative w-full aspect-[16/9] overflow-hidden bg-black/10">
             <img
               src={projectImg}
               alt={`${project.title} Interface Screenshot`}
               class="w-full h-full object-cover filter contrast-105 group-hover:scale-105 transition-transform duration-500"
               loading="lazy"
             />
-            <span class="absolute bottom-1 right-1 px-1.5 py-0.5 bg-black/80 font-mono text-[9px] text-[#FFC933] font-bold uppercase">
+            <!-- Inspection Zoom Badge -->
+            <div class="absolute inset-0 bg-ink/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+              <span class="px-3 py-1 bg-surface border-2 border-ink font-mono text-xs font-bold text-ink uppercase tracking-wider shadow-[2px_2px_0_var(--ink)]">
+                INSPECT SPEC 🔍
+              </span>
+            </div>
+            <span class="absolute bottom-1 right-1 px-1.5 py-0.5 bg-black/85 font-mono text-[9px] text-[#FFC933] font-bold uppercase tracking-wider">
               AUTHENTICATED BUILD
             </span>
           </div>
         ) : (
-          <div class="w-full aspect-[16/8] bg-surface flex items-center justify-center font-mono text-xs text-ink-soft">
-            SCHEMATIC BLUEPRINT // PROD
+          <div class="w-full aspect-[16/9] bg-surface flex flex-col items-center justify-center font-mono text-xs text-ink-soft p-4 text-center">
+            <span class="font-bold text-ink mb-1">SCHEMATIC BLUEPRINT</span>
+            <span>PRODUCTION VERIFIED ARCHITECTURE</span>
           </div>
         )}
       </div>
+    </div>
 
-      <!-- Action Links -->
-      <div class="flex flex-wrap items-center justify-between gap-2 pt-1">
-        <div class="flex items-center gap-3">
-          {project.liveUrl && !project.liveUrl.startsWith('TODO') ? (
-            <a
-              href={project.liveUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              class="font-mono text-xs font-bold uppercase tracking-wider text-ink hover:text-line-frontend inline-flex items-center gap-1 border border-ink px-2.5 py-1 bg-paper shadow-[2px_2px_0_var(--ink)]"
-            >
-              <span>Visit Project</span>
-              <Pictograms name="arrow-up-right" size={12} />
-            </a>
-          ) : (
-            <span class="font-mono text-[10px] text-ink-soft uppercase tracking-wider">
-              {isDev ? '[DEV: TODO-USER Live Link]' : 'Demo: On Request'}
-            </span>
-          )}
-
-          {project.repoUrl && (
-            project.repoUrl.startsWith('TODO') ? (
-              <span class="font-mono text-[10px] text-ink-soft uppercase tracking-wider">
-                {isDev ? '[DEV: TODO-USER Repo]' : 'Source: Private'}
-              </span>
-            ) : (
-              <a
-                href={project.repoUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                class="font-mono text-xs font-bold text-ink hover:underline uppercase"
-              >
-                Repo ➔
-              </a>
-            )
+    <!-- Blueprint View (Engineering Schematic) -->
+    <div id={`view-blueprint-${project.id}`} class="plaque-view-blueprint mb-3 hidden">
+      <div class="border-2 border-ink bg-[#0c0e14] p-3 shadow-[3px_3px_0_var(--ink)] text-white font-mono text-[11px] leading-relaxed">
+        <div class="flex items-center justify-between border-b border-rule/40 pb-1.5 mb-2 text-[10px] text-ink-soft">
+          <span class="text-line-hardware font-bold">ENGINEERING TOPOLOGY</span>
+          <span>REV 2.6</span>
+        </div>
+        <div class="space-y-1.5">
+          <div class="flex justify-between">
+            <span class="text-ink-soft">PRIMARY LINE:</span>
+            <span class="text-line-frontend font-bold uppercase">{project.lines.join(' · ')}</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-ink-soft">CORE FRAMEWORK:</span>
+            <span class="text-white font-bold">{project.techStack.slice(0, 2).join(' + ')}</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-ink-soft">SERVICES / APIS:</span>
+            <span class="text-white">{project.techStack.slice(2).join(', ') || 'N/A'}</span>
+          </div>
+          {project.grantAmount && (
+            <div class="flex justify-between border-t border-rule/40 pt-1 text-line-hardware">
+              <span>GRANT CERT:</span>
+              <span class="font-bold">{project.grantAmount}</span>
+            </div>
           )}
         </div>
-
-        <span class="font-mono text-[10px] font-bold uppercase text-emerald-600 flex items-center gap-1">
-          <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-          ACTIVE ON LINE
-        </span>
       </div>
+    </div>
+
+    <!-- Action Links Bar -->
+    <div class="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-rule">
+      <div class="flex items-center gap-2">
+        {project.liveUrl && !project.liveUrl.startsWith('TODO') ? (
+          <a
+            href={project.liveUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="font-mono text-xs font-bold uppercase tracking-wider text-ink hover:text-line-frontend inline-flex items-center gap-1.5 border border-ink px-3 py-1 bg-paper shadow-[2px_2px_0_var(--ink)] transition-transform active:translate-y-0.5"
+          >
+            <span>Visit Platform</span>
+            <Pictograms name="arrow-up-right" size={12} />
+          </a>
+        ) : (
+          <button
+            type="button"
+            class="project-lightbox-trigger font-mono text-xs font-bold uppercase tracking-wider text-ink hover:text-line-frontend inline-flex items-center gap-1 border border-ink px-2.5 py-1 bg-paper shadow-[2px_2px_0_var(--ink)]"
+            data-project-id={project.id}
+          >
+            <span>Inspect Spec</span>
+            <span aria-hidden="true">➔</span>
+          </button>
+        )}
+
+        {project.repoUrl && (
+          project.repoUrl.startsWith('TODO') ? (
+            <span class="font-mono text-[10px] text-ink-soft uppercase tracking-wider">
+              {isDev ? '[Source: Private]' : 'Source: Private'}
+            </span>
+          ) : (
+            <a
+              href={project.repoUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="font-mono text-xs font-bold text-ink hover:underline uppercase inline-flex items-center gap-1"
+            >
+              <span>Repo</span>
+              <Pictograms name="arrow-up-right" size={10} />
+            </a>
+          )
+        )}
+      </div>
+
+      <span class="font-mono text-[10px] font-bold uppercase text-emerald-500 flex items-center gap-1.5">
+        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+        ACTIVE ON LINE
+      </span>
     </div>
   </div>
 </div>

@@ -5,6 +5,7 @@ import OverviewMap from '../components/OverviewMap.astro';
 import DeparturesBoard from '../components/DeparturesBoard.astro';
 import InterchangeGhumify from '../components/InterchangeGhumify.astro';
 import ProjectStop from '../components/ProjectStop.astro';
+import ProjectDossierModal from '../components/ProjectDossierModal.astro';
 import ExperienceTicket from '../components/ExperienceTicket.astro';
 import TechLegend from '../components/TechLegend.astro';
 import EducationTicket from '../components/EducationTicket.astro';
@@ -383,75 +384,142 @@ const moreProjects = PROJECTS.filter((p) => !p.featured);
           id="heading-st-03"
         />
 
-        <!-- Filter Controls -->
-        <div class="flex items-center gap-2 overflow-x-auto pb-4 mb-6 font-mono text-xs" role="toolbar" aria-label="Project line filters">
-          <button
-            type="button"
-            class="project-filter-btn px-4 py-2 border-2 border-ink bg-ink text-paper font-bold uppercase transition-all"
-            data-filter="all"
-            aria-pressed="true"
-          >
-            All Stops
-          </button>
-          <button
-            type="button"
-            class="project-filter-btn px-4 py-2 border-2 border-rule bg-surface text-ink hover:border-ink uppercase transition-all"
-            data-filter="frontend"
-            aria-pressed="false"
-          >
-            Frontend Line
-          </button>
-          <button
-            type="button"
-            class="project-filter-btn px-4 py-2 border-2 border-rule bg-surface text-ink hover:border-ink uppercase transition-all"
-            data-filter="backend"
-            aria-pressed="false"
-          >
-            Backend Line
-          </button>
-          <button
-            type="button"
-            class="project-filter-btn px-4 py-2 border-2 border-rule bg-surface text-ink hover:border-ink uppercase transition-all"
-            data-filter="ai"
-            aria-pressed="false"
-          >
-            AI / ML Line
-          </button>
-          <button
-            type="button"
-            class="project-filter-btn px-4 py-2 border-2 border-rule bg-surface text-ink hover:border-ink uppercase transition-all"
-            data-filter="hardware"
-            aria-pressed="false"
-          >
-            Hardware Line
-          </button>
+        <!-- Station Platform Telemetry Board (LED Operations Matrix) -->
+        <div class="mb-8 p-4 sm:p-6 bg-[#0c0e14] border-2 border-ink shadow-[4px_4px_0_var(--ink)] font-mono text-paper">
+          <div class="flex flex-wrap items-center justify-between gap-3 border-b border-rule/30 pb-3 mb-4">
+            <div class="flex items-center gap-2 text-xs sm:text-sm">
+              <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+              <span class="font-bold uppercase tracking-wider text-white">PLATFORM 03 // DISPATCH BAY OPERATIONS</span>
+            </div>
+            <div class="flex items-center gap-4 text-xs font-mono text-ink-soft">
+              <span>INTERLOCKING: <strong class="text-emerald-400">ACTIVE</strong></span>
+              <span>FLEET STATUS: <strong class="text-[#FFC933]">100% OPERATIONAL</strong></span>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+            <div class="p-3 bg-surface border border-rule/50">
+              <div class="text-[10px] text-ink-soft uppercase tracking-wider font-bold">FLEET STRENGTH</div>
+              <div class="text-xl sm:text-2xl font-archivo font-black text-ink mt-0.5">7 BUILDS</div>
+              <div class="text-[10px] text-ink-soft mt-1">Certified Production Ready</div>
+            </div>
+            <div class="p-3 bg-surface border border-rule/50">
+              <div class="text-[10px] text-ink-soft uppercase tracking-wider font-bold">GOV'T SSIP GRANTS</div>
+              <div class="text-xl sm:text-2xl font-archivo font-black text-line-hardware mt-0.5">₹45,000+</div>
+              <div class="text-[10px] text-ink-soft mt-1">State Innovation Funding</div>
+            </div>
+            <div class="p-3 bg-surface border border-rule/50">
+              <div class="text-[10px] text-ink-soft uppercase tracking-wider font-bold">TRANSIT LINES</div>
+              <div class="text-xl sm:text-2xl font-archivo font-black text-line-frontend mt-0.5">4 ARTERIES</div>
+              <div class="text-[10px] text-ink-soft mt-1">Frontend · Backend · AI · IoT</div>
+            </div>
+            <div class="p-3 bg-surface border border-rule/50">
+              <div class="text-[10px] text-ink-soft uppercase tracking-wider font-bold">CORE CAPABILITY</div>
+              <div class="text-xl sm:text-2xl font-archivo font-black text-line-backend mt-0.5">FULL-STACK</div>
+              <div class="text-[10px] text-ink-soft mt-1">High Availability & Scale</div>
+            </div>
+          </div>
         </div>
 
-        <!-- Main Project Stops Grid -->
+        <!-- Industrial Track Bay Interlocking Switcher & Live Search Bar -->
+        <div class="mb-6 p-4 sm:p-5 bg-surface border-2 border-ink shadow-[4px_4px_0_var(--ink)]">
+          <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-3 border-b border-rule mb-4">
+            <!-- Interlocking Track Switcher Buttons -->
+            <div class="flex items-center gap-1.5 overflow-x-auto pb-1 font-mono text-xs" role="toolbar" aria-label="Project line filters">
+              <button
+                type="button"
+                class="project-filter-btn px-3.5 py-2 border-2 border-ink bg-ink text-paper font-bold uppercase transition-all shadow-[2px_2px_0_var(--paper)] flex items-center gap-2"
+                data-filter="all"
+                aria-pressed="true"
+              >
+                <span class="w-2 h-2 rounded-full bg-paper"></span>
+                <span>ALL BERTHS (7)</span>
+              </button>
+              <button
+                type="button"
+                class="project-filter-btn px-3.5 py-2 border-2 border-rule bg-paper text-ink hover:border-ink font-bold uppercase transition-all flex items-center gap-2"
+                data-filter="frontend"
+                aria-pressed="false"
+              >
+                <span class="w-2 h-2 rounded-full bg-line-frontend"></span>
+                <span>FRONTEND (4)</span>
+              </button>
+              <button
+                type="button"
+                class="project-filter-btn px-3.5 py-2 border-2 border-rule bg-paper text-ink hover:border-ink font-bold uppercase transition-all flex items-center gap-2"
+                data-filter="backend"
+                aria-pressed="false"
+              >
+                <span class="w-2 h-2 rounded-full bg-line-backend"></span>
+                <span>BACKEND (5)</span>
+              </button>
+              <button
+                type="button"
+                class="project-filter-btn px-3.5 py-2 border-2 border-rule bg-paper text-ink hover:border-ink font-bold uppercase transition-all flex items-center gap-2"
+                data-filter="ai"
+                aria-pressed="false"
+              >
+                <span class="w-2 h-2 rounded-full bg-line-ai"></span>
+                <span>AI / ML (3)</span>
+              </button>
+              <button
+                type="button"
+                class="project-filter-btn px-3.5 py-2 border-2 border-rule bg-paper text-ink hover:border-ink font-bold uppercase transition-all flex items-center gap-2"
+                data-filter="hardware"
+                aria-pressed="false"
+              >
+                <span class="w-2 h-2 rounded-full bg-line-hardware"></span>
+                <span>HARDWARE (2)</span>
+              </button>
+            </div>
+
+            <!-- Live Status Counter -->
+            <div class="font-mono text-xs text-ink-soft whitespace-nowrap flex items-center gap-1.5 self-end lg:self-auto">
+              <span>DISPATCHING:</span>
+              <span id="fleet-live-counter" class="font-bold text-ink bg-paper px-2 py-0.5 border border-rule">
+                7 OF 7 BERTHS
+              </span>
+            </div>
+          </div>
+
+          <!-- Instant Search Input -->
+          <div class="relative w-full">
+            <input
+              type="text"
+              id="project-search-input"
+              placeholder="Search fleet by tech (e.g. Django, Flutter, Python, Firebase, Grant)..."
+              class="w-full px-4 py-2.5 bg-paper border-2 border-ink text-ink font-mono text-xs placeholder:text-ink-soft focus:outline-none focus:ring-2 focus:ring-line-frontend transition-all shadow-[2px_2px_0_var(--ink)]"
+              aria-label="Search systems by tech or keyword"
+            />
+            <button
+              type="button"
+              id="project-search-clear"
+              class="hidden absolute right-3 top-1/2 -translate-y-1/2 font-mono text-xs font-bold text-ink-soft hover:text-ink px-1.5 py-0.5 border border-rule bg-surface"
+              aria-label="Clear search"
+            >
+              CLEAR ✕
+            </button>
+          </div>
+        </div>
+
+        <!-- Main Project Stops Grid (All 7 Production Systems) -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="projects-grid">
-          {expandedProjects.map((project) => (
+          {PROJECTS.filter((p) => p.id !== 'ghumify').map((project) => (
             <ProjectStop project={project} />
           ))}
         </div>
 
-        <!-- More Stops Toggle Accordion -->
-        <div class="mt-8">
+        <!-- Empty Search State -->
+        <div id="projects-empty-state" class="hidden p-8 border-2 border-dashed border-ink bg-surface text-center font-mono my-6">
+          <div class="text-sm font-bold text-ink mb-1">NO PRODUCTION SYSTEMS MATCH THIS TRACK QUERY</div>
+          <p class="text-xs text-ink-soft mb-4">Try checking spelling or clear search filters to view all 7 platform berths.</p>
           <button
             type="button"
-            id="toggle-more-stops"
-            class="w-full p-4 border-2 border-dashed border-ink bg-surface font-mono text-xs sm:text-sm font-bold uppercase tracking-wider text-ink hover:bg-paper transition-colors flex items-center justify-center gap-2"
-            aria-expanded="false"
-            aria-controls="more-stops-container"
+            id="reset-project-filters-btn"
+            class="px-4 py-2 bg-ink text-paper font-bold text-xs uppercase border border-ink shadow-[2px_2px_0_var(--paper)]"
           >
-            <span>Show More Stops ({moreProjects.length} Additional Projects: Cricktraker, Clinic, EMS)</span>
-            <span id="more-stops-icon" aria-hidden="true">▼</span>
+            Reset Filters ➔
           </button>
-
-          <div id="more-stops-container" class="hidden grid-cols-1 md:grid-cols-2 gap-6 mt-6">
-            {moreProjects.map((project) => (
-              <ProjectStop project={project} />
-            ))}
-          </div>
         </div>
       </div>
 
@@ -563,6 +631,9 @@ const moreProjects = PROJECTS.filter((p) => !p.featured);
     </section>
 
   </main>
+
+  <!-- ST-03 Focused Transit Inspection Dossier Modal -->
+  <ProjectDossierModal />
 
   <!-- Interactive Scripts (Client-side interactivity) -->
   <script>
@@ -693,57 +764,142 @@ const moreProjects = PROJECTS.filter((p) => !p.featured);
         });
       }
 
-      // 2. Project filters
+      // 2. ST-03 Project filters, live search & dual-view switcher
       const filterBtns = document.querySelectorAll('.project-filter-btn');
       const cards = document.querySelectorAll('.project-card');
+      const searchInput = document.getElementById('project-search-input') as HTMLInputElement;
+      const searchClear = document.getElementById('project-search-clear');
+      const liveCounter = document.getElementById('fleet-live-counter');
+      const emptyState = document.getElementById('projects-empty-state');
+      const resetBtn = document.getElementById('reset-project-filters-btn');
+
+      let currentFilter = 'all';
+
+      const applyFilters = () => {
+        const query = (searchInput?.value || '').toLowerCase().trim();
+        let visibleCount = 0;
+
+        cards.forEach((card) => {
+          const cardEl = card as HTMLElement;
+          const cardLines = (cardEl.getAttribute('data-lines') || '').split(' ');
+          const title = (cardEl.getAttribute('data-title') || '').toLowerCase();
+          const tech = (cardEl.getAttribute('data-tech') || '').toLowerCase();
+          const text = cardEl.textContent?.toLowerCase() || '';
+
+          const matchesLine = currentFilter === 'all' || cardLines.includes(currentFilter);
+          const matchesQuery = !query || title.includes(query) || tech.includes(query) || text.includes(query);
+
+          if (matchesLine && matchesQuery) {
+            cardEl.style.display = 'flex';
+            visibleCount++;
+          } else {
+            cardEl.style.display = 'none';
+          }
+        });
+
+        if (liveCounter) {
+          liveCounter.textContent = `${visibleCount} OF ${cards.length} BERTHS`;
+        }
+
+        if (emptyState) {
+          if (visibleCount === 0) {
+            emptyState.classList.remove('hidden');
+          } else {
+            emptyState.classList.add('hidden');
+          }
+        }
+
+        if (searchClear) {
+          if (query.length > 0) {
+            searchClear.classList.remove('hidden');
+          } else {
+            searchClear.classList.add('hidden');
+          }
+        }
+      };
 
       filterBtns.forEach((btn) => {
         btn.addEventListener('click', () => {
-          const filter = btn.getAttribute('data-filter');
+          currentFilter = btn.getAttribute('data-filter') || 'all';
+
+          // Play tactile track switch sound
+          if (metroSound.isEnabled()) {
+            metroSound.beep();
+          }
 
           // Style active button
           filterBtns.forEach((b) => {
             b.classList.remove('bg-ink', 'text-paper', 'border-ink');
-            b.classList.add('bg-surface', 'text-ink', 'border-rule');
+            b.classList.add('bg-paper', 'text-ink', 'border-rule');
             b.setAttribute('aria-pressed', 'false');
           });
           btn.classList.add('bg-ink', 'text-paper', 'border-ink');
-          btn.classList.remove('bg-surface', 'text-ink', 'border-rule');
+          btn.classList.remove('bg-paper', 'text-ink', 'border-rule');
           btn.setAttribute('aria-pressed', 'true');
 
-          // Filter cards
-          cards.forEach((card) => {
-            const cardLines = (card.getAttribute('data-lines') || '').split(' ');
-            if (filter === 'all' || cardLines.includes(filter || '')) {
-              (card as HTMLElement).style.display = 'flex';
-            } else {
-              (card as HTMLElement).style.display = 'none';
-            }
-          });
+          applyFilters();
         });
       });
 
-      // 3. More stops toggle
-      const moreBtn = document.getElementById('toggle-more-stops');
-      const moreContainer = document.getElementById('more-stops-container');
-      const moreIcon = document.getElementById('more-stops-icon');
+      if (searchInput) {
+        searchInput.addEventListener('input', applyFilters);
+      }
 
-      if (moreBtn && moreContainer) {
-        moreBtn.addEventListener('click', () => {
-          const isHidden = moreContainer.classList.contains('hidden');
-          if (isHidden) {
-            moreContainer.classList.remove('hidden');
-            moreContainer.classList.add('grid');
-            moreBtn.setAttribute('aria-expanded', 'true');
-            if (moreIcon) moreIcon.textContent = '▲';
-          } else {
-            moreContainer.classList.add('hidden');
-            moreContainer.classList.remove('grid');
-            moreBtn.setAttribute('aria-expanded', 'false');
-            if (moreIcon) moreIcon.textContent = '▼';
-          }
+      if (searchClear) {
+        searchClear.addEventListener('click', () => {
+          if (searchInput) searchInput.value = '';
+          applyFilters();
+          searchInput?.focus();
         });
       }
+
+      if (resetBtn) {
+        resetBtn.addEventListener('click', () => {
+          currentFilter = 'all';
+          if (searchInput) searchInput.value = '';
+          const allBtn = document.querySelector('.project-filter-btn[data-filter="all"]') as HTMLElement;
+          if (allBtn) allBtn.click();
+          applyFilters();
+        });
+      }
+
+      // Plaque Tab View Switcher (Vitrine vs Blueprint)
+      document.addEventListener('click', (e) => {
+        const tabBtn = (e.target as HTMLElement).closest('.plaque-tab-btn');
+        if (tabBtn) {
+          const mode = tabBtn.getAttribute('data-mode');
+          const id = tabBtn.getAttribute('data-id');
+          if (!id || !mode) return;
+
+          const vitrineView = document.getElementById(`view-vitrine-${id}`);
+          const blueprintView = document.getElementById(`view-blueprint-${id}`);
+          const card = tabBtn.closest('.project-card');
+
+          if (card) {
+            const tabs = card.querySelectorAll('.plaque-tab-btn');
+            tabs.forEach((t) => {
+              t.classList.remove('bg-ink', 'text-paper', 'border-ink');
+              t.classList.add('bg-surface', 'text-ink-soft', 'border-rule');
+              t.setAttribute('aria-selected', 'false');
+            });
+            tabBtn.classList.add('bg-ink', 'text-paper', 'border-ink');
+            tabBtn.classList.remove('bg-surface', 'text-ink-soft', 'border-rule');
+            tabBtn.setAttribute('aria-selected', 'true');
+          }
+
+          if (mode === 'vitrine') {
+            if (vitrineView) vitrineView.classList.remove('hidden');
+            if (blueprintView) blueprintView.classList.add('hidden');
+          } else {
+            if (vitrineView) vitrineView.classList.add('hidden');
+            if (blueprintView) blueprintView.classList.remove('hidden');
+          }
+
+          if (metroSound.isEnabled()) {
+            metroSound.beep();
+          }
+        }
+      });
     });
   </script>
 </BaseLayout>
