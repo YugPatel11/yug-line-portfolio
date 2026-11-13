@@ -1,138 +1,327 @@
 ---
 // DeparturesBoard.astro
-// Signature Split-Flap Departures Board with Flip Counters & Ticket-Stub Proof Modals
+// Signature Split-Flap Departures Board with Integrated Live Proof Vitrine & Mechanical Audio
 import { ACHIEVEMENTS } from '../data/portfolio';
 import Pictograms from './Pictograms.astro';
 
-const PROOF_IMAGES: Record<string, { image: string; alt: string; badge: string }> = {
+const PROOF_IMAGES: Record<string, { image: string; alt: string; badge: string; stamp: string }> = {
   'sih-2026': {
     image: '/images/sih2026-certificate.jpg',
     alt: 'Smart India Hackathon 2026 Winner Certificate',
     badge: 'MINISTRY OF EDUCATION // VERIFIED 1ST ROUND WINNER',
+    stamp: 'OFFICIAL SIH 2026 WINNER SEAL',
   },
   'indux-5': {
     image: '/images/indux5-hackathon.jpg',
     alt: 'INDUX 5.0 National Hackathon Trophy & Stage Photo',
-    badge: 'NATIONAL TOP 10 // 165 TEAMS',
+    badge: 'NATIONAL TOP 10 // 165 TEAMS NATIONWIDE',
+    stamp: 'NATIONAL HACKATHON FINALIST',
   },
   'website-competition': {
     image: '/images/website-competition.jpg',
     alt: 'University Website Competition 1st Prize Award Ceremony',
     badge: 'P P SAVANI UNIVERSITY // 1ST PRIZE',
+    stamp: '1ST PRIZE GOLD TROPHY',
   },
   'edverb-lor': {
     image: '/images/lor.png',
     alt: 'Edverb Official Letter of Recommendation (LOR)',
-    badge: 'CORPORATE LOR // FRONTEND ARCHITECTURE',
+    badge: 'EDVERB CORP // FRONTEND ARCHITECTURE LOR',
+    stamp: 'CORPORATE VERIFIED LOR',
   },
 };
 ---
 
-<div class="split-flap-board p-6 md:p-8 bg-[#0D0F14] border-4 border-ink shadow-[8px_8px_0_var(--ink)] select-none">
-  <!-- Mechanical Solari Header -->
-  <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b-2 border-ink pb-4 mb-6">
-    <div class="flex items-center gap-3">
-      <div class="w-3.5 h-3.5 rounded-full bg-line-hardware animate-pulse shadow-[0_0_8px_#FFC933]"></div>
-      <h3 class="font-mono text-sm sm:text-base font-black uppercase tracking-widest text-[#F1EEE6]">
-        SOLARI // SPLIT-FLAP DEPARTURES & MILESTONES
-      </h3>
+<div class="split-flap-board space-y-6 select-none" id="achievements-departures-station">
+  
+  <!-- ========================================================
+       TOP TELEMETRY HUD: 4 STANDOUT MILESTONE FLAP TILES
+       ======================================================== -->
+  <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 font-mono">
+    <!-- Tile 1 -->
+    <div class="p-3.5 bg-[#0D0F14] border-2 border-ink shadow-[4px_4px_0_var(--ink)] text-paper relative overflow-hidden group hover:border-line-hardware transition-colors">
+      <div class="flex items-center justify-between text-[10px] text-ink-soft uppercase tracking-wider mb-1">
+        <span>PLT 01 // SIH 2026</span>
+        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+      </div>
+      <div class="font-archivo text-2xl sm:text-3xl font-black text-line-hardware tracking-tight">
+        150+
+      </div>
+      <div class="text-[11px] text-[#A6AFBF] uppercase font-bold mt-0.5">
+        Teams Defeated • Winner
+      </div>
+      <div class="absolute -right-2 -bottom-2 opacity-10 text-paper font-black text-4xl pointer-events-none">
+        01
+      </div>
     </div>
-    <div class="flex items-center gap-4 text-xs font-mono text-ink-soft">
-      <span class="flex items-center gap-1.5">
-        <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
-        SERVICE: ACTIVE
-      </span>
-      <span>STATUS: ON TIME</span>
+
+    <!-- Tile 2 -->
+    <div class="p-3.5 bg-[#0D0F14] border-2 border-ink shadow-[4px_4px_0_var(--ink)] text-paper relative overflow-hidden group hover:border-line-hardware transition-colors">
+      <div class="flex items-center justify-between text-[10px] text-ink-soft uppercase tracking-wider mb-1">
+        <span>PLT 02 // INDUX 5.0</span>
+        <span class="w-2 h-2 rounded-full bg-line-frontend"></span>
+      </div>
+      <div class="font-archivo text-2xl sm:text-3xl font-black text-line-frontend tracking-tight">
+        TOP 10
+      </div>
+      <div class="text-[11px] text-[#A6AFBF] uppercase font-bold mt-0.5">
+        165 Teams Nationwide
+      </div>
+      <div class="absolute -right-2 -bottom-2 opacity-10 text-paper font-black text-4xl pointer-events-none">
+        02
+      </div>
+    </div>
+
+    <!-- Tile 3 -->
+    <div class="p-3.5 bg-[#0D0F14] border-2 border-ink shadow-[4px_4px_0_var(--ink)] text-paper relative overflow-hidden group hover:border-line-hardware transition-colors">
+      <div class="flex items-center justify-between text-[10px] text-ink-soft uppercase tracking-wider mb-1">
+        <span>PLT 03 // WEB DEV</span>
+        <span class="w-2 h-2 rounded-full bg-line-hardware"></span>
+      </div>
+      <div class="font-archivo text-2xl sm:text-3xl font-black text-line-hardware tracking-tight">
+        1ST PRIZE
+      </div>
+      <div class="text-[11px] text-[#A6AFBF] uppercase font-bold mt-0.5">
+        University Competition
+      </div>
+      <div class="absolute -right-2 -bottom-2 opacity-10 text-paper font-black text-4xl pointer-events-none">
+        03
+      </div>
+    </div>
+
+    <!-- Tile 4 -->
+    <div class="p-3.5 bg-[#0D0F14] border-2 border-ink shadow-[4px_4px_0_var(--ink)] text-paper relative overflow-hidden group hover:border-line-hardware transition-colors">
+      <div class="flex items-center justify-between text-[10px] text-ink-soft uppercase tracking-wider mb-1">
+        <span>PLT 04 // EDVERB</span>
+        <span class="w-2 h-2 rounded-full bg-line-backend"></span>
+      </div>
+      <div class="font-archivo text-2xl sm:text-3xl font-black text-line-backend tracking-tight">
+        2 SITES
+      </div>
+      <div class="text-[11px] text-[#A6AFBF] uppercase font-bold mt-0.5">
+        Shipped + Official LOR
+      </div>
+      <div class="absolute -right-2 -bottom-2 opacity-10 text-paper font-black text-4xl pointer-events-none">
+        04
+      </div>
     </div>
   </div>
 
-  <!-- Board Table Header (Desktop) -->
-  <div class="hidden md:grid grid-cols-12 gap-4 pb-3 border-b border-[#222834] text-[11px] font-mono text-[#8C96AA] uppercase tracking-wider">
-    <div class="col-span-1">PLT</div>
-    <div class="col-span-5">EVENT // DESTINATION</div>
-    <div class="col-span-3">STANDOUT METRIC</div>
-    <div class="col-span-3 text-right">DISPATCH // VERIFY</div>
-  </div>
-
-  <!-- Mechanical Flap Rows -->
-  <div class="divide-y divide-[#1D222E]">
-    {ACHIEVEMENTS.map((item, idx) => (
-      <div
-        class="py-4 md:py-5 group cursor-pointer flap-row transition-all hover:bg-[#131722] px-2 rounded-sm"
-        data-id={item.id}
-        tabindex="0"
-        role="button"
-        aria-label={`View proof and details for ${item.title}`}
-      >
-        <div class="grid grid-cols-1 md:grid-cols-12 gap-3 items-center">
-          
-          <!-- Platform Flap Cell -->
-          <div class="font-mono text-xs text-[#8C96AA] flex items-center justify-between md:block md:col-span-1">
-            <span class="md:hidden text-[10px] text-[#8C96AA] uppercase">Platform</span>
-            <div class="inline-flex items-center justify-center w-8 h-8 bg-[#181C26] border border-[#2B3242] shadow-[2px_2px_0_#000] relative overflow-hidden">
-              <span class="text-line-hardware font-black text-sm relative z-10">0{idx + 1}</span>
-              <!-- Flap Split Seam Line -->
-              <div class="absolute inset-x-0 top-1/2 h-[1px] bg-[#0A0C10] z-20"></div>
-            </div>
-          </div>
-
-          <!-- Title & Institution -->
-          <div class="md:col-span-5">
-            <div class="font-archivo font-bold text-base md:text-lg text-[#F1EEE6] group-hover:text-line-hardware transition-colors flex items-center gap-2">
-              <span>{item.title}</span>
-              <span class="font-mono text-[10px] px-1.5 py-0.5 bg-[#1B202E] text-[#8C96AA] border border-[#2B3242] hidden sm:inline-block">
-                VERIFIED
-              </span>
-            </div>
-            <div class="font-mono text-xs text-[#8C96AA] mt-0.5">
-              {item.subtitle} • {item.institution}
-            </div>
-          </div>
-
-          <!-- Mechanical Flap Counter Metric -->
-          <div class="md:col-span-3">
-            {item.metricNumber && (
-              <div class="flex items-center gap-2 font-mono">
-                <!-- Split-Flap Cell Box -->
-                <div class="flap-cell inline-flex items-center justify-center px-3 py-1.5 bg-[#161B26] border-2 border-ink shadow-[2px_2px_0_#000] relative overflow-hidden">
-                  <span
-                    class="text-xl md:text-2xl font-black text-line-hardware font-mono counter-number relative z-10 tracking-tight"
-                    data-target={item.metricNumber}
-                    data-suffix={item.metricSuffix || ''}
-                  >
-                    0{item.metricSuffix || ''}
-                  </span>
-                  <!-- Solari Horizontal Split Line -->
-                  <div class="absolute inset-x-0 top-1/2 h-[1px] bg-[#0A0C10] z-20"></div>
-                </div>
-                <span class="text-xs text-[#8C96AA] uppercase font-bold">{item.metricLabel}</span>
-              </div>
-            )}
-          </div>
-
-          <!-- Status Tag & Ticket Stub Action -->
-          <div class="md:col-span-3 flex items-center justify-between md:justify-end gap-3">
-            <span class={`status-tag ${
-              item.statusTag.includes('WINNER') || item.statusTag.includes('1ST') ? 'status-tag--winner' :
-              item.statusTag.includes('TOP') ? 'status-tag--top10' :
-              'status-tag--ontime'
-            }`}>
-              {item.statusTag}
-            </span>
-            <span class="font-mono text-xs font-bold text-line-hardware group-hover:translate-x-1 transition-transform flex items-center gap-1 border border-line-hardware/40 px-2 py-1 bg-black/40">
-              <span>PROOFS</span>
-              <span>➔</span>
-            </span>
+  <!-- ========================================================
+       MASTER SOLARI & EVIDENCE PAVILION GRID (12 Cols)
+       ======================================================== -->
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+    
+    <!-- LEFT 7 COLS: SOLARI SPLIT-FLAP DEPARTURES BOARD -->
+    <div class="lg:col-span-7 p-5 sm:p-6 md:p-7 bg-[#0D0F14] border-4 border-ink shadow-[8px_8px_0_var(--ink)] flex flex-col justify-between">
+      
+      <!-- Solari Board Header -->
+      <div class="flex flex-wrap items-center justify-between gap-3 border-b-2 border-ink pb-4 mb-5">
+        <div class="flex items-center gap-3">
+          <div class="w-3.5 h-3.5 rounded-full bg-line-hardware animate-pulse shadow-[0_0_8px_#FFC933]"></div>
+          <div>
+            <h3 class="font-mono text-sm sm:text-base font-black uppercase tracking-widest text-[#F1EEE6]">
+              SOLARI // MASTER DEPARTURES BOARD
+            </h3>
+            <p class="font-mono text-[10px] text-[#8C96AA]">MECHANICAL TRACK MILESTONES • LINE 01</p>
           </div>
         </div>
-      </div>
-    ))}
-  </div>
 
-  <!-- Bottom Tip -->
-  <div class="mt-6 pt-4 border-t border-[#1D222E] flex items-center justify-between text-xs font-mono text-[#8C96AA]">
-    <span>TAP ANY ROW TO INSPECT OFFICIAL CERTIFICATE & PROOFS</span>
-    <span class="text-line-hardware animate-pulse">● MECHANICAL LOG READY</span>
+        <!-- Live Station Clock -->
+        <div class="flex items-center gap-3 font-mono text-xs text-[#8C96AA] bg-[#161B26] px-3 py-1.5 border border-[#2B3242]">
+          <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+          <span id="solari-station-clock" class="text-line-hardware font-bold">12:00:00 IST</span>
+          <span class="text-[10px] text-[#8C96AA] hidden sm:inline">ONLINE</span>
+        </div>
+      </div>
+
+      <!-- Table Subheader -->
+      <div class="hidden sm:grid grid-cols-12 gap-2 pb-2.5 border-b border-[#222834] text-[10px] font-mono text-[#8C96AA] uppercase tracking-wider">
+        <div class="col-span-1">PLT</div>
+        <div class="col-span-6">DESTINATION // EVENT</div>
+        <div class="col-span-3">STANDOUT METRIC</div>
+        <div class="col-span-2 text-right">DISPATCH</div>
+      </div>
+
+      <!-- Split-Flap Rows -->
+      <div class="divide-y divide-[#1D222E] my-1" id="solari-rows-container">
+        {ACHIEVEMENTS.map((item, idx) => (
+          <div
+            class={`py-3.5 sm:py-4 px-2.5 sm:px-3 flap-row cursor-pointer transition-all rounded-xs group ${
+              idx === 0 ? 'bg-[#181D2A] border-l-4 border-line-hardware' : 'hover:bg-[#141824]'
+            }`}
+            data-id={item.id}
+            data-index={idx}
+            tabindex="0"
+            role="button"
+            aria-label={`Select platform 0${idx + 1} for ${item.title}`}
+          >
+            <div class="grid grid-cols-1 sm:grid-cols-12 gap-2.5 items-center">
+              
+              <!-- Platform Indicator -->
+              <div class="flex items-center justify-between sm:block sm:col-span-1 font-mono">
+                <span class="sm:hidden text-[10px] text-[#8C96AA] uppercase">Platform</span>
+                <div class="inline-flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 bg-[#181C26] border border-[#2B3242] shadow-[2px_2px_0_#000] relative overflow-hidden">
+                  <span class="text-line-hardware font-black text-xs sm:text-sm relative z-10">0{idx + 1}</span>
+                  <!-- Mechanical Seam -->
+                  <div class="absolute inset-x-0 top-1/2 h-[1px] bg-[#0A0C10] z-20"></div>
+                </div>
+              </div>
+
+              <!-- Title & Institution -->
+              <div class="sm:col-span-6">
+                <div class="font-archivo font-bold text-sm sm:text-base text-[#F1EEE6] group-hover:text-line-hardware transition-colors flex items-center gap-2">
+                  <span>{item.title}</span>
+                  <span class="font-mono text-[9px] px-1 py-0.5 bg-[#1B202E] text-[#8C96AA] border border-[#2B3242] hidden md:inline-block">
+                    VERIFIED
+                  </span>
+                </div>
+                <div class="font-mono text-[11px] text-[#8C96AA] mt-0.5 line-clamp-1">
+                  {item.subtitle} • {item.institution}
+                </div>
+              </div>
+
+              <!-- Mechanical Flap Counter Cell -->
+              <div class="sm:col-span-3">
+                {item.metricNumber && (
+                  <div class="flex items-center gap-2 font-mono">
+                    <div class="flap-cell inline-flex items-center justify-center px-2.5 py-1 bg-[#161B26] border border-[#2B3242] shadow-[2px_2px_0_#000] relative overflow-hidden">
+                      <span
+                        class="text-base sm:text-lg font-black text-line-hardware font-mono counter-number relative z-10 tracking-tight"
+                        data-target={item.metricNumber}
+                        data-suffix={item.metricSuffix || ''}
+                      >
+                        0{item.metricSuffix || ''}
+                      </span>
+                      <div class="absolute inset-x-0 top-1/2 h-[1px] bg-[#0A0C10] z-20"></div>
+                    </div>
+                    <span class="text-[10px] text-[#8C96AA] uppercase font-bold">{item.metricLabel}</span>
+                  </div>
+                )}
+              </div>
+
+              <!-- Status Tag & Quick Action -->
+              <div class="sm:col-span-2 flex items-center justify-between sm:justify-end gap-2">
+                <span class="font-mono text-[10px] font-bold text-line-hardware border border-line-hardware/40 px-2 py-0.5 bg-black/40 group-hover:bg-line-hardware group-hover:text-ink transition-colors flex items-center gap-1">
+                  <span>INSPECT</span>
+                  <span>➔</span>
+                </span>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <!-- Solari Footer Status -->
+      <div class="mt-4 pt-3 border-t border-[#1D222E] flex flex-wrap items-center justify-between gap-2 text-[11px] font-mono text-[#8C96AA]">
+        <div class="flex items-center gap-2">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          <span>CLICK ANY ROW TO LOAD LIVE PROOF & CERTIFICATE</span>
+        </div>
+        <button
+          type="button"
+          id="cycle-solari-btn"
+          class="text-line-hardware hover:underline font-bold uppercase tracking-wider"
+        >
+          Cycle Platforms ↺
+        </button>
+      </div>
+    </div>
+
+    <!-- RIGHT 5 COLS: INTEGRATED EVIDENCE DOCK / TROPHY VITRINE -->
+    <div class="lg:col-span-5 p-5 sm:p-6 bg-paper border-4 border-ink shadow-[8px_8px_0_var(--ink)] flex flex-col justify-between" id="evidence-vitrine-dock">
+      
+      <!-- Vitrine Header & Platform Selector -->
+      <div>
+        <div class="flex items-center justify-between border-b-2 border-ink pb-3 mb-4">
+          <div class="flex items-center gap-2">
+            <span class="w-3 h-3 rounded-full bg-line-frontend"></span>
+            <span class="font-mono text-xs font-black uppercase tracking-wider text-ink">
+              EVIDENCE DOCK // AUTHENTICATED PROOF
+            </span>
+          </div>
+          <span id="vitrine-platform-pill" class="font-mono text-xs font-bold px-2 py-0.5 bg-surface border border-ink text-ink">
+            PLT 01
+          </span>
+        </div>
+
+        <!-- Quick Platform Tabs (01, 02, 03, 04) -->
+        <div class="grid grid-cols-4 gap-1.5 mb-4">
+          {ACHIEVEMENTS.map((item, idx) => (
+            <button
+              type="button"
+              class={`vitrine-tab-btn py-1.5 px-1 font-mono text-xs font-bold uppercase transition-all border-2 border-ink text-center cursor-pointer ${
+                idx === 0 ? 'bg-line-hardware text-ink' : 'bg-surface text-ink hover:bg-paper'
+              }`}
+              data-target-id={item.id}
+              data-index={idx}
+            >
+              0{idx + 1}
+            </button>
+          ))}
+        </div>
+
+        <!-- Certificate Frame & Stage Photo Showcase -->
+        <div class="relative border-3 border-ink bg-surface p-2 shadow-[4px_4px_0_var(--ink)] mb-4 group cursor-zoom-in" id="vitrine-image-container">
+          <img
+            id="vitrine-main-image"
+            src="/images/sih2026-certificate.jpg"
+            alt="Smart India Hackathon 2026 Winner Certificate"
+            class="w-full h-56 sm:h-64 object-contain bg-black/5 border border-rule transition-transform duration-300 group-hover:scale-[1.02]"
+          />
+          
+          <!-- Golden Stamp Badge with angle tilt -->
+          <div
+            id="vitrine-stamp-badge"
+            class="absolute bottom-4 right-4 bg-line-hardware text-ink border-2 border-ink font-mono text-[9px] font-black uppercase tracking-wider px-2.5 py-1 shadow-[2px_2px_0_var(--ink)] rotate-[-4deg] pointer-events-none"
+          >
+            MINISTRY OF EDUCATION // VERIFIED 1ST ROUND WINNER
+          </div>
+
+          <!-- Enlarge Hover Hint -->
+          <div class="absolute top-4 left-4 bg-paper/90 border border-ink px-2 py-0.5 text-[9px] font-mono font-bold uppercase text-ink flex items-center gap-1 shadow-[2px_2px_0_var(--ink)]">
+            <span>⚲ Click to Enlarge</span>
+          </div>
+        </div>
+
+        <!-- Dynamic Title & Description -->
+        <div class="mb-4">
+          <h4 id="vitrine-title" class="font-archivo text-xl font-black text-ink uppercase tracking-tight mb-1">
+            Smart India Hackathon 2026
+          </h4>
+          <p id="vitrine-subtitle" class="font-mono text-xs text-ink-soft mb-2">
+            Internal Round Winner • P P Savani University
+          </p>
+          <p id="vitrine-details" class="font-manrope text-xs sm:text-sm text-ink leading-relaxed bg-surface p-3 border-2 border-ink shadow-[2px_2px_0_var(--ink)]">
+            Won the Internal Round of Smart India Hackathon (SIH) 2026 competing against 150+ teams across the university. Developed an innovative working prototype with technical depth and practical feasibility.
+          </p>
+        </div>
+      </div>
+
+      <!-- Vitrine Actions (Enlarge + External Drive Link) -->
+      <div class="pt-3 border-t-2 border-ink flex flex-wrap items-center justify-between gap-3">
+        <button
+          type="button"
+          id="vitrine-enlarge-btn"
+          class="btn-stub !bg-surface !text-ink text-xs font-mono font-bold uppercase flex-1 justify-center shadow-[3px_3px_0_var(--ink)]"
+        >
+          <span>Enlarge Certificate</span>
+          <Pictograms name="arrow-up-right" size={14} />
+        </button>
+
+        <a
+          id="vitrine-external-link"
+          href="https://drive.google.com/drive/folders/1VGbdkfLk9W22SSYEtJS8HZAFWRFObDd6?usp=sharing"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="btn-stub btn-stub--primary text-xs font-mono font-bold uppercase flex-1 justify-center shadow-[3px_3px_0_var(--ink)]"
+        >
+          <span id="vitrine-link-text">Prototype Drive</span>
+          <Pictograms name="arrow-up-right" size={14} />
+        </a>
+      </div>
+
+    </div>
   </div>
 </div>
 
@@ -147,13 +336,13 @@ const PROOF_IMAGES: Record<string, { image: string; alt: string; badge: string }
   aria-modal="true"
   aria-labelledby="proof-modal-title"
 >
-  <div class="ticket p-6 sm:p-8 max-w-2xl w-full bg-paper border-4 border-ink shadow-[10px_10px_0_var(--ink)] max-h-[92vh] overflow-y-auto">
+  <div class="ticket p-6 sm:p-8 max-w-3xl w-full bg-paper border-4 border-ink shadow-[10px_10px_0_var(--ink)] max-h-[92vh] overflow-y-auto">
     <!-- Top Modal Bar -->
     <div class="flex items-center justify-between border-b-2 border-ink pb-3 mb-4">
       <div class="flex items-center gap-2">
         <span class="w-3 h-3 rounded-full bg-line-frontend"></span>
         <span class="font-mono text-xs font-black uppercase tracking-widest text-ink">
-          OFFICIAL DISPATCH // VERIFIED PROOF
+          OFFICIAL DISPATCH // VERIFIED CERTIFICATE PROOF
         </span>
       </div>
       <button
@@ -185,7 +374,7 @@ const PROOF_IMAGES: Record<string, { image: string; alt: string; badge: string }
         id="proof-modal-img"
         src="/images/sih2026-certificate.jpg"
         alt="Verified Certificate"
-        class="w-full h-auto max-h-[380px] object-contain border border-rule bg-paper"
+        class="w-full h-auto max-h-[500px] object-contain border border-rule bg-paper"
       />
     </div>
 
@@ -219,30 +408,44 @@ const PROOF_IMAGES: Record<string, { image: string; alt: string; badge: string }
   import { sound } from '../scripts/sound';
   import { ACHIEVEMENTS } from '../data/portfolio';
 
-  const PROOF_DATA: Record<string, { image: string; alt: string; badge: string }> = {
+  const PROOF_DATA: Record<string, { image: string; alt: string; badge: string; stamp: string }> = {
     'sih-2026': {
       image: '/images/sih2026-certificate.jpg',
       alt: 'Smart India Hackathon 2026 Winner Certificate',
       badge: 'MINISTRY OF EDUCATION // 1ST ROUND WINNER',
+      stamp: 'OFFICIAL SIH 2026 WINNER SEAL',
     },
     'indux-5': {
       image: '/images/indux5-hackathon.jpg',
-      alt: 'INDUX 5.0 National Hackathon Stage & Trophy',
+      alt: 'INDUX 5.0 National Hackathon Trophy & Stage Photo',
       badge: 'VIKRANT UNIVERSITY // NATIONAL TOP 10',
+      stamp: 'NATIONAL HACKATHON FINALIST',
     },
     'website-competition': {
       image: '/images/website-competition.jpg',
       alt: 'University Website Competition 1st Prize Award Ceremony',
       badge: 'P P SAVANI UNIVERSITY // 1ST PRIZE',
+      stamp: '1ST PRIZE GOLD TROPHY',
     },
     'edverb-lor': {
       image: '/images/lor.png',
       alt: 'Edverb Official Letter of Recommendation (LOR)',
-      badge: 'EDVERB // VERIFIED LETTER OF RECOMMENDATION',
+      badge: 'EDVERB CORP // LETTER OF RECOMMENDATION',
+      stamp: 'CORPORATE VERIFIED LOR',
     },
   };
 
-  // 1. Mechanical Solari Split-Flap Counter Sequence
+  // 1. Live Solari Station Clock
+  const clockEl = document.getElementById('solari-station-clock');
+  const updateClock = () => {
+    if (!clockEl) return;
+    const now = new Date();
+    clockEl.textContent = now.toLocaleTimeString('en-GB', { hour12: false }) + ' IST';
+  };
+  setInterval(updateClock, 1000);
+  updateClock();
+
+  // 2. Mechanical Solari Split-Flap Counter Sequence
   const counterElements = document.querySelectorAll('.counter-number');
   let hasAnimatedCounters = false;
 
@@ -259,9 +462,8 @@ const PROOF_IMAGES: Record<string, { image: string; alt: string; badge: string }
       const interval = setInterval(() => {
         current = Math.min(target, current + step);
         el.textContent = `${current}${suffix}`;
-        // Rapid soft solenoid flap clicks
         if (elIdx === 0 && current % (step * 2) === 0) {
-          sound.flapClick();
+          sound.splitFlap();
         }
 
         if (current >= target) {
@@ -272,8 +474,8 @@ const PROOF_IMAGES: Record<string, { image: string; alt: string; badge: string }
     });
   };
 
-  // IntersectionObserver triggers counter when board scrolls into view
-  const boardEl = document.querySelector('.split-flap-board');
+  // Observer triggers counter
+  const boardEl = document.getElementById('achievements-departures-station');
   if (boardEl) {
     const observer = new IntersectionObserver((entries) => {
       if (entries[0].isIntersecting) {
@@ -284,7 +486,111 @@ const PROOF_IMAGES: Record<string, { image: string; alt: string; badge: string }
     observer.observe(boardEl);
   }
 
-  // 2. Interactive Ticket-Stub Modal Management
+  // 3. Vitrine Evidence Dock Sync
+  let currentActiveId = 'sih-2026';
+  const vitrineImg = document.getElementById('vitrine-main-image') as HTMLImageElement | null;
+  const vitrineTitle = document.getElementById('vitrine-title');
+  const vitrineSubtitle = document.getElementById('vitrine-subtitle');
+  const vitrineDetails = document.getElementById('vitrine-details');
+  const vitrineStamp = document.getElementById('vitrine-stamp-badge');
+  const vitrinePill = document.getElementById('vitrine-platform-pill');
+  const vitrineLink = document.getElementById('vitrine-external-link') as HTMLAnchorElement | null;
+  const vitrineLinkText = document.getElementById('vitrine-link-text');
+  const vitrineTabs = document.querySelectorAll('.vitrine-tab-btn');
+  const flapRows = document.querySelectorAll('.flap-row');
+
+  const selectPlatform = (id: string, playAudio: boolean = true) => {
+    currentActiveId = id;
+    const item = ACHIEVEMENTS.find((a) => a.id === id);
+    const proof = PROOF_DATA[id];
+    if (!item) return;
+
+    if (playAudio) {
+      sound.splitFlap();
+    }
+
+    const idx = ACHIEVEMENTS.findIndex((a) => a.id === id);
+
+    // Update vitrine elements
+    if (vitrineTitle) vitrineTitle.textContent = item.title;
+    if (vitrineSubtitle) vitrineSubtitle.textContent = `${item.subtitle} • ${item.institution}`;
+    if (vitrineDetails) vitrineDetails.textContent = item.details;
+    if (vitrinePill) vitrinePill.textContent = `PLT 0${idx + 1}`;
+
+    if (vitrineImg && proof) {
+      vitrineImg.src = proof.image;
+      vitrineImg.alt = proof.alt;
+    }
+
+    if (vitrineStamp && proof) {
+      vitrineStamp.textContent = proof.stamp;
+    }
+
+    if (vitrineLink) {
+      if (item.externalLink) {
+        vitrineLink.href = item.externalLink;
+        vitrineLink.style.display = 'inline-flex';
+        if (vitrineLinkText) vitrineLinkText.textContent = item.externalLinkText || 'Inspect Prototype';
+      } else {
+        vitrineLink.style.display = 'none';
+      }
+    }
+
+    // Update row highlights
+    flapRows.forEach((row) => {
+      const rowId = row.getAttribute('data-id');
+      if (rowId === id) {
+        row.classList.add('bg-[#181D2A]', 'border-l-4', 'border-line-hardware');
+      } else {
+        row.classList.remove('bg-[#181D2A]', 'border-l-4', 'border-line-hardware');
+      }
+    });
+
+    // Update tab buttons
+    vitrineTabs.forEach((tab) => {
+      const targetId = tab.getAttribute('data-target-id');
+      if (targetId === id) {
+        tab.classList.add('bg-line-hardware');
+        tab.classList.remove('bg-surface');
+      } else {
+        tab.classList.remove('bg-line-hardware');
+        tab.classList.add('bg-surface');
+      }
+    });
+  };
+
+  // Row and Tab Click Handlers
+  flapRows.forEach((row) => {
+    const id = row.getAttribute('data-id');
+    row.addEventListener('click', () => {
+      if (id) selectPlatform(id);
+    });
+    row.addEventListener('keydown', (e: any) => {
+      if ((e.key === 'Enter' || e.key === ' ') && id) {
+        e.preventDefault();
+        selectPlatform(id);
+      }
+    });
+  });
+
+  vitrineTabs.forEach((tab) => {
+    const targetId = tab.getAttribute('data-target-id');
+    tab.addEventListener('click', () => {
+      if (targetId) selectPlatform(targetId);
+    });
+  });
+
+  // Cycle platforms button
+  const cycleBtn = document.getElementById('cycle-solari-btn');
+  if (cycleBtn) {
+    cycleBtn.addEventListener('click', () => {
+      const currentIdx = ACHIEVEMENTS.findIndex((a) => a.id === currentActiveId);
+      const nextIdx = (currentIdx + 1) % ACHIEVEMENTS.length;
+      selectPlatform(ACHIEVEMENTS[nextIdx].id);
+    });
+  }
+
+  // 4. Fullscreen Modal Trigger
   const modal = document.getElementById('achievement-proof-modal');
   const modalCloseBtn = document.getElementById('proof-modal-close-btn');
   const modalTitle = document.getElementById('proof-modal-title');
@@ -311,8 +617,6 @@ const PROOF_IMAGES: Record<string, { image: string; alt: string; badge: string }
       modalImg.src = proof.image;
       modalImg.alt = proof.alt;
       modalImg.style.display = 'block';
-    } else if (modalImg) {
-      modalImg.style.display = 'none';
     }
 
     if (modalLink) {
@@ -336,25 +640,20 @@ const PROOF_IMAGES: Record<string, { image: string; alt: string; badge: string }
     if (modal) modal.style.display = 'none';
   };
 
-  // Row Click Handlers
-  document.querySelectorAll('.flap-row').forEach((row) => {
-    const id = row.getAttribute('data-id');
-    row.addEventListener('click', () => {
-      if (id) openProofModal(id);
-    });
-    row.addEventListener('keydown', (e: any) => {
-      if ((e.key === 'Enter' || e.key === ' ') && id) {
-        e.preventDefault();
-        openProofModal(id);
-      }
-    });
-  });
+  const vitrineImgBox = document.getElementById('vitrine-image-container');
+  if (vitrineImgBox) {
+    vitrineImgBox.addEventListener('click', () => openProofModal(currentActiveId));
+  }
+
+  const vitrineEnlargeBtn = document.getElementById('vitrine-enlarge-btn');
+  if (vitrineEnlargeBtn) {
+    vitrineEnlargeBtn.addEventListener('click', () => openProofModal(currentActiveId));
+  }
 
   if (modalCloseBtn) {
     modalCloseBtn.addEventListener('click', closeProofModal);
   }
 
-  // Close on Escape or click outside
   window.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && modal && modal.style.display === 'flex') {
       closeProofModal();

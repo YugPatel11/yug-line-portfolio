@@ -1,6 +1,6 @@
 ---
 // ExperienceTicket.astro
-// Signature Staff ID Badges on Lanyards with 3D Card Flip & Route Timeline (Section 5)
+// Signature Staff ID Badges on Lanyards with 3D Card Flip & Chronological Career Metro Route (Section 5)
 import { EXPERIENCES, SERVICE_TAGS } from '../data/portfolio';
 import Pictograms from './Pictograms.astro';
 
@@ -14,6 +14,14 @@ const BADGE_CONFIG = [
     accentColor: 'var(--line-frontend)',
     proofLink: '/images/lor.png',
     proofText: 'Inspect Verified LOR ➔',
+    offerLink: '/images/edverb-offer-letter.jpg',
+    offerText: 'Inspect Offer Letter ➔',
+    period: '2024 · 4 MONTHS',
+    highlightsOnFront: ['Shipped 2 Live Client Sites', 'Frontend Architecture & UI'],
+    directPills: [
+      { label: 'Edverb.in ↗', url: 'https://edverb.in/' },
+      { label: 'BlackBanana.in ↗', url: 'https://blackbanana.in/' },
+    ],
   },
   {
     badgeId: 'ebc',
@@ -24,6 +32,14 @@ const BADGE_CONFIG = [
     accentColor: 'var(--line-hardware)',
     proofLink: 'https://iec.ppsu.ac.in/',
     proofText: 'Inspect Club Records ➔',
+    offerLink: '',
+    offerText: '',
+    period: '2024 - PRESENT',
+    highlightsOnFront: ['50+ Core Team Managed', 'Major University Tech Fests'],
+    directPills: [
+      { label: '50+ Team Lead', url: 'https://iec.ppsu.ac.in/' },
+      { label: 'PPSU Fests', url: 'https://iec.ppsu.ac.in/' },
+    ],
   },
   {
     badgeId: 'freelance',
@@ -33,31 +49,69 @@ const BADGE_CONFIG = [
     barcode: '|| | ||||| || ||| | |||',
     accentColor: 'var(--line-backend)',
     proofLink: 'https://edverb.in',
-    proofText: 'Inspect Live Client Build ➔',
+    proofText: 'Inspect Client Works ➔',
+    offerLink: '',
+    offerText: '',
+    period: '2023 - PRESENT',
+    highlightsOnFront: ['End-to-End Delivery', 'Operational Web Tools'],
+    directPills: [
+      { label: 'Client Delivery', url: '#projects' },
+      { label: 'Full-Stack SDE', url: '#legend' },
+    ],
   },
 ];
 ---
 
-<div class="space-y-8 select-none" id="experience-crew-station">
-  <!-- Service Tags Bar (What I Do) -->
-  <div class="flex flex-wrap items-center justify-between gap-3 p-4 bg-surface border-2 border-ink shadow-[4px_4px_0_var(--ink)]">
-    <div class="flex items-center gap-2">
-      <span class="w-2.5 h-2.5 rounded-full bg-line-backend animate-pulse"></span>
-      <span class="font-mono text-xs uppercase tracking-wider text-ink font-bold">
-        // AUTHORIZED SERVICE ROLES:
-      </span>
-    </div>
-    <div class="flex flex-wrap gap-2">
-      {SERVICE_TAGS.map((tag) => (
-        <span class="font-mono text-xs font-bold uppercase tracking-wider px-3 py-1 bg-paper border border-ink text-ink shadow-[2px_2px_0_var(--ink)]">
-          {tag}
+<div class="space-y-6 select-none" id="experience-crew-station">
+  
+  <!-- ========================================================
+       TOP OPERATIONS MATRIX & VIEW SWITCHER
+       ======================================================== -->
+  <div class="p-4 sm:p-5 bg-surface border-2 border-ink shadow-[4px_4px_0_var(--ink)] flex flex-col md:flex-row md:items-center justify-between gap-4">
+    <div>
+      <div class="flex items-center gap-2 mb-1">
+        <span class="w-2.5 h-2.5 rounded-full bg-line-backend animate-pulse"></span>
+        <span class="font-mono text-xs uppercase tracking-wider text-ink font-bold">
+          // CREW BUREAU & AUTHORIZED SERVICE ROLES:
         </span>
-      ))}
+      </div>
+      <div class="flex flex-wrap gap-2 mt-2">
+        {SERVICE_TAGS.map((tag) => (
+          <span class="font-mono text-xs font-bold uppercase tracking-wider px-3 py-1 bg-paper border border-ink text-ink shadow-[2px_2px_0_var(--ink)]">
+            {tag}
+          </span>
+        ))}
+        <span class="font-mono text-xs font-bold uppercase tracking-wider px-3 py-1 bg-[#15171C] text-line-hardware border border-ink">
+          2+ YEARS INDUSTRY & CAMPUS IMPACT
+        </span>
+      </div>
+    </div>
+
+    <!-- Dual View Switcher (Badges vs. Career Track) -->
+    <div class="flex items-center gap-1.5 font-mono text-xs border-2 border-ink p-1 bg-paper self-start md:self-auto shadow-[2px_2px_0_var(--ink)]">
+      <button
+        type="button"
+        id="view-badges-btn"
+        class="px-3 py-1.5 font-bold uppercase tracking-wider bg-line-backend text-paper border border-ink cursor-pointer transition-all flex items-center gap-1.5"
+      >
+        <span class="w-2 h-2 rounded-full bg-paper"></span>
+        <span>Physical Badges</span>
+      </button>
+      <button
+        type="button"
+        id="view-track-btn"
+        class="px-3 py-1.5 font-bold uppercase tracking-wider bg-surface text-ink border border-ink hover:bg-paper cursor-pointer transition-all flex items-center gap-1.5"
+      >
+        <span class="w-2 h-2 rounded-full bg-line-frontend"></span>
+        <span>Route Timeline</span>
+      </button>
     </div>
   </div>
 
-  <!-- Physical Lanyard Badges Grid -->
-  <div class="grid grid-cols-1 md:grid-cols-3 gap-8 pt-4">
+  <!-- ========================================================
+       VIEW 1: PHYSICAL LANYARD PASSES (3D Interactive Cards)
+       ======================================================== -->
+  <div id="crew-badges-view" class="grid grid-cols-1 md:grid-cols-3 gap-8 pt-2">
     {EXPERIENCES.map((exp, idx) => {
       const cfg = BADGE_CONFIG[idx] || BADGE_CONFIG[0];
       return (
@@ -67,20 +121,20 @@ const BADGE_CONFIG = [
           <div class="flex flex-col items-center pointer-events-none mb-[-8px] z-10">
             <!-- Woven Ribbon Loop -->
             <div
-              class="w-8 h-12 border-x-2 border-t-2 border-ink"
-              style={`background: repeating-linear-gradient(45deg, #111111, #111111 4px, ${cfg.accentColor} 4px, ${cfg.accentColor} 8px);`}
+              class="w-10 h-14 border-x-2 border-t-2 border-ink shadow-[2px_0_0_#000]"
+              style={`background: repeating-linear-gradient(45deg, #111111, #111111 6px, ${cfg.accentColor} 6px, ${cfg.accentColor} 12px);`}
             ></div>
             <!-- Metallic Swivel Clasp / Clip -->
-            <div class="w-6 h-5 bg-[#C5CBD8] border-2 border-ink rounded-sm shadow-[1px_1px_0_#000] flex items-center justify-center">
-              <span class="w-2 h-2 rounded-full bg-ink"></span>
+            <div class="w-7 h-5 bg-[#C5CBD8] border-2 border-ink rounded-sm shadow-[1px_1px_0_#000] flex items-center justify-center">
+              <span class="w-2.5 h-2.5 rounded-full bg-ink"></span>
             </div>
             <!-- Metal Ring Through Badge Slot -->
-            <div class="w-3 h-3 border-2 border-ink rounded-full bg-transparent -mt-1"></div>
+            <div class="w-3.5 h-3.5 border-2 border-ink rounded-full bg-transparent -mt-1"></div>
           </div>
 
           <!-- 3D Flip Card Container -->
           <div
-            class="badge-flip-container w-full max-w-[340px] h-[480px] cursor-pointer group"
+            class="badge-flip-container w-full max-w-[340px] h-[520px] cursor-pointer group"
             tabindex="0"
             role="button"
             aria-label={`Staff ID Badge for ${exp.role} at ${exp.organization}. Press to flip badge.`}
@@ -91,31 +145,46 @@ const BADGE_CONFIG = [
               <!-- ==============================================
                    BADGE FRONT: PHYSICAL STAFF CREDENTIAL
                    ============================================== -->
-              <div class="badge-front absolute inset-0 [backface-visibility:hidden] p-6 bg-surface border-4 border-ink shadow-[8px_8px_0_var(--ink)] flex flex-col justify-between rounded-lg">
-                <!-- Top Badge Slot Hole -->
-                <div class="w-12 h-2.5 bg-paper border-2 border-ink rounded-full mx-auto -mt-2 mb-2 flex items-center justify-center">
-                  <span class="w-8 h-0.5 bg-ink/40"></span>
-                </div>
+              <div class="badge-front absolute inset-0 [backface-visibility:hidden] p-5 sm:p-6 bg-surface border-4 border-ink shadow-[8px_8px_0_var(--ink)] flex flex-col justify-between rounded-lg">
+                
+                <!-- Top Badge Slot Hole & Security Chip -->
+                <div>
+                  <div class="w-14 h-2.5 bg-paper border-2 border-ink rounded-full mx-auto -mt-2 mb-3 flex items-center justify-center">
+                    <span class="w-10 h-0.5 bg-ink/40"></span>
+                  </div>
 
-                <!-- Header Security Strip -->
-                <div class="flex items-center justify-between border-b-2 border-ink pb-2 mb-3">
-                  <span class="font-mono text-[9px] font-black uppercase tracking-widest text-ink">
-                    {cfg.securityLevel}
-                  </span>
-                  <span class="w-3 h-3 rounded-full border border-ink" style={`background-color: ${cfg.accentColor};`}></span>
+                  <!-- Header Security Strip -->
+                  <div class="flex items-center justify-between border-b-2 border-ink pb-2 mb-3">
+                    <span class="font-mono text-[9px] font-black uppercase tracking-widest text-ink">
+                      {cfg.securityLevel}
+                    </span>
+                    <span class="font-mono text-[9px] px-1.5 py-0.5 border border-ink font-bold" style={`background-color: ${cfg.accentColor}; color: #fff;`}>
+                      {cfg.period}
+                    </span>
+                  </div>
                 </div>
 
                 <!-- Badge Portrait & Role Identity -->
                 <div class="text-center my-auto">
-                  <!-- Photo Frame -->
-                  <div class="w-24 h-24 mx-auto mb-3 border-3 border-ink p-1 bg-paper shadow-[3px_3px_0_var(--ink)] relative">
+                  
+                  <!-- Photo Frame with Gold Circuit Chip & Security Seal -->
+                  <div class="relative w-28 h-28 mx-auto mb-3 border-3 border-ink p-1 bg-paper shadow-[3px_3px_0_var(--ink)]">
                     <img
                       src={cfg.photo}
                       alt="Yug Rojivadiya"
                       class="w-full h-full object-cover filter contrast-110"
                     />
+                    
+                    <!-- Smart Security Chip Overlay -->
+                    <div class="absolute -top-2.5 -left-2.5 w-6 h-5 bg-[#FFC933] border-2 border-ink flex items-center justify-center shadow-[1px_1px_0_#000]">
+                      <div class="w-3.5 h-3 border border-ink flex flex-col justify-around">
+                        <span class="h-[1px] bg-ink"></span>
+                        <span class="h-[1px] bg-ink"></span>
+                      </div>
+                    </div>
+
                     <!-- Hologram Corner Watermark -->
-                    <span class="absolute bottom-1 right-1 px-1 bg-[#111111] text-[7px] font-mono text-line-hardware font-bold">
+                    <span class="absolute bottom-1 right-1 px-1 bg-[#111111] text-[7px] font-mono text-line-hardware font-bold border border-ink">
                       VERIFIED
                     </span>
                   </div>
@@ -129,66 +198,103 @@ const BADGE_CONFIG = [
                   <p class="font-mono text-[10px] text-ink-soft uppercase mt-0.5">
                     DEPT: {cfg.dept}
                   </p>
+
+                  <!-- Direct Key Highlights on Front -->
+                  <div class="mt-3 space-y-1">
+                    {cfg.highlightsOnFront.map((hl) => (
+                      <div class="font-mono text-[10px] font-bold text-ink bg-paper border border-rule py-0.5 px-2">
+                        ★ {hl}
+                      </div>
+                    ))}
+                  </div>
+
+                  <!-- Direct Live Action Links on Front -->
+                  <div class="mt-2.5 flex flex-wrap justify-center gap-1.5">
+                    {cfg.directPills.map((pill) => (
+                      <a
+                        href={pill.url}
+                        target={pill.url.startsWith('http') ? '_blank' : '_self'}
+                        rel="noopener noreferrer"
+                        class="font-mono text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 bg-paper border border-ink text-line-frontend hover:bg-ink hover:text-paper transition-colors"
+                        onclick="event.stopPropagation();"
+                      >
+                        {pill.label}
+                      </a>
+                    ))}
+                  </div>
                 </div>
 
                 <!-- Bottom Credential Barcode & Flip Hint -->
-                <div class="border-t-2 border-ink pt-3">
+                <div class="border-t-2 border-ink pt-2.5">
                   <div class="font-mono text-center text-xs tracking-widest text-ink opacity-80 mb-1 select-none font-bold">
                     {cfg.barcode}
                   </div>
                   <div class="flex items-center justify-between text-[10px] font-mono font-bold text-ink">
                     <span class="text-ink-soft">PASSHOLDER #0{idx + 1}</span>
-                    <span class="text-line-frontend flex items-center gap-1 group-hover:translate-x-1 transition-transform">
-                      <span>FLIP TO REVEAL DUTIES</span>
-                      <span>➔</span>
+                    <span class="text-line-backend flex items-center gap-1 group-hover:translate-x-1 transition-transform">
+                      <span>FLIP TO REVEAL</span>
+                      <span>⇄</span>
                     </span>
                   </div>
                 </div>
               </div>
 
               <!-- ==============================================
-                   BADGE BACK: VERIFIED DUTIES & PROOFS
+                   BADGE BACK: VERIFIED DUTIES & OFFICIAL PROOFS
                    ============================================== -->
-              <div class="badge-back absolute inset-0 [backface-visibility:hidden] [transform:rotateY(180deg)] p-6 bg-paper border-4 border-ink shadow-[8px_8px_0_var(--ink)] flex flex-col justify-between rounded-lg">
+              <div class="badge-back absolute inset-0 [backface-visibility:hidden] [transform:rotateY(180deg)] p-5 sm:p-6 bg-paper border-4 border-ink shadow-[8px_8px_0_var(--ink)] flex flex-col justify-between rounded-lg">
+                
                 <!-- Top Badge Slot Hole -->
-                <div class="w-12 h-2.5 bg-surface border-2 border-ink rounded-full mx-auto -mt-2 mb-2 flex items-center justify-center">
-                  <span class="w-8 h-0.5 bg-ink/40"></span>
-                </div>
-
                 <div>
+                  <div class="w-14 h-2.5 bg-surface border-2 border-ink rounded-full mx-auto -mt-2 mb-3 flex items-center justify-center">
+                    <span class="w-10 h-0.5 bg-ink/40"></span>
+                  </div>
+
                   <div class="flex items-center justify-between border-b-2 border-ink pb-2 mb-3">
-                    <span class="font-mono text-[9px] font-black uppercase tracking-widest text-line-frontend">
+                    <span class="font-mono text-[9px] font-black uppercase tracking-widest text-line-backend">
                       // OPERATIONAL RESPONSIBILITIES
                     </span>
-                    <span class="font-mono text-[9px] text-ink-soft uppercase font-bold">CONFIDENTIAL</span>
+                    <span class="font-mono text-[9px] text-ink-soft uppercase font-bold">AUTHENTICATED</span>
                   </div>
 
                   <!-- Highlights List -->
-                  <ul class="space-y-2.5 text-xs font-manrope text-ink leading-relaxed">
+                  <ul class="space-y-2 text-xs font-manrope text-ink leading-relaxed">
                     {exp.highlights.map((item) => (
                       <li class="flex items-start gap-2">
-                        <span class="font-mono text-line-frontend font-black text-sm leading-none mt-0.5">➔</span>
+                        <span class="font-mono text-line-backend font-black text-sm leading-none mt-0.5">➔</span>
                         <span>{item}</span>
                       </li>
                     ))}
                   </ul>
                 </div>
 
-                <!-- Verified Proof Link -->
+                <!-- Verified Proof Link & Documents -->
                 <div class="border-t-2 border-ink pt-3 space-y-2">
                   <a
                     href={cfg.proofLink}
                     target="_blank"
                     rel="noopener noreferrer"
-                    class="btn-stub !bg-surface !text-ink w-full justify-center !min-h-[40px] text-xs font-mono font-bold uppercase shadow-[3px_3px_0_var(--ink)] hover:!bg-paper"
+                    class="btn-stub !bg-surface !text-ink w-full justify-center !min-h-[38px] text-xs font-mono font-bold uppercase shadow-[3px_3px_0_var(--ink)] hover:!bg-paper"
                     onclick="event.stopPropagation();"
                   >
                     <span>{cfg.proofText}</span>
                     <Pictograms name="arrow-up-right" size={12} />
                   </a>
 
-                  <div class="text-center font-mono text-[9px] text-ink-soft">
-                    Tap anywhere to flip front ➔
+                  {cfg.offerLink && (
+                    <a
+                      href={cfg.offerLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="font-mono text-[10px] font-bold text-center block text-line-frontend hover:underline uppercase"
+                      onclick="event.stopPropagation();"
+                    >
+                      {cfg.offerText}
+                    </a>
+                  )}
+
+                  <div class="text-center font-mono text-[9px] text-ink-soft pt-1">
+                    Tap anywhere to flip front ⇄
                   </div>
                 </div>
               </div>
@@ -200,32 +306,131 @@ const BADGE_CONFIG = [
     })}
   </div>
 
-  <!-- Subway Route Timeline Connecting the 3 Nodes -->
-  <div class="p-4 bg-surface border-2 border-ink shadow-[4px_4px_0_var(--ink)] mt-6">
-    <div class="font-mono text-xs text-ink-soft uppercase mb-3 flex items-center justify-between font-bold">
-      <span>// Career Transit Timeline</span>
-      <span class="text-line-backend font-black">CONTINUOUS ENGINEERING TRACK</span>
-    </div>
-    <svg viewBox="0 0 600 50" class="w-full h-12" xmlns="http://www.w3.org/2000/svg">
-      <!-- Main Route Track -->
-      <line x1="40" y1="25" x2="560" y2="25" stroke="var(--line-backend)" stroke-width="4" />
+  <!-- ========================================================
+       VIEW 2: CHRONOLOGICAL CAREER ROUTE TIMELINE (Hidden by default, toggled via switch)
+       ======================================================== -->
+  <div id="crew-track-view" class="hidden space-y-6">
+    <div class="p-6 bg-[#0D0F14] border-4 border-ink shadow-[8px_8px_0_var(--ink)] text-paper">
       
-      <!-- Station 1 Node -->
-      <circle cx="100" cy="25" r="9" fill="var(--paper)" stroke="var(--ink)" stroke-width="3" />
-      <circle cx="100" cy="25" r="4" fill="var(--line-frontend)" />
-      <text x="100" y="44" font-family="'IBM Plex Mono', monospace" font-size="9" fill="var(--ink)" font-weight="bold" text-anchor="middle">EDVERB</text>
+      <div class="flex items-center justify-between border-b border-[#222834] pb-4 mb-6">
+        <div>
+          <h4 class="font-archivo text-xl font-black uppercase text-[#F1EEE6] tracking-tight">
+            TRANSIT ROUTE // CAREER MILESTONE TIMELINE
+          </h4>
+          <p class="font-mono text-xs text-[#8C96AA]">SEQUENTIAL SERVICE DISPATCH • 2023 - 2026</p>
+        </div>
+        <span class="font-mono text-xs font-bold text-emerald-400 bg-[#161B26] px-3 py-1 border border-[#2B3242]">
+          ALL SECTORS VERIFIED
+        </span>
+      </div>
 
-      <!-- Station 2 Node -->
-      <circle cx="300" cy="25" r="9" fill="var(--paper)" stroke="var(--ink)" stroke-width="3" />
-      <circle cx="300" cy="25" r="4" fill="var(--line-hardware)" />
-      <text x="300" y="44" font-family="'IBM Plex Mono', monospace" font-size="9" fill="var(--ink)" font-weight="bold" text-anchor="middle">EBC CLUB</text>
+      <!-- Timeline Stops -->
+      <div class="space-y-6 font-mono">
+        <!-- Stop 1: Edverb -->
+        <div class="p-4 bg-[#141824] border-2 border-line-frontend relative">
+          <div class="flex flex-wrap items-center justify-between gap-2 border-b border-[#2B3242] pb-2 mb-3">
+            <div class="flex items-center gap-2">
+              <span class="w-3 h-3 rounded-full bg-line-frontend"></span>
+              <span class="font-archivo text-lg font-bold text-[#F1EEE6]">01. FRONTEND INTERN @ EDVERB</span>
+            </div>
+            <span class="text-xs text-line-frontend font-bold">2024 · 4 MONTHS</span>
+          </div>
+          <p class="font-manrope text-sm text-[#C4CDDC] mb-3">
+            Built responsive frontend architectures and independently developed & shipped two live client platforms: Edverb.in and BlackBanana.in. Received official Letter of Recommendation.
+          </p>
+          <div class="flex flex-wrap gap-2 text-xs">
+            <span class="px-2 py-0.5 bg-[#1B202E] border border-[#2B3242] text-line-frontend">Next.js</span>
+            <span class="px-2 py-0.5 bg-[#1B202E] border border-[#2B3242] text-[#8C96AA]">Tailwind CSS</span>
+            <span class="px-2 py-0.5 bg-[#1B202E] border border-[#2B3242] text-[#8C96AA]">Responsive UI</span>
+            <a href="https://edverb.in/" target="_blank" class="px-2 py-0.5 bg-line-frontend text-ink font-bold hover:underline">Edverb.in ↗</a>
+            <a href="https://blackbanana.in/" target="_blank" class="px-2 py-0.5 bg-line-frontend text-ink font-bold hover:underline">BlackBanana.in ↗</a>
+            <a href="/images/lor.png" target="_blank" class="px-2 py-0.5 bg-surface text-ink font-bold hover:underline">View LOR ↗</a>
+          </div>
+        </div>
 
-      <!-- Station 3 Node -->
-      <circle cx="500" cy="25" r="9" fill="var(--paper)" stroke="var(--ink)" stroke-width="3" />
-      <circle cx="500" cy="25" r="4" fill="var(--line-backend)" />
-      <text x="500" y="44" font-family="'IBM Plex Mono', monospace" font-size="9" fill="var(--ink)" font-weight="bold" text-anchor="middle">FREELANCE</text>
-    </svg>
+        <!-- Stop 2: EBC Club -->
+        <div class="p-4 bg-[#141824] border-2 border-line-hardware relative">
+          <div class="flex flex-wrap items-center justify-between gap-2 border-b border-[#2B3242] pb-2 mb-3">
+            <div class="flex items-center gap-2">
+              <span class="w-3 h-3 rounded-full bg-line-hardware"></span>
+              <span class="font-archivo text-lg font-bold text-[#F1EEE6]">02. VICE PRESIDENT @ EBC CLUB</span>
+            </div>
+            <span class="text-xs text-line-hardware font-bold">2024 - PRESENT</span>
+          </div>
+          <p class="font-manrope text-sm text-[#C4CDDC] mb-3">
+            Leading event management and technical operations for university-wide tech fests at P P Savani University. Directly managed a 50+ student core team across technical, logistics, and design domains.
+          </p>
+          <div class="flex flex-wrap gap-2 text-xs">
+            <span class="px-2 py-0.5 bg-[#1B202E] border border-[#2B3242] text-line-hardware">Team Leadership (50+)</span>
+            <span class="px-2 py-0.5 bg-[#1B202E] border border-[#2B3242] text-[#8C96AA]">Tech Fest Operations</span>
+            <span class="px-2 py-0.5 bg-[#1B202E] border border-[#2B3242] text-[#8C96AA]">Faculty Administration</span>
+            <a href="https://iec.ppsu.ac.in/" target="_blank" class="px-2 py-0.5 bg-line-hardware text-ink font-bold hover:underline">Club Records ↗</a>
+          </div>
+        </div>
+
+        <!-- Stop 3: Freelance -->
+        <div class="p-4 bg-[#141824] border-2 border-line-backend relative">
+          <div class="flex flex-wrap items-center justify-between gap-2 border-b border-[#2B3242] pb-2 mb-3">
+            <div class="flex items-center gap-2">
+              <span class="w-3 h-3 rounded-full bg-line-backend"></span>
+              <span class="font-archivo text-lg font-bold text-[#F1EEE6]">03. FREELANCE FULL-STACK DEVELOPER</span>
+            </div>
+            <span class="text-xs text-line-backend font-bold">2023 - PRESENT</span>
+          </div>
+          <p class="font-manrope text-sm text-[#C4CDDC] mb-3">
+            Engineering end-to-end custom digital platforms, business management systems, and high-performance websites for independent clients. Complete ownership of design, backend logic, and production deployment.
+          </p>
+          <div class="flex flex-wrap gap-2 text-xs">
+            <span class="px-2 py-0.5 bg-[#1B202E] border border-[#2B3242] text-line-backend">Full-Stack Architecture</span>
+            <span class="px-2 py-0.5 bg-[#1B202E] border border-[#2B3242] text-[#8C96AA]">Django / React / Next.js</span>
+            <span class="px-2 py-0.5 bg-[#1B202E] border border-[#2B3242] text-[#8C96AA]">PostgreSQL / SQLite</span>
+            <span class="px-2 py-0.5 bg-line-backend text-paper font-bold">100% Quality On-Time</span>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
+
+  <!-- ========================================================
+       METRO ROUTE STRIP (Always Visible Carrier Track)
+       ======================================================== -->
+  <div class="p-4 sm:p-5 bg-surface border-2 border-ink shadow-[4px_4px_0_var(--ink)]">
+    <div class="font-mono text-xs text-ink-soft uppercase mb-3 flex items-center justify-between font-bold">
+      <span class="text-ink">// CONTINUOUS CAREER TRANSIT TRACK</span>
+      <span class="text-line-backend font-black">ACTIVE PROGRESSION 2024 → 2026</span>
+    </div>
+    
+    <div class="relative py-2">
+      <!-- Track SVG -->
+      <svg viewBox="0 0 600 56" class="w-full h-14" xmlns="http://www.w3.org/2000/svg">
+        <!-- Main Route Track Line -->
+        <line x1="50" y1="28" x2="550" y2="28" stroke="var(--ink)" stroke-width="6" />
+        <line x1="50" y1="28" x2="550" y2="28" stroke="var(--line-backend)" stroke-width="3" />
+        
+        <!-- Station 1: Edverb -->
+        <g class="cursor-pointer group" tabindex="0" role="button" aria-label="Edverb Internship Stop">
+          <circle cx="100" cy="28" r="12" fill="var(--surface)" stroke="var(--ink)" stroke-width="3" />
+          <circle cx="100" cy="28" r="6" fill="var(--line-frontend)" />
+          <text x="100" y="50" font-family="'IBM Plex Mono', monospace" font-size="9" fill="var(--ink)" font-weight="bold" text-anchor="middle">01. EDVERB</text>
+        </g>
+
+        <!-- Station 2: EBC Club -->
+        <g class="cursor-pointer group" tabindex="0" role="button" aria-label="EBC Club Leadership Stop">
+          <circle cx="300" cy="28" r="12" fill="var(--surface)" stroke="var(--ink)" stroke-width="3" />
+          <circle cx="300" cy="28" r="6" fill="var(--line-hardware)" />
+          <text x="300" y="50" font-family="'IBM Plex Mono', monospace" font-size="9" fill="var(--ink)" font-weight="bold" text-anchor="middle">02. EBC CLUB</text>
+        </g>
+
+        <!-- Station 3: Freelance -->
+        <g class="cursor-pointer group" tabindex="0" role="button" aria-label="Freelance Developer Stop">
+          <circle cx="500" cy="28" r="12" fill="var(--surface)" stroke="var(--ink)" stroke-width="3" />
+          <circle cx="500" cy="28" r="6" fill="var(--line-backend)" />
+          <text x="500" y="50" font-family="'IBM Plex Mono', monospace" font-size="9" fill="var(--ink)" font-weight="bold" text-anchor="middle">03. FREELANCE</text>
+        </g>
+      </svg>
+    </div>
+  </div>
+
 </div>
 
 <style>
@@ -237,6 +442,7 @@ const BADGE_CONFIG = [
 <script>
   import { sound } from '../scripts/sound';
 
+  // 1. 3D Badge Flip Logic
   document.querySelectorAll('.badge-flip-container').forEach((container) => {
     const flipCard = () => {
       sound.paperSlide();
@@ -251,4 +457,32 @@ const BADGE_CONFIG = [
       }
     });
   });
+
+  // 2. View Switcher Logic (Physical Badges vs. Route Timeline)
+  const viewBadgesBtn = document.getElementById('view-badges-btn');
+  const viewTrackBtn = document.getElementById('view-track-btn');
+  const badgesView = document.getElementById('crew-badges-view');
+  const trackView = document.getElementById('crew-track-view');
+
+  if (viewBadgesBtn && viewTrackBtn && badgesView && trackView) {
+    viewBadgesBtn.addEventListener('click', () => {
+      sound.beep();
+      badgesView.classList.remove('hidden');
+      trackView.classList.add('hidden');
+      viewBadgesBtn.classList.add('bg-line-backend', 'text-paper');
+      viewBadgesBtn.classList.remove('bg-surface', 'text-ink');
+      viewTrackBtn.classList.remove('bg-line-backend', 'text-paper');
+      viewTrackBtn.classList.add('bg-surface', 'text-ink');
+    });
+
+    viewTrackBtn.addEventListener('click', () => {
+      sound.beep();
+      badgesView.classList.add('hidden');
+      trackView.classList.remove('hidden');
+      viewTrackBtn.classList.add('bg-line-backend', 'text-paper');
+      viewTrackBtn.classList.remove('bg-surface', 'text-ink');
+      viewBadgesBtn.classList.remove('bg-line-backend', 'text-paper');
+      viewBadgesBtn.classList.add('bg-surface', 'text-ink');
+    });
+  }
 </script>

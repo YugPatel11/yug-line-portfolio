@@ -232,6 +232,26 @@ class SoundEngine {
     }
   }
 
+  // 8b. Mechanical Solari Split-Flap flutter click
+  public splitFlap() {
+    const ctx = this.getAudioContext();
+    if (!ctx || !this.masterGain) return;
+
+    for (let i = 0; i < 3; i++) {
+      const t = ctx.currentTime + i * 0.045;
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(1200 + i * 180, t);
+      gain.gain.setValueAtTime(0.04, t);
+      gain.gain.exponentialRampToValueAtTime(0.001, t + 0.035);
+      osc.connect(gain);
+      gain.connect(this.masterGain);
+      osc.start(t);
+      osc.stop(t + 0.035);
+    }
+  }
+
   // 9. Stamp Thunk = heavy 80Hz resonant impact + crisp surface snap
   public stampThunk() {
     const ctx = this.getAudioContext();
