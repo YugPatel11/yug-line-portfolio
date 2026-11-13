@@ -1,41 +1,57 @@
 class SoundEngine {
   private ctx: AudioContext | null = null;
-  private enabled: boolean = false;
+  private enabled: boolean = true;
   private masterGain: GainNode | null = null;
 
   constructor() {
+    this.syncEnabled();
+    if (typeof window !== 'undefined') {
+      window.addEventListener('storage', () => this.syncEnabled());
+    }
+  }
+
+  private syncEnabled() {
     try {
-      this.enabled = localStorage.getItem('yugline_sound') === 'true';
+      const saved = localStorage.getItem('yugline_sound');
+      // Default to true/on unless user explicitly toggled off
+      this.enabled = saved !== 'off' && saved !== 'false';
     } catch (e) {
-      this.enabled = false;
+      this.enabled = true;
     }
   }
 
   public isEnabled(): boolean {
+    this.syncEnabled();
     return this.enabled;
   }
 
-  public toggle(): boolean {
-    this.enabled = !this.enabled;
+  public setEnabled(enable: boolean) {
+    this.enabled = enable;
     try {
-      localStorage.setItem('yugline_sound', String(this.enabled));
+      localStorage.setItem('yugline_sound', enable ? 'on' : 'off');
     } catch (e) {}
-
-    if (this.enabled) {
+    if (enable) {
       this.getAudioContext();
+    }
+  }
+
+  public toggle(): boolean {
+    this.setEnabled(!this.isEnabled());
+    if (this.enabled) {
       this.beep();
     }
     return this.enabled;
   }
 
   private getAudioContext(): AudioContext | null {
+    this.syncEnabled();
     if (!this.enabled) return null;
     if (!this.ctx) {
       const AudioCtx = window.AudioContext || (window as any).webkitAudioContext;
       if (AudioCtx) {
         this.ctx = new AudioCtx();
         this.masterGain = this.ctx.createGain();
-        this.masterGain.gain.setValueAtTime(0.06, this.ctx.currentTime);
+        this.masterGain.gain.setValueAtTime(0.20, this.ctx.currentTime);
         this.masterGain.connect(this.ctx.destination);
       }
     }

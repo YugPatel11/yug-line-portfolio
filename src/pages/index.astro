@@ -620,21 +620,24 @@ import { PROFILE, PROJECTS } from '../data/portfolio';
     import { JourneyStateMachine } from '../scripts/journey/machine';
     import { initInteractions } from '../scripts/interactions';
     import { metroSound } from '../scripts/sound/metroSound';
+    import { sound } from '../scripts/sound';
 
     document.addEventListener('DOMContentLoaded', () => {
       // Expose sound engine
       (window as any).__yugsound = metroSound;
+      (window as any).__sound = sound;
 
       // Sound Toggle Handler
       const soundBtn = document.getElementById('sound-toggle');
       const soundStatus = document.getElementById('sound-status');
       if (soundBtn && soundStatus) {
-        if (metroSound.isEnabled()) {
+        if (metroSound.isEnabled() && sound.isEnabled()) {
           soundStatus.textContent = 'Sound: On';
         }
         soundBtn.addEventListener('click', () => {
           const nextState = !metroSound.isEnabled();
           metroSound.setEnabled(nextState);
+          sound.setEnabled(nextState);
           soundStatus.textContent = nextState ? 'Sound: On' : 'Sound: Off';
           const stageLabel = document.getElementById('metro-stage-sound-label');
           if (stageLabel) stageLabel.textContent = nextState ? 'Sound: On' : 'Sound: Off';

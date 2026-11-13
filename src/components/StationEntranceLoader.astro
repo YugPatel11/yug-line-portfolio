@@ -377,6 +377,7 @@
           if (loader.parentNode) {
             loader.parentNode.removeChild(loader);
           }
+          window.dispatchEvent(new CustomEvent('yugline:loader_finish'));
           // Focus main heading
           const mainHeading = document.getElementById('heading-st-00') || document.querySelector('h1');
           if (mainHeading) {

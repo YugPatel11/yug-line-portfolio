@@ -820,7 +820,7 @@ const DESTINATIONS = [
   };
 
   // Station Master Speech Synthesizer
-  const speakClerk = (rawText: string, onEnd?: () => void) => {
+  const speakClerk = (rawText: string, onEnd?: () => void, onStart?: () => void) => {
     if (!('speechSynthesis' in window)) {
       if (onEnd) setTimeout(onEnd, 1000);
       return;
@@ -829,13 +829,16 @@ const DESTINATIONS = [
     // Check mute preference
     try {
       const soundPref = localStorage.getItem('yugline_sound');
-      if (soundPref === 'off') {
+      if (soundPref === 'off' || soundPref === 'false') {
         if (onEnd) setTimeout(onEnd, 1000);
         return;
       }
     } catch (e) {}
 
     try {
+      if (window.speechSynthesis.paused) {
+        window.speechSynthesis.resume();
+      }
       window.speechSynthesis.cancel();
       const clean = rawText.replace(/^["'“]|["'”]$/g, '').trim();
       if (!clean) {
@@ -853,10 +856,11 @@ const DESTINATIONS = [
         utterance.voice = voice;
         utterance.lang = voice.lang;
       } else {
-        utterance.lang = 'en-IN';
+        utterance.lang = navigator.language || 'en-US';
       }
 
       utterance.onstart = () => {
+        if (onStart) onStart();
         if (clerkMouth) clerkMouth.classList.add('clerk-mouth-talking');
         if (speechBubble) speechBubble.classList.add('ring-4', 'ring-line-hardware');
         if (speechBadge) {
@@ -884,7 +888,12 @@ const DESTINATIONS = [
       const safetyTimer = setTimeout(finishSpeaking, 3500);
 
       utterance.onend = finishSpeaking;
-      utterance.onerror = finishSpeaking;
+      utterance.onerror = (e) => {
+        if ((e as any).error === 'not-allowed') {
+          hasAnnouncedGreeting = false;
+        }
+        finishSpeaking();
+      };
 
       window.speechSynthesis.speak(utterance);
     } catch (err) {
@@ -893,6 +902,7 @@ const DESTINATIONS = [
   };
 
   const GREETING_TEXT = '"Namaste, welcome to Yug Lines Metro. There is something different at each station."';
+  let hasAnnouncedGreeting = false;
 
   // Station Master Welcome Announcement (Announces automatically on arrival each time)
   const triggerInitialGreeting = () => {
@@ -901,7 +911,12 @@ const DESTINATIONS = [
     if (speechText) {
       speechText.textContent = GREETING_TEXT;
     }
-    speakClerk(GREETING_TEXT);
+    if ('speechSynthesis' in window && window.speechSynthesis.paused) {
+      window.speechSynthesis.resume();
+    }
+    speakClerk(GREETING_TEXT, undefined, () => {
+      hasAnnouncedGreeting = true;
+    });
   };
 
   // Click speech bubble or clerk avatar to replay current speech
@@ -924,17 +939,12 @@ const DESTINATIONS = [
   }
 
   // 2. Trigger automatically on page reload whenever on base station
-  let hasAnnouncedGreeting = false;
   const playGreetingOnReload = () => {
     if (hasAnnouncedGreeting) return;
     const welcomeEl = document.getElementById('scene-welcome');
     const isWelcomeVisible = welcomeEl && welcomeEl.style.display !== 'none';
     const hash = window.location.hash.toLowerCase();
     if (!isWelcomeVisible && (hash === '' || hash === '#base' || hash === '#station-00')) {
-      if ('speechSynthesis' in window && window.speechSynthesis.paused) {
-        window.speechSynthesis.resume();
-      }
-      hasAnnouncedGreeting = true;
       triggerInitialGreeting();
     }
   };
@@ -945,6 +955,13 @@ const DESTINATIONS = [
     document.addEventListener('DOMContentLoaded', playGreetingOnReload);
   }
   window.addEventListener('load', playGreetingOnReload);
+
+  // Trigger when station entrance loader finishes opening
+  window.addEventListener('yugline:loader_finish', () => {
+    if (!selectedStationId) {
+      triggerInitialGreeting();
+    }
+  });
 
   // If voices were loading asynchronously on reload, retry when available
   if ('speechSynthesis' in window && window.speechSynthesis.onvoiceschanged !== undefined) {
@@ -985,11 +1002,9 @@ const DESTINATIONS = [
       return;
     }
     const chooseVisible = document.getElementById('journey-step-choose')?.style.display !== 'none';
-    if (chooseVisible && !selectedStationId && !hasAnnouncedGreeting) {
-      if ('speechSynthesis' in window && window.speechSynthesis.paused) {
-        window.speechSynthesis.resume();
-      }
-      hasAnnouncedGreeting = true;
+    const hash = window.location.hash.toLowerCase();
+    const isBase = hash === '' || hash === '#base' || hash === '#station-00';
+    if (chooseVisible && isBase && !selectedStationId && !hasAnnouncedGreeting) {
       triggerInitialGreeting();
     }
   };
@@ -1018,6 +1033,7 @@ const DESTINATIONS = [
   };
 
   let isTransitioningToMetro = false;
+  let printRunId = 0;
 
   // Take ticket and launch full-screen cinematic metro
   const proceedToMetro = (stId?: StationCode) => {
@@ -1076,8 +1092,9 @@ const DESTINATIONS = [
         }, 350);
       }
 
-      // 2. Play soft chime
+      // 2. Play soft chime and mechanical Solari flap
       sound.doorDing();
+      sound.splitFlap();
 
       // 3. Station name & voice line
       const cleanName = CLEAN_STATION_NAMES[stId] || stTitle.replace(/^All\s+/i, '');
@@ -1092,7 +1109,7 @@ const DESTINATIONS = [
       if (stripCode) stripCode.textContent = stCode;
       if (stripTitle) stripTitle.textContent = cleanName.toUpperCase();
 
-      // 4. Issue and dispense ticket in tray
+      // 4. Issue and dispense ticket in tray (mechanical printer & stamp sounds)
       executeBuyTicket(cleanName);
 
       // 5. Play voice line; once the sound finishes, the metro appears on the screen!
@@ -1107,7 +1124,8 @@ const DESTINATIONS = [
 
   // Execute Ticket Issuance Sequence (Responsive, animated handover)
   const executeBuyTicket = async (cleanName: string) => {
-    if (!selectedStationId || isPrinting) return;
+    if (!selectedStationId) return;
+    const currentRun = ++printRunId;
     isPrinting = true;
     isReadyForTake = false;
 
@@ -1119,7 +1137,8 @@ const DESTINATIONS = [
     // Step A: Typing clatter
     if (clerkLeftArm) clerkLeftArm.classList.add('clerk-typing');
     sound.keyboardClick();
-    await new Promise((r) => setTimeout(r, 200));
+    await new Promise((r) => setTimeout(r, 180));
+    if (currentRun !== printRunId) return;
     if (clerkLeftArm) clerkLeftArm.classList.remove('clerk-typing');
 
     // Step B: Printer extrusion
@@ -1129,7 +1148,8 @@ const DESTINATIONS = [
       ticketEl.style.transform = 'translateY(-14px) scale(0.95)';
       ticketEl.style.pointerEvents = 'auto';
     }
-    await new Promise((r) => setTimeout(r, 200));
+    await new Promise((r) => setTimeout(r, 180));
+    if (currentRun !== printRunId) return;
 
     // Step C: Rubber Stamp impact thunk
     if (clerkRightArm) {
@@ -1140,7 +1160,8 @@ const DESTINATIONS = [
       ticketEl.style.opacity = '1';
       ticketEl.style.transform = 'translateY(0) scale(1)';
     }
-    await new Promise((r) => setTimeout(r, 160));
+    await new Promise((r) => setTimeout(r, 150));
+    if (currentRun !== printRunId) return;
     if (clerkRightArm) clerkRightArm.style.transform = 'translateY(0) rotate(0deg)';
 
     // Step D: Slide ticket into tray
