@@ -677,13 +677,16 @@ import Pictograms from './Pictograms.astro';
       }, 70);
 
       // Conductor voice announcement if Web Speech API available
-      if ('speechSynthesis' in window && metroSound.isEnabled()) {
+      if ('speechSynthesis' in window) {
         try {
           window.speechSynthesis.cancel();
-          const msg = new SpeechSynthesisUtterance("Ticket validated. Mind the gap!");
-          msg.rate = 1.05;
+          const meta = STATIONS[currentDestination];
+          const stationName = meta ? meta.name : 'Next Station';
+          const msg = new SpeechSynthesisUtterance(`Ticket validated. Next station: ${stationName}.`);
+          msg.rate = 1.0;
           msg.pitch = 1.0;
-          msg.volume = 0.85;
+          msg.volume = 1.0;
+          msg.lang = 'en-US';
           window.speechSynthesis.speak(msg);
         } catch (e) {}
       }
