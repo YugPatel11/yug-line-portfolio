@@ -670,14 +670,33 @@ import Pictograms from './Pictograms.astro';
       isBoarding = true;
       clearTimeout(idleTimer);
 
-      // Ticket person validation & stamp sound effect
+      if (boardBtn) {
+        boardBtn.innerHTML = '<span class="flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span><span>TICKET VALIDATED...</span></span>';
+        boardBtn.classList.remove('animate-pulse');
+      }
+      if (ticker) ticker.textContent = 'TICKET VALIDATED';
+
+      // 1. Ticket person validation & stamp sound effect
       sound.stampThunk();
       setTimeout(() => {
         sound.gateGreen();
       }, 70);
 
-      // Conductor voice announcement if Web Speech API available
-      if ('speechSynthesis' in window) {
+      // 2. Play conductor voice announcement completely before moving
+      await new Promise<void>((resolve) => {
+        if (!('speechSynthesis' in window)) {
+          setTimeout(resolve, 800);
+          return;
+        }
+
+        try {
+          const soundPref = localStorage.getItem('yugline_sound');
+          if (soundPref === 'off') {
+            setTimeout(resolve, 300);
+            return;
+          }
+        } catch (e) {}
+
         try {
           window.speechSynthesis.cancel();
           const meta = STATIONS[currentDestination];
@@ -687,17 +706,31 @@ import Pictograms from './Pictograms.astro';
           msg.pitch = 1.0;
           msg.volume = 1.0;
           msg.lang = 'en-US';
-          window.speechSynthesis.speak(msg);
-        } catch (e) {}
-      }
 
+          const safetyTimer = setTimeout(resolve, 3500);
+
+          msg.onend = () => {
+            clearTimeout(safetyTimer);
+            setTimeout(resolve, 150);
+          };
+
+          msg.onerror = () => {
+            clearTimeout(safetyTimer);
+            resolve();
+          };
+
+          window.speechSynthesis.speak(msg);
+        } catch (e) {
+          resolve();
+        }
+      });
+
+      // 3. Play door closing sequence (3 beeps + pneumatic door thump)
       if (boardBtn) {
         boardBtn.innerHTML = '<span class="flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full bg-line-frontend animate-pulse"></span><span>DOORS CLOSING...</span></span>';
-        boardBtn.classList.remove('animate-pulse');
       }
       if (ticker) ticker.textContent = 'DOORS CLOSING';
 
-      // Play 3 beeps & door thump
       await metroSound.playDoorClosingSequence();
 
       // Close doors on Car 2
@@ -711,38 +744,39 @@ import Pictograms from './Pictograms.astro';
       }
       if (doorSeam) doorSeam.style.opacity = '1';
 
-      // Departure sequence after 0.25s hold
+      // Short 200ms seal pause before metro moves
+      await new Promise((r) => setTimeout(r, 200));
+
+      // 4. NOW the metro starts moving
+      if (boardContainer) boardContainer.style.display = 'none';
+      if (streaks) streaks.style.opacity = '1';
+      if (ticker) ticker.textContent = 'DEPARTING';
+
+      // Play departure audio (motor whine + accelerating clatter panning right)
+      metroSound.playDepartureSequence();
+
+      const { departX } = calculatePositions();
+
+      // Train accelerates off to the right with torque pitch (only the train moves)
+      if (trainWrapper) {
+        currentAnim = trainWrapper.animate(
+          [
+            { transform: `translate3d(${lastStopX}px, 0, 0) rotate(0deg)` },
+            { transform: `translate3d(${lastStopX + 60}px, 0, 0) rotate(-0.3deg)`, offset: 0.15 },
+            { transform: `translate3d(${departX}px, 0, 0) rotate(0deg)`, offset: 1.0 },
+          ],
+          {
+            duration: 1400,
+            easing: 'cubic-bezier(0.55, 0, 0.9, 0.5)',
+            fill: 'forwards',
+          }
+        );
+      }
+
+      // Reveal stop underneath at ~0.9s into departure (Section 3.6)
       setTimeout(() => {
-        if (boardContainer) boardContainer.style.display = 'none';
-        if (streaks) streaks.style.opacity = '1';
-        if (ticker) ticker.textContent = 'DEPARTING';
-
-        // Play departure audio (motor whine + accelerating clatter panning right)
-        metroSound.playDepartureSequence();
-
-        const { departX } = calculatePositions();
-
-        // Train accelerates off to the right with torque pitch (only the train moves)
-        if (trainWrapper) {
-          currentAnim = trainWrapper.animate(
-            [
-              { transform: `translate3d(${lastStopX}px, 0, 0) rotate(0deg)` },
-              { transform: `translate3d(${lastStopX + 60}px, 0, 0) rotate(-0.3deg)`, offset: 0.15 },
-              { transform: `translate3d(${departX}px, 0, 0) rotate(0deg)`, offset: 1.0 },
-            ],
-            {
-              duration: 1400,
-              easing: 'cubic-bezier(0.55, 0, 0.9, 0.5)',
-              fill: 'forwards',
-            }
-          );
-        }
-
-        // Reveal stop underneath at ~0.9s into departure (Section 3.6)
-        setTimeout(() => {
-          completeArrival();
-        }, 900);
-      }, 250);
+        completeArrival();
+      }, 900);
     };
 
     const completeArrival = () => {
