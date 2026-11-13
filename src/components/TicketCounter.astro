@@ -514,7 +514,7 @@ const DESTINATIONS = [
             </div>
           </div>
           <p id="clerk-speech-text" class="font-manrope text-sm sm:text-base font-bold text-ink leading-snug">
-            "Namaste! Where to today? Select any stop on the fare board."
+            "Namaste, welcome to Yug Lines Metro. There is something different at each station."
           </p>
           <!-- Speech Bubble Downward Tail -->
           <div class="absolute -bottom-2.5 left-1/2 -translate-x-1/2 w-4 h-4 bg-paper border-r-3 border-b-3 border-ink transform rotate-45"></div>
@@ -770,7 +770,6 @@ const DESTINATIONS = [
   let isPrinting = false;
   let isReadyForTake = false;
   let idleTimer: any = null;
-  let hasSpokenGreeting = false;
 
   // Live Concourse Clock
   const clockEl = document.getElementById('concourse-live-clock');
@@ -894,13 +893,16 @@ const DESTINATIONS = [
     }
   };
 
-  // Initial Welcome Greeting
+  const GREETING_TEXT = '"Namaste, welcome to Yug Lines Metro. There is something different at each station."';
+
+  // Station Master Welcome Announcement (Announces automatically on arrival each time)
   const triggerInitialGreeting = () => {
-    if (hasSpokenGreeting) return;
-    hasSpokenGreeting = true;
-    if (!selectedStationId && speechText && speechText.textContent) {
-      speakClerk(speechText.textContent);
+    selectedStationId = null;
+    isTransitioningToMetro = false;
+    if (speechText) {
+      speechText.textContent = GREETING_TEXT;
     }
+    speakClerk(GREETING_TEXT);
   };
 
   // Click speech bubble or clerk avatar to replay current speech
@@ -912,32 +914,69 @@ const DESTINATIONS = [
   if (speechBubble) speechBubble.addEventListener('click', replayCurrentSpeech);
   if (clerkAvatar) clerkAvatar.addEventListener('click', replayCurrentSpeech);
 
-  // Trigger greeting when entering from Welcome screen with sound
+  // 1. Trigger greeting when entering from Welcome screen with sound
   const enterSoundBtn = document.getElementById('welcome-enter-sound-btn');
   if (enterSoundBtn) {
     enterSoundBtn.addEventListener('click', () => {
       setTimeout(() => {
         triggerInitialGreeting();
-      }, 500);
+      }, 400);
     });
   }
 
-  // If already on #base, trigger greeting on first interaction
-  const chooseSection = document.getElementById('journey-step-choose');
-  if (chooseSection) {
-    chooseSection.addEventListener(
-      'click',
-      (e) => {
-        if (
-          !(e.target as HTMLElement).closest('.destination-choice-btn') &&
-          !(e.target as HTMLElement).closest('#counter-bell-btn')
-        ) {
-          triggerInitialGreeting();
-        }
-      },
-      { once: true }
-    );
+  // 2. Trigger automatically on page load if already at base station
+  const checkInitialAnnouncement = () => {
+    const welcomeEl = document.getElementById('scene-welcome');
+    const isWelcomeVisible = welcomeEl && welcomeEl.style.display !== 'none';
+    const hash = window.location.hash.toLowerCase();
+    if (!isWelcomeVisible && (hash === '' || hash === '#base' || hash === '#station-00')) {
+      setTimeout(() => {
+        triggerInitialGreeting();
+      }, 500);
+    }
+  };
+  if (document.readyState === 'complete') {
+    checkInitialAnnouncement();
+  } else {
+    window.addEventListener('load', checkInitialAnnouncement);
   }
+
+  // 3. Trigger automatically whenever returning to base station
+  window.addEventListener('yugline:step_choose', () => {
+    isTransitioningToMetro = false;
+    setTimeout(() => {
+      triggerInitialGreeting();
+    }, 300);
+  });
+
+  window.addEventListener('hashchange', () => {
+    const hash = window.location.hash.toLowerCase();
+    if (hash === '#base' || hash === '' || hash === '#station-00') {
+      isTransitioningToMetro = false;
+      setTimeout(() => {
+        triggerInitialGreeting();
+      }, 300);
+    }
+  });
+
+  // 4. Fallback user gesture to satisfy browser audio autoplay requirements
+  let hasUserInteractedOnce = false;
+  const onFirstInteraction = (e: Event) => {
+    if (hasUserInteractedOnce) return;
+    hasUserInteractedOnce = true;
+    if (
+      (e.target as HTMLElement).closest('.destination-choice-btn') ||
+      (e.target as HTMLElement).closest('#counter-bell-btn')
+    ) {
+      return;
+    }
+    const chooseVisible = document.getElementById('journey-step-choose')?.style.display !== 'none';
+    if (chooseVisible && !selectedStationId) {
+      triggerInitialGreeting();
+    }
+  };
+  window.addEventListener('click', onFirstInteraction, { passive: true });
+  window.addEventListener('touchstart', onFirstInteraction, { passive: true });
 
   // Pre-load voices if browser requires event
   if ('speechSynthesis' in window && window.speechSynthesis.onvoiceschanged !== undefined) {

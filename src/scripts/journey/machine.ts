@@ -144,6 +144,7 @@ export class JourneyStateMachine {
       window.scrollTo({ top: 0, behavior: 'smooth' });
       const h = document.getElementById('choose-stop-heading');
       if (h) h.focus();
+      window.dispatchEvent(new CustomEvent('yugline:step_choose'));
     } else if (step === 'ticket') {
       this.hideElement('journey-step-choose');
       this.showElement('journey-step-ticket');
