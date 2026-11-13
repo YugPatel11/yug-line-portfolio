@@ -57,10 +57,10 @@ export class Welcome3DScene {
 
       this.updateSize();
 
-      // Camera: Elevated front-3/4 angle where the train directly faces the user
-      // Front cab, windshield, headlights, destination sign, and side flank are all clearly visible
-      this.camera.position.set(1.45, 1.25, 3.85);
-      this.camera.lookAt(0.1, 0.65, 0.85);
+      // Camera: Elevated 3/4 angle looking down at the train from above
+      // Shows more of the roof, pantograph, and side flank in clear perspective
+      this.camera.position.set(2.5, 2.05, 3.85);
+      this.camera.lookAt(0.05, 0.72, 0.65);
 
       // Studio Reflection Environment
       this.setupStudioEnvironment();
@@ -83,9 +83,9 @@ export class Welcome3DScene {
       this.rootGroup.add(this.trainGroup);
       this.scene.add(this.rootGroup);
 
-      // Lock to screen-facing hero angle
-      this.rootGroup.rotation.y = 0.05;
-      this.rootGroup.rotation.x = 0.02;
+      // Turn sideways ~24° so both front cab and side flank are prominent
+      this.rootGroup.rotation.y = -0.42;
+      this.rootGroup.rotation.x = 0.04;
 
       // Event listener for resize
       window.addEventListener('resize', this.onResize);
@@ -745,12 +745,13 @@ export class Welcome3DScene {
     carABody.receiveShadow = true;
     carA.add(carABody);
 
-    // 2. Arched Stainless Steel Roof Crown
+    // 2. Arched Stainless Steel Roof Crown (Sweeps continuously over body and cab)
+    const totalRoofLength = carALength + noseLength;
     const carARoof = new THREE.Mesh(
-      new THREE.BoxGeometry(carAWidth - 0.08, 0.08, carALength),
+      new THREE.BoxGeometry(carAWidth - 0.08, 0.08, totalRoofLength),
       stainlessSteelMat
     );
-    carARoof.position.set(0, bodyBaseY + carAHeight / 2 + 0.035, carAZ);
+    carARoof.position.set(0, bodyBaseY + carAHeight / 2 + 0.035, carAZ + noseLength / 2);
     carA.add(carARoof);
 
     // -------------------------------------------------------------
@@ -759,10 +760,10 @@ export class Welcome3DScene {
     const cabFrontZ = carAZ + carALength / 2; // Z = 2.0
     const noseLength = 0.55;
 
-    // Aerodynamic Nose Base
+    // Aerodynamic Nose Base with Matching Flank Material
     const cabNose = new THREE.Mesh(
       new THREE.BoxGeometry(carAWidth - 0.02, carAHeight - 0.02, noseLength),
-      stainlessSteelMat
+      flankMaterial
     );
     cabNose.position.set(0, bodyBaseY, cabFrontZ + noseLength / 2 - 0.05);
     cabNose.castShadow = true;
