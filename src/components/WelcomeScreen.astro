@@ -33,8 +33,15 @@ import Pictograms from './Pictograms.astro';
 
   <!-- Centre Content Block -->
   <div class="w-full max-w-xl text-center my-auto py-4">
-    <!-- Calm SVG Metro Rolling In -->
-    <div class="w-full py-4 mb-6 overflow-hidden relative border-y-2 border-ink bg-surface">
+    <!-- Interactive WebGL 3D Metro Scene (Rule 6a) with 2D SVG Fallback -->
+    <div id="welcome-3d-container" class="w-full py-2 mb-6 overflow-hidden relative border-y-2 border-ink bg-surface flex flex-col items-center justify-center min-h-[160px] cursor-grab active:cursor-grabbing">
+      <canvas
+        id="welcome-3d-canvas"
+        class="w-full max-w-lg h-[180px] sm:h-[220px] pointer-events-none select-none"
+        style="display: none;"
+        aria-label="Interactive 3D Metro Train Model"
+      ></canvas>
+
       <svg
         id="welcome-train-svg"
         viewBox="0 0 500 90"
@@ -143,9 +150,11 @@ import Pictograms from './Pictograms.astro';
 </div>
 
 <script>
-  document.addEventListener('DOMContentLoaded', () => {
+  document.addEventListener('DOMContentLoaded', async () => {
     const welcome = document.getElementById('scene-welcome');
     if (!welcome) return;
+
+    let scene3D: any = null;
 
     // Check if welcome already acknowledged in this session or via hash
     let seen = false;
@@ -159,17 +168,27 @@ import Pictograms from './Pictograms.astro';
     if (!seen && !hasHash && mode === 'journey') {
       welcome.style.display = 'flex';
 
-      // Animate train roll-in
-      const train = document.getElementById('welcome-train-svg');
-      if (train) {
-        train.style.transform = 'translateX(-120px)';
-        requestAnimationFrame(() => {
-          train.style.transform = 'translateX(0px)';
-        });
+      // Lazy load 3D WebGL Metro Scene (Rule 6a)
+      try {
+        const { Welcome3DScene } = await import('../scripts/webgl/welcomeScene');
+        scene3D = new Welcome3DScene('welcome-3d-container', 'welcome-3d-canvas');
+      } catch (err) {
+        // Fallback to 2D SVG
+        const train = document.getElementById('welcome-train-svg');
+        if (train) {
+          train.style.transform = 'translateX(-120px)';
+          requestAnimationFrame(() => {
+            train.style.transform = 'translateX(0px)';
+          });
+        }
       }
     }
 
     const closeWelcome = (soundEnabled: boolean) => {
+      if (scene3D) {
+        scene3D.destroy();
+        scene3D = null;
+      }
       // 1. Audio consent handling (Section 4.1)
       try {
         localStorage.setItem('yugline_sound', soundEnabled ? 'on' : 'off');
