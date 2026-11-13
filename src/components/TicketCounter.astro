@@ -822,6 +822,17 @@ const DESTINATIONS = [
   // Global reference to active utterance to prevent V8 garbage collection
   let activeClerkUtterance: SpeechSynthesisUtterance | null = null;
 
+  // Helper: Strictly verify audio consent
+  const isSoundActive = (): boolean => {
+    try {
+      const welcome = document.getElementById('scene-welcome');
+      if (welcome && welcome.style.display !== 'none') return false;
+      return localStorage.getItem('yugline_sound') === 'on';
+    } catch (e) {
+      return false;
+    }
+  };
+
   // Station Master Speech Synthesizer
   const speakClerk = (rawText: string, onEnd?: () => void) => {
     if (!('speechSynthesis' in window)) {
@@ -829,14 +840,11 @@ const DESTINATIONS = [
       return;
     }
 
-    // Check mute preference
-    try {
-      const soundPref = localStorage.getItem('yugline_sound');
-      if (soundPref === 'off') {
-        if (onEnd) setTimeout(onEnd, 1000);
-        return;
-      }
-    } catch (e) {}
+    // Check strict sound permission (must be explicitly 'on')
+    if (!isSoundActive()) {
+      if (onEnd) setTimeout(onEnd, 300);
+      return;
+    }
 
     try {
       if (window.speechSynthesis.paused) {
@@ -910,6 +918,7 @@ const DESTINATIONS = [
 
   // Station Master Welcome Announcement (Announces automatically on arrival each time)
   const triggerInitialGreeting = () => {
+    if (!isSoundActive()) return;
     selectedStationId = null;
     isTransitioningToMetro = false;
     if (speechText) {
@@ -930,18 +939,18 @@ const DESTINATIONS = [
   if (speechBubble) speechBubble.addEventListener('click', replayCurrentSpeech);
   if (clerkAvatar) clerkAvatar.addEventListener('click', replayCurrentSpeech);
 
-  // 1. Trigger greeting when entering from Welcome screen with sound
-  const enterSoundBtn = document.getElementById('welcome-enter-sound-btn');
-  if (enterSoundBtn) {
-    enterSoundBtn.addEventListener('click', () => {
+  // 1. Trigger greeting strictly after Welcome screen is dismissed WITH sound
+  window.addEventListener('yugline:welcome_dismissed', (e: any) => {
+    if (e.detail && e.detail.sound) {
       setTimeout(() => {
         triggerInitialGreeting();
-      }, 400);
-    });
-  }
+      }, 350);
+    }
+  });
 
-  // 2. Trigger automatically on page load/reload if on base station
+  // 2. Trigger automatically on page load/reload if on base station and sound permitted
   const checkInitialAnnouncement = () => {
+    if (!isSoundActive()) return;
     const welcomeEl = document.getElementById('scene-welcome');
     const isWelcomeVisible = welcomeEl && welcomeEl.style.display !== 'none';
     const hash = window.location.hash.toLowerCase();
@@ -959,7 +968,7 @@ const DESTINATIONS = [
 
   // Trigger when station entrance loader finishes opening
   window.addEventListener('yugline:loader_finish', () => {
-    if (!selectedStationId) {
+    if (isSoundActive() && !selectedStationId) {
       setTimeout(() => {
         triggerInitialGreeting();
       }, 300);
@@ -977,9 +986,11 @@ const DESTINATIONS = [
   window.addEventListener('yugline:step_choose', () => {
     isTransitioningToMetro = false;
     hasUserInteractedOnce = false;
-    setTimeout(() => {
-      triggerInitialGreeting();
-    }, 300);
+    if (isSoundActive()) {
+      setTimeout(() => {
+        triggerInitialGreeting();
+      }, 300);
+    }
   });
 
   window.addEventListener('hashchange', () => {
@@ -987,9 +998,11 @@ const DESTINATIONS = [
     if (hash === '#base' || hash === '' || hash === '#station-00') {
       isTransitioningToMetro = false;
       hasUserInteractedOnce = false;
-      setTimeout(() => {
-        triggerInitialGreeting();
-      }, 300);
+      if (isSoundActive()) {
+        setTimeout(() => {
+          triggerInitialGreeting();
+        }, 300);
+      }
     }
   });
 
@@ -1004,7 +1017,7 @@ const DESTINATIONS = [
       return;
     }
     const chooseVisible = document.getElementById('journey-step-choose')?.style.display !== 'none';
-    if (chooseVisible && !selectedStationId) {
+    if (chooseVisible && !selectedStationId && isSoundActive()) {
       hasUserInteractedOnce = true;
       triggerInitialGreeting();
     }

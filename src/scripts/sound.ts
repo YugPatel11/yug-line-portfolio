@@ -13,10 +13,10 @@ class SoundEngine {
   private syncEnabled() {
     try {
       const saved = localStorage.getItem('yugline_sound');
-      // Default to true/on unless user explicitly toggled off
-      this.enabled = saved !== 'off' && saved !== 'false';
+      // Only enabled when user explicitly entered with sound
+      this.enabled = saved === 'on' || saved === 'true';
     } catch (e) {
-      this.enabled = true;
+      this.enabled = false;
     }
   }
 
