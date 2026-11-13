@@ -1,8 +1,8 @@
 // src/scripts/webgl/welcomeScene.ts
-// Ultra-Realistic Front-Facing 3D Metro Train Consist (Screen-Facing Hero Perspective)
-// High-fidelity procedural textures: brushed stainless steel, aerodynamic cab,
-// illuminated driver console, dual projector LED headlights with chrome reflectors,
-// destination matrix LED sign, articulated diamond roof pantograph, and 4-line transit livery.
+// Ultra-Realistic 3D Metro Train Consist (Fixed 3/4 Elevated Perspective)
+// Shown slightly sideways and from slightly above looking down at the train,
+// revealing the roof crown, articulated diamond pantograph, windshield, headlights,
+// fluted brushed stainless steel bodywork, passenger windows, doors, and 4-line transit livery.
 
 import * as THREE from 'three';
 
@@ -26,7 +26,7 @@ export class Welcome3DScene {
     this.container = document.getElementById(containerId) as HTMLElement;
     this.canvas = document.getElementById(canvasId) as HTMLCanvasElement;
     this.scene = new THREE.Scene();
-    this.camera = new THREE.PerspectiveCamera(32, 1, 0.1, 100);
+    this.camera = new THREE.PerspectiveCamera(30, 1, 0.1, 100);
     this.rootGroup = new THREE.Group();
     this.trainGroup = new THREE.Group();
     this.plinthGroup = new THREE.Group();
@@ -37,11 +37,11 @@ export class Welcome3DScene {
   }
 
   private init() {
-    if (
+    const isReduced =
       document.documentElement.classList.contains('reduce-motion') ||
-      window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    ) {
-      return;
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (isReduced) {
+      this.rollInProgress = 1; // Still render full 3D model, just skip entrance animation
     }
 
     try {
@@ -49,18 +49,17 @@ export class Welcome3DScene {
         canvas: this.canvas,
         alpha: true,
         antialias: true,
-        powerPreference: 'high-performance',
       });
-      this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      this.renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
       this.renderer.shadowMap.enabled = true;
       this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
       this.updateSize();
 
       // Camera: Elevated 3/4 angle looking down at the train from above
-      // Shows more of the roof, pantograph, and side flank in clear perspective
-      this.camera.position.set(2.5, 2.05, 3.85);
-      this.camera.lookAt(0.05, 0.72, 0.65);
+      // Shows front cab, roof crown, pantograph, and side flank in clear perspective
+      this.camera.position.set(2.4, 1.95, 3.85);
+      this.camera.lookAt(0.05, 0.70, 0.65);
 
       // Studio Reflection Environment
       this.setupStudioEnvironment();
@@ -75,38 +74,68 @@ export class Welcome3DScene {
       // Build Plinth & Railway Track Bed
       this.buildPlinthAndTrack();
 
-      // Build Ultra-Realistic Metro Train Facing Screen
-      this.buildRealisticFrontFacingTrain();
+      // Build Ultra-Realistic Metro Train
+      this.buildRealisticTrainModel();
 
       // Assemble Root Group
       this.rootGroup.add(this.plinthGroup);
       this.rootGroup.add(this.trainGroup);
       this.scene.add(this.rootGroup);
 
-      // Turn sideways ~24° so both front cab and side flank are prominent
-      this.rootGroup.rotation.y = -0.42;
+      // Turn sideways ~22° so both front cab and side flank are prominent
+      this.rootGroup.rotation.y = -0.38;
       this.rootGroup.rotation.x = 0.04;
 
       // Event listener for resize
       window.addEventListener('resize', this.onResize);
 
-      // Reveal 3D Canvas
+      // Force canvas display
       this.canvas.style.display = 'block';
-      const svgFallback = document.getElementById('welcome-train-svg');
-      if (svgFallback) svgFallback.style.display = 'none';
+
+      // Render initial frame
+      this.renderer.render(this.scene, this.camera);
 
       // Start render loop
       this.animate();
     } catch (e) {
-      console.warn('WebGL init failed, falling back to 2D SVG:', e);
-      if (this.canvas) this.canvas.style.display = 'none';
-      const svgFallback = document.getElementById('welcome-train-svg');
-      if (svgFallback) svgFallback.style.display = 'block';
+      console.error('WebGL init error in Welcome3DScene:', e);
+      if (this.canvas) this.canvas.style.display = 'block';
     }
   }
 
   // =========================================================================
-  // HIGH-RESOLUTION PROCEDURAL TEXTURES (THE SECRET TO REALISTIC URBAN RAIL)
+  // SAFE CROSS-BROWSER ROUNDED RECTANGLE HELPER
+  // =========================================================================
+  private drawSafeRoundRect(
+    ctx: CanvasRenderingContext2D,
+    x: number,
+    y: number,
+    w: number,
+    h: number,
+    r: number
+  ) {
+    if (typeof (ctx as any).roundRect === 'function') {
+      ctx.beginPath();
+      (ctx as any).roundRect(x, y, w, h, r);
+      ctx.fill();
+    } else {
+      ctx.beginPath();
+      ctx.moveTo(x + r, y);
+      ctx.lineTo(x + w - r, y);
+      ctx.arcTo(x + w, y, x + w, y + r, r);
+      ctx.lineTo(x + w, y + h - r);
+      ctx.arcTo(x + w, y + h, x + w - r, y + h, r);
+      ctx.lineTo(x + r, y + h);
+      ctx.arcTo(x, y + h, x, y + h - r, r);
+      ctx.lineTo(x, y + r);
+      ctx.arcTo(x, y, x + r, y, r);
+      ctx.closePath();
+      ctx.fill();
+    }
+  }
+
+  // =========================================================================
+  // PROCEDURAL HIGH-RESOLUTION TEXTURES
   // =========================================================================
   private generateCabFrontTexture(): THREE.CanvasTexture {
     const canvas = document.createElement('canvas');
@@ -114,7 +143,7 @@ export class Welcome3DScene {
     canvas.height = 1024;
     const ctx = canvas.getContext('2d')!;
 
-    // 1. Brushed Stainless Steel Base Gradient with subtle horizontal grain
+    // 1. Brushed Stainless Steel Base Gradient
     const baseGrad = ctx.createLinearGradient(0, 0, 1024, 0);
     baseGrad.addColorStop(0, '#c2c7d4');
     baseGrad.addColorStop(0.2, '#dde2ed');
@@ -136,17 +165,12 @@ export class Welcome3DScene {
 
     // 2. Aerodynamic Black Front Mask Surround
     ctx.fillStyle = '#12151c';
-    ctx.beginPath();
-    ctx.roundRect(110, 140, 804, 720, [40, 40, 20, 20]);
-    ctx.fill();
+    this.drawSafeRoundRect(ctx, 110, 140, 804, 720, 36);
 
-    // Subtle carbon/graphite texture inside mask
     ctx.fillStyle = '#181c26';
-    ctx.beginPath();
-    ctx.roundRect(120, 150, 784, 700, [32, 32, 16, 16]);
-    ctx.fill();
+    this.drawSafeRoundRect(ctx, 120, 150, 784, 700, 28);
 
-    // 3. Destination LED Matrix Sign (Amber matrix reading "CENTRAL // EXP 01")
+    // 3. Destination LED Matrix Sign
     ctx.fillStyle = '#080a0e';
     ctx.fillRect(220, 180, 584, 76);
     ctx.strokeStyle = '#283244';
@@ -172,16 +196,14 @@ export class Welcome3DScene {
     glassGrad.addColorStop(0.5, '#161d2b');
     glassGrad.addColorStop(1, '#0e121a');
     ctx.fillStyle = glassGrad;
-    ctx.beginPath();
-    ctx.roundRect(150, 270, 724, 310, [18, 18, 12, 12]);
-    ctx.fill();
+    this.drawSafeRoundRect(ctx, 150, 270, 724, 310, 16);
 
-    // Ceramic black frit dots border around glass
+    // Ceramic black border
     ctx.strokeStyle = '#080a0f';
     ctx.lineWidth = 14;
     ctx.stroke();
 
-    // Cockpit Interior: Illuminated instrument dials & driver console
+    // Cockpit Interior Instruments
     ctx.fillStyle = '#2fb584';
     ctx.fillRect(400, 520, 90, 20);
     ctx.fillStyle = '#f2b705';
@@ -189,11 +211,9 @@ export class Welcome3DScene {
 
     // Driver Seat Silhouette
     ctx.fillStyle = '#1c2230';
-    ctx.beginPath();
-    ctx.roundRect(460, 420, 104, 110, [16, 16, 4, 4]);
-    ctx.fill();
+    this.drawSafeRoundRect(ctx, 460, 420, 104, 110, 14);
 
-    // Dual Black Windshield Wipers
+    // Dual Windshield Wipers
     ctx.strokeStyle = '#06080b';
     ctx.lineWidth = 6;
     ctx.beginPath();
@@ -227,7 +247,7 @@ export class Welcome3DScene {
       ctx.arc(cx, 745, 58, 0, Math.PI * 2);
       ctx.fill();
 
-      // Deep Reflector Dish
+      // Reflector Dish
       ctx.fillStyle = '#10141c';
       ctx.beginPath();
       ctx.arc(cx, 745, 48, 0, Math.PI * 2);
@@ -244,7 +264,7 @@ export class Welcome3DScene {
       ctx.arc(cx, 745, 42, 0, Math.PI * 2);
       ctx.fill();
 
-      // Amber Halo Marker Ring
+      // Amber Halo Ring
       ctx.strokeStyle = '#f2b705';
       ctx.lineWidth = 4;
       ctx.beginPath();
@@ -255,17 +275,13 @@ export class Welcome3DScene {
     drawHeadlight(280);
     drawHeadlight(744);
 
-    // 7. Lower Anti-Climber Impact Bumper with Ribbed Slats
+    // 7. Lower Anti-Climber Bumper
     ctx.fillStyle = '#181b22';
     ctx.fillRect(140, 830, 744, 95);
     ctx.fillStyle = '#0d0f14';
     for (let bx = 160; bx < 860; bx += 28) {
       ctx.fillRect(bx, 835, 14, 85);
     }
-
-    // Coupler Pocket Notch
-    ctx.fillStyle = '#080a0d';
-    ctx.fillRect(452, 850, 120, 95);
 
     const texture = new THREE.CanvasTexture(canvas);
     texture.colorSpace = THREE.SRGBColorSpace;
@@ -287,28 +303,25 @@ export class Welcome3DScene {
     ctx.fillStyle = baseGrad;
     ctx.fillRect(0, 0, 2048, 512);
 
-    // Micro-grain horizontal brushed striations
     ctx.fillStyle = 'rgba(255, 255, 255, 0.08)';
     for (let y = 0; y < 512; y += 3) {
       ctx.fillRect(0, y, 2048, 1.2);
     }
 
-    // 2. Dark Continuous Window Belt Band
+    // 2. Dark Window Belt Band
     ctx.fillStyle = '#12151d';
     ctx.fillRect(0, 90, 2048, 175);
 
-    // Smoked Glass Windows with Interior Warm Light & Passenger Seats
+    // Smoked Windows
     const drawWindow = (x: number, w: number) => {
       const winGrad = ctx.createLinearGradient(x, 105, x, 245);
       winGrad.addColorStop(0, '#101520');
       winGrad.addColorStop(0.5, '#1e2638');
       winGrad.addColorStop(1, '#141a24');
       ctx.fillStyle = winGrad;
-      ctx.beginPath();
-      ctx.roundRect(x, 105, w, 140, 8);
-      ctx.fill();
+      this.drawSafeRoundRect(ctx, x, 105, w, 140, 8);
 
-      // Interior warm ceiling illumination glow
+      // Interior warm ceiling illumination
       const glowGrad = ctx.createLinearGradient(x, 105, x, 160);
       glowGrad.addColorStop(0, 'rgba(255, 242, 216, 0.45)');
       glowGrad.addColorStop(1, 'transparent');
@@ -317,14 +330,12 @@ export class Welcome3DScene {
 
       // Passenger seat outline
       ctx.fillStyle = '#1a2233';
-      ctx.beginPath();
-      ctx.roundRect(x + 20, 180, 45, 60, 6);
-      ctx.fill();
+      this.drawSafeRoundRect(ctx, x + 20, 180, 45, 60, 6);
     };
 
     [120, 360, 600, 980, 1220, 1460, 1700].forEach((wx) => drawWindow(wx, 180));
 
-    // 3. Double Sliding Passenger Doors with Rubber Gaskets & Stainless Handles
+    // 3. Sliding Doors
     const drawDoors = (dx: number) => {
       ctx.fillStyle = '#222733';
       ctx.fillRect(dx, 80, 140, 270);
@@ -332,12 +343,12 @@ export class Welcome3DScene {
       ctx.fillRect(dx + 4, 84, 63, 262);
       ctx.fillRect(dx + 73, 84, 63, 262);
 
-      // Door glass inserts
+      // Door glass
       ctx.fillStyle = '#101520';
       ctx.fillRect(dx + 12, 105, 47, 120);
       ctx.fillRect(dx + 81, 105, 47, 120);
 
-      // Center rubber gasket
+      // Gasket
       ctx.fillStyle = '#080a0e';
       ctx.fillRect(dx + 68, 80, 4, 270);
 
@@ -350,7 +361,7 @@ export class Welcome3DScene {
     drawDoors(800);
     drawDoors(1900);
 
-    // 4. Horizontal Fluted Corrugated Ribs
+    // 4. Fluted Ribs
     ctx.fillStyle = '#b4bac8';
     [290, 315, 340].forEach((fy) => {
       ctx.fillRect(0, fy, 2048, 6);
@@ -368,7 +379,7 @@ export class Welcome3DScene {
     ctx.fillStyle = '#1b3a8a';
     ctx.fillRect(0, stripeY + stripeH * 3, 2048, stripeH);
 
-    // Unit Numbering Monogram
+    // Unit Monogram
     ctx.fillStyle = '#0a0d13';
     ctx.font = 'bold 22px monospace';
     ctx.fillText('CAR YR-01 // CENTRAL TERMINAL TRANSIT', 140, 480);
@@ -379,7 +390,7 @@ export class Welcome3DScene {
   }
 
   // =========================================================================
-  // PROCEDURAL STUDIO ENVIRONMENT FOR AUTHENTIC METALLIC REFLECTIONS
+  // STUDIO ENVIRONMENT
   // =========================================================================
   private setupStudioEnvironment() {
     const canvas = document.createElement('canvas');
@@ -405,7 +416,7 @@ export class Welcome3DScene {
     ctx.fillStyle = tubeGrad;
     ctx.fillRect(40, 0, 432, 95);
 
-    // Side platform ambient floor bounce (#F2B705)
+    // Side platform floor bounce (#F2B705)
     const platformGrad = ctx.createLinearGradient(0, 150, 0, 256);
     platformGrad.addColorStop(0, 'rgba(242, 183, 5, 0.16)');
     platformGrad.addColorStop(1, 'transparent');
@@ -418,38 +429,33 @@ export class Welcome3DScene {
   }
 
   // =========================================================================
-  // NATURAL CALIBRATED LIGHTING SETUP (Front Face High-Contrast Illumination)
+  // LIGHTING SETUP
   // =========================================================================
   private setupLighting() {
-    // 1. Ambient Light
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.95);
     this.scene.add(ambientLight);
 
-    // 2. Direct Front-Facing Key Light (Directly illuminates the front cab)
     const frontKeyLight = new THREE.DirectionalLight(0xfffdf6, 2.6);
-    frontKeyLight.position.set(2.5, 4.5, 5.5);
+    frontKeyLight.position.set(3.5, 5.5, 5.0);
     frontKeyLight.castShadow = true;
     frontKeyLight.shadow.mapSize.width = 1024;
     frontKeyLight.shadow.mapSize.height = 1024;
     frontKeyLight.shadow.bias = -0.0004;
     this.scene.add(frontKeyLight);
 
-    // 3. Cool Slate Left Fill Light (Prevents dark unlit shadow on left cab)
     const fillLight = new THREE.DirectionalLight(0x8295b0, 1.4);
-    fillLight.position.set(-3.5, 3.2, 4.2);
+    fillLight.position.set(-3.5, 3.5, 3.5);
     this.scene.add(fillLight);
 
-    // 4. Roof & Pantograph Rim Light
     const rimLight = new THREE.DirectionalLight(0xdde6f5, 1.6);
     rimLight.position.set(-1.5, 6.0, -3.5);
     this.scene.add(rimLight);
   }
 
   // =========================================================================
-  // ARCHITECTURAL TRACK BED & PLATFORM PLINTH
+  // PLINTH & TRACK
   // =========================================================================
   private buildPlinthAndTrack() {
-    // 1. Foundation Slab
     const plinthMat = new THREE.MeshStandardMaterial({
       color: 0x10131a,
       roughness: 0.5,
@@ -460,7 +466,6 @@ export class Welcome3DScene {
     plinth.receiveShadow = true;
     this.plinthGroup.add(plinth);
 
-    // Ballast gravel top bed
     const ballastMat = new THREE.MeshStandardMaterial({
       color: 0x171b24,
       roughness: 0.95,
@@ -471,7 +476,7 @@ export class Welcome3DScene {
     ballast.receiveShadow = true;
     this.plinthGroup.add(ballast);
 
-    // 2. Sleepers (Ties) with Steel Plates
+    // Sleepers (Ties)
     const tieMat = new THREE.MeshStandardMaterial({ color: 0x222733, roughness: 0.8, metalness: 0.15 });
     const tiePlateMat = new THREE.MeshStandardMaterial({ color: 0x3e4554, roughness: 0.4, metalness: 0.8 });
     const tieGeom = new THREE.BoxGeometry(1.5, 0.06, 0.15);
@@ -493,7 +498,7 @@ export class Welcome3DScene {
       this.plinthGroup.add(plateR);
     }
 
-    // 3. Polished Steel Running Rails (Running directly forward toward camera)
+    // Running Rails
     const railMat = new THREE.MeshStandardMaterial({
       color: 0xa8b4c7,
       metalness: 0.96,
@@ -513,7 +518,7 @@ export class Welcome3DScene {
     railR.receiveShadow = true;
     this.plinthGroup.add(railR);
 
-    // 4. Platform Edge with Tactile Yellow Safety Pavers (#F2B705)
+    // Platform Edge with Tactile Yellow Safety Pavers (#F2B705)
     const platformSlab = new THREE.Mesh(
       new THREE.BoxGeometry(0.45, 0.18, 7.34),
       new THREE.MeshStandardMaterial({ color: 0x151822, roughness: 0.6, metalness: 0.25 })
@@ -541,9 +546,9 @@ export class Welcome3DScene {
   }
 
   // =========================================================================
-  // ULTRA-REALISTIC FRONT-FACING METRO TRAIN
+  // REALISTIC TRAIN MODEL
   // =========================================================================
-  private buildRealisticFrontFacingTrain() {
+  private buildRealisticTrainModel() {
     const stainlessSteelMat = new THREE.MeshStandardMaterial({
       color: 0xd6dae4,
       metalness: 0.82,
@@ -565,9 +570,7 @@ export class Welcome3DScene {
     const bogieSteelMat = new THREE.MeshStandardMaterial({ color: 0x1c202a, metalness: 0.65, roughness: 0.65 });
     const wheelSteelMat = new THREE.MeshStandardMaterial({ color: 0x2b313f, metalness: 0.92, roughness: 0.14 });
 
-    // -------------------------------------------------------------
-    // Helper: 2-Axle Bogie Truck
-    // -------------------------------------------------------------
+    // Bogie Helper
     const createBogie = (zCenter: number): THREE.Group => {
       const bogie = new THREE.Group();
       bogie.position.set(0, 0, zCenter);
@@ -587,7 +590,6 @@ export class Welcome3DScene {
       transom.position.set(0, 0.25, 0);
       bogie.add(transom);
 
-      // Axles & Wheels
       const axlePositions = [-0.3, 0.3];
       const axleGeom = new THREE.CylinderGeometry(0.025, 0.025, 1.1, 16);
       axleGeom.rotateZ(Math.PI / 2);
@@ -633,7 +635,6 @@ export class Welcome3DScene {
         bogie.add(hubR);
       });
 
-      // Third Rail Contact Shoe
       const shoe = new THREE.Mesh(
         new THREE.BoxGeometry(0.04, 0.03, 0.22),
         new THREE.MeshStandardMaterial({ color: 0xf2b705, metalness: 0.85, roughness: 0.25 })
@@ -644,16 +645,12 @@ export class Welcome3DScene {
       return bogie;
     };
 
-    // -------------------------------------------------------------
-    // Helper: Articulated Diamond Roof Pantograph
-    // -------------------------------------------------------------
+    // Roof Pantograph
     const createArticulatedPantograph = (zCenter: number): THREE.Group => {
       const pantograph = new THREE.Group();
       pantograph.position.set(0, 1.42, zCenter);
 
       const insulatorMat = new THREE.MeshStandardMaterial({ color: 0x9e432b, roughness: 0.4, metalness: 0.3 });
-
-      // 4 Insulator Footings
       const insulatorGeom = new THREE.CylinderGeometry(0.024, 0.03, 0.06, 12);
       [
         [-0.24, -0.2],
@@ -666,12 +663,10 @@ export class Welcome3DScene {
         pantograph.add(post);
       });
 
-      // Base Frame
       const baseFrame = new THREE.Mesh(new THREE.BoxGeometry(0.52, 0.02, 0.44), chromeMat);
       baseFrame.position.set(0, 0.07, 0);
       pantograph.add(baseFrame);
 
-      // Lower Arm
       const lowerArmGeom = new THREE.CylinderGeometry(0.015, 0.015, 0.46, 10);
       lowerArmGeom.rotateX(Math.PI / 4.2);
 
@@ -683,7 +678,6 @@ export class Welcome3DScene {
       lowerArmR.position.set(0.16, 0.22, -0.06);
       pantograph.add(lowerArmR);
 
-      // Upper Diamond Arms
       const upperArmGeom = new THREE.CylinderGeometry(0.012, 0.012, 0.42, 10);
       upperArmGeom.rotateX(-Math.PI / 5.2);
 
@@ -695,7 +689,6 @@ export class Welcome3DScene {
       upperArmR.position.set(0.12, 0.51, -0.07);
       pantograph.add(upperArmR);
 
-      // Top Carbon Collector Bow
       const collectorBar = new THREE.Mesh(
         new THREE.BoxGeometry(0.72, 0.02, 0.05),
         new THREE.MeshStandardMaterial({ color: 0x222630, metalness: 0.9, roughness: 0.2 })
@@ -703,7 +696,6 @@ export class Welcome3DScene {
       collectorBar.position.set(0, 0.66, 0.06);
       pantograph.add(collectorBar);
 
-      // Horn Endtips
       const hornGeom = new THREE.CylinderGeometry(0.008, 0.008, 0.08, 8);
       hornGeom.rotateZ(Math.PI / 3);
 
@@ -719,23 +711,22 @@ export class Welcome3DScene {
       return pantograph;
     };
 
-    // -------------------------------------------------------------
-    // CAR A: LEAD CARRIAGE (Facing Screen Forward at +Z)
-    // -------------------------------------------------------------
+    // CAR A: LEAD CARRIAGE
     const carA = new THREE.Group();
     const carALength = 3.2;
     const carAWidth = 1.28;
     const carAHeight = 0.98;
     const bodyBaseY = 0.88;
     const carAZ = 0.4;
+    const noseLength = 0.55;
 
-    // 1. Main Carriage Body with Textured Flank
     const flankMaterial = new THREE.MeshStandardMaterial({
       map: this.flankTexture,
       metalness: 0.8,
       roughness: 0.22,
     });
 
+    // Main Carriage Body
     const carABody = new THREE.Mesh(
       new THREE.BoxGeometry(carAWidth, carAHeight, carALength),
       flankMaterial
@@ -745,7 +736,7 @@ export class Welcome3DScene {
     carABody.receiveShadow = true;
     carA.add(carABody);
 
-    // 2. Arched Stainless Steel Roof Crown (Sweeps continuously over body and cab)
+    // Continuous Roof Crown spanning over body and cab nose
     const totalRoofLength = carALength + noseLength;
     const carARoof = new THREE.Mesh(
       new THREE.BoxGeometry(carAWidth - 0.08, 0.08, totalRoofLength),
@@ -754,13 +745,8 @@ export class Welcome3DScene {
     carARoof.position.set(0, bodyBaseY + carAHeight / 2 + 0.035, carAZ + noseLength / 2);
     carA.add(carARoof);
 
-    // -------------------------------------------------------------
-    // SCREEN-FACING AERODYNAMIC FRONT CAB (+Z)
-    // -------------------------------------------------------------
-    const cabFrontZ = carAZ + carALength / 2; // Z = 2.0
-    const noseLength = 0.55;
-
-    // Aerodynamic Nose Base with Matching Flank Material
+    // Aerodynamic Cab Nose (+Z)
+    const cabFrontZ = carAZ + carALength / 2;
     const cabNose = new THREE.Mesh(
       new THREE.BoxGeometry(carAWidth - 0.02, carAHeight - 0.02, noseLength),
       flankMaterial
@@ -769,7 +755,7 @@ export class Welcome3DScene {
     cabNose.castShadow = true;
     carA.add(cabNose);
 
-    // High-Resolution Textured Front Face Plate (Displays Windshield, LED Lights & Matrix Sign)
+    // Front Textured Plate (Displays Windshield, Headlights & Destination Sign)
     const frontPlateMat = new THREE.MeshStandardMaterial({
       map: this.frontTexture,
       metalness: 0.75,
@@ -782,7 +768,7 @@ export class Welcome3DScene {
     frontPlate.position.set(0, bodyBaseY, cabFrontZ + noseLength);
     carA.add(frontPlate);
 
-    // 3D Physical Chrome Headlight Bezels with Glowing LED Lens Bulbs
+    // 3D Chrome Headlight Bezels with Projector Lenses
     const bezelGeom = new THREE.CylinderGeometry(0.075, 0.075, 0.04, 20);
     bezelGeom.rotateX(Math.PI / 2);
     const lensGeom = new THREE.SphereGeometry(0.055, 16, 16);
@@ -794,17 +780,14 @@ export class Welcome3DScene {
     });
 
     [-0.34, 0.34].forEach((hx) => {
-      // Chrome surround bezel
       const bezel = new THREE.Mesh(bezelGeom, chromeMat);
       bezel.position.set(hx, bodyBaseY - 0.22, cabFrontZ + noseLength + 0.015);
       carA.add(bezel);
 
-      // Projector Lens Bulb
       const lens = new THREE.Mesh(lensGeom, ledLensMat);
       lens.position.set(hx, bodyBaseY - 0.22, cabFrontZ + noseLength + 0.035);
       carA.add(lens);
 
-      // Forward SpotLight projecting soft warm beam along rails toward viewer
       const spot = new THREE.SpotLight(0xfffae8, 3.5, 9.5, Math.PI / 7, 0.45);
       spot.position.set(hx, bodyBaseY - 0.22, cabFrontZ + noseLength + 0.08);
       spot.target.position.set(hx, 0.08, cabFrontZ + noseLength + 6.0);
@@ -812,7 +795,7 @@ export class Welcome3DScene {
       carA.add(spot.target);
     });
 
-    // Lower Front Chin Scoop & Knuckle Coupler Protruding Forward
+    // Lower Front Chin Scoop & Coupler
     const chinSpoiler = new THREE.Mesh(
       new THREE.BoxGeometry(carAWidth - 0.08, 0.16, 0.24),
       darkTrimMat
@@ -827,22 +810,20 @@ export class Welcome3DScene {
     coupler.position.set(0, 0.36, cabFrontZ + noseLength + 0.14);
     carA.add(coupler);
 
-    // Car A Articulated Roof Pantograph & Roof HVAC
+    // Pantograph & Roof HVAC
     carA.add(createArticulatedPantograph(carAZ - 0.1));
 
     const hvacA = new THREE.Mesh(new THREE.BoxGeometry(0.74, 0.1, 0.8), darkTrimMat);
     hvacA.position.set(0, 1.41, carAZ + 0.9);
     carA.add(hvacA);
 
-    // Car A Bogies
+    // Bogies
     carA.add(createBogie(carAZ - 0.7));
     carA.add(createBogie(carAZ + 0.7));
 
     this.trainGroup.add(carA);
 
-    // -------------------------------------------------------------
-    // GANGWAY BELLOWS & CAR B (REAR COACH RECEDING IN PERSPECTIVE)
-    // -------------------------------------------------------------
+    // GANGWAY BELLOWS & CAR B
     const bellows = new THREE.Mesh(
       new THREE.BoxGeometry(carAWidth - 0.1, carAHeight - 0.08, 0.22),
       new THREE.MeshStandardMaterial({ color: 0x12141a, roughness: 0.85, metalness: 0.2 })
@@ -883,8 +864,8 @@ export class Welcome3DScene {
 
   private updateSize() {
     if (!this.renderer || !this.container) return;
-    const width = this.container.clientWidth;
-    const height = Math.min(330, Math.max(230, Math.floor(width * 0.48)));
+    const width = this.container.clientWidth || (this.canvas && this.canvas.clientWidth) || 580;
+    const height = Math.min(340, Math.max(240, Math.floor(width * 0.48)));
 
     this.renderer.setSize(width, height);
     this.camera.aspect = width / height;
@@ -897,7 +878,6 @@ export class Welcome3DScene {
   private animate = () => {
     if (this.isDestroyed) return;
 
-    // 1. Smooth Cinematic Arrival Glide forward along rails into platform berth
     if (this.rollInProgress < 1) {
       this.rollInProgress += (1 - this.rollInProgress) * 0.045;
       const rollOffset = (1 - this.rollInProgress) * -3.2;
@@ -906,7 +886,6 @@ export class Welcome3DScene {
       this.trainGroup.position.z = 0;
     }
 
-    // 2. Subtle Idle Suspension Breathing (Gentle vertical float, strictly facing screen)
     const time = Date.now() * 0.0018;
     this.trainGroup.position.y = Math.sin(time) * 0.007;
 

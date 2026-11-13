@@ -315,42 +315,13 @@ import Pictograms from './Pictograms.astro';
             </div>
           </div>
 
-          <!-- 3D Canvas Stage -->
+          <!-- 3D Canvas Stage (Always Display 3D Scene) -->
           <div class="relative w-full h-[250px] sm:h-[300px] lg:h-[330px] flex items-center justify-center overflow-hidden bg-[#0A0C12]">
             <canvas
               id="welcome-3d-canvas"
-              class="w-full h-full select-none"
-              style="display: none;"
+              class="w-full h-full select-none block"
               aria-label="Interactive 3D Metro Train Model"
             ></canvas>
-
-            <!-- 2D SVG Fallback if WebGL disabled -->
-            <svg
-              id="welcome-train-svg"
-              viewBox="0 0 500 90"
-              class="w-full max-w-lg h-24 sm:h-28 transition-transform duration-[1800ms] ease-out px-4"
-              xmlns="http://www.w3.org/2000/svg"
-              aria-hidden="true"
-            >
-              <line x1="0" y1="82" x2="500" y2="82" stroke="#4B5563" stroke-width="3" />
-              <line x1="0" y1="87" x2="500" y2="87" stroke="#2B3446" stroke-width="2" stroke-dasharray="6 4" />
-              <g id="welcome-train-body">
-                <rect x="50" y="16" width="380" height="56" rx="4" fill="#181B22" stroke="#EDEAE2" stroke-width="2" />
-                <rect x="110" y="8" width="50" height="8" rx="2" fill="#242832" stroke="#EDEAE2" stroke-width="1.5" />
-                <rect x="300" y="8" width="50" height="8" rx="2" fill="#242832" stroke="#EDEAE2" stroke-width="1.5" />
-                <rect x="50" y="58" width="380" height="3" fill="#E4572E" />
-                <rect x="50" y="61" width="380" height="3" fill="#F2B705" />
-                <rect x="80" y="24" width="40" height="24" rx="2" fill="#0A0C10" />
-                <rect x="190" y="24" width="50" height="24" rx="2" fill="#0A0C10" />
-                <rect x="310" y="24" width="50" height="24" rx="2" fill="#0A0C10" />
-                <path d="M 430 24 Q 450 44 430 72 Z" fill="#242832" stroke="#EDEAE2" stroke-width="2" />
-                <circle cx="438" cy="56" r="4" fill="#F2B705" />
-                <circle cx="95" cy="77" r="7" fill="#0A0C10" stroke="#4B5563" stroke-width="2" />
-                <circle cx="125" cy="77" r="7" fill="#0A0C10" stroke="#4B5563" stroke-width="2" />
-                <circle cx="340" cy="77" r="7" fill="#0A0C10" stroke="#4B5563" stroke-width="2" />
-                <circle cx="370" cy="77" r="7" fill="#0A0C10" stroke="#4B5563" stroke-width="2" />
-              </g>
-            </svg>
           </div>
 
           <!-- Platform Edge Tactile Warning Strip (Yellow Line #F2B705) -->
@@ -499,19 +470,12 @@ import Pictograms from './Pictograms.astro';
     if (!seen && !hasHash && mode === 'journey') {
       welcome.style.display = 'flex';
 
-      // Lazy load 3D WebGL Metro Scene
+      // Initialize 3D WebGL Metro Scene
       try {
         const { Welcome3DScene } = await import('../scripts/webgl/welcomeScene');
         scene3D = new Welcome3DScene('welcome-3d-container', 'welcome-3d-canvas');
       } catch (err) {
-        // Fallback to 2D SVG
-        const train = document.getElementById('welcome-train-svg');
-        if (train) {
-          train.style.transform = 'translateX(-120px)';
-          requestAnimationFrame(() => {
-            train.style.transform = 'translateX(0px)';
-          });
-        }
+        console.error('3D scene loading error:', err);
       }
     }
 
