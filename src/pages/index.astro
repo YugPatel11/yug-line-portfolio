@@ -16,7 +16,7 @@ import WelcomeScreen from '../components/WelcomeScreen.astro';
 import StationEntranceLoader from '../components/StationEntranceLoader.astro';
 import MetroCinematic from '../components/MetroCinematic.astro';
 import AllStopsSheet from '../components/AllStopsSheet.astro';
-import ChooseStop from '../components/ChooseStop.astro';
+import TicketCounter from '../components/TicketCounter.astro';
 import TicketScreen from '../components/TicketScreen.astro';
 import GateScreen from '../components/GateScreen.astro';
 import JourneyControls from '../components/JourneyControls.astro';
@@ -208,8 +208,8 @@ const moreProjects = PROJECTS.filter((p) => !p.featured);
          Visible in Journey Mode during booking flow
          ======================================================== -->
     <div id="journey-flow-wrapper" class="w-full">
-      <!-- Step 1 of 3: Choose a Stop -->
-      <ChooseStop />
+      <!-- Step 1 of 3: Ticket Counter with Clerk (Signature Feature Section 4) -->
+      <TicketCounter />
 
       <!-- Step 2 of 3: Your Ticket -->
       <TicketScreen />

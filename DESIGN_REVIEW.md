@@ -80,3 +80,4 @@ Scoring Dimensions (1–10):
 - Axe accessibility audit & Lighthouse performance (targets: Perf ≥90, A11y ≥95, Best Practices ≥95, SEO ≥95).
 - Git milestone tags (`stable-1`, `stable-2`, `stable-3`).
 - Final documentation updates (`README.md`, `CREDITS.md`, `TODO-USER.md`).
+

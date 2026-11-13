@@ -178,6 +178,147 @@ class SoundEngine {
     osc.start(t);
     osc.stop(t + 0.3);
   }
+
+  // 7. Counter Desk Bell = crisp brass ping at 2093Hz + 3136Hz overtone
+  public counterBell() {
+    const ctx = this.getAudioContext();
+    if (!ctx || !this.masterGain) return;
+
+    const t = ctx.currentTime;
+    [2093, 3136].forEach((freq, idx) => {
+      const osc = ctx.createOscillator();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(freq, t);
+
+      const gain = ctx.createGain();
+      const initialGain = idx === 0 ? 0.12 : 0.05;
+      gain.gain.setValueAtTime(initialGain, t);
+      gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.6);
+
+      osc.connect(gain);
+      gain.connect(this.masterGain);
+      osc.start(t);
+      osc.stop(t + 0.6);
+    });
+  }
+
+  // 8. Keyboard Typing Clatter = rapid soft click bursts
+  public keyboardClick() {
+    const ctx = this.getAudioContext();
+    if (!ctx || !this.masterGain) return;
+
+    for (let i = 0; i < 4; i++) {
+      const t = ctx.currentTime + i * 0.055;
+      const buffer = ctx.createBuffer(1, Math.floor(ctx.sampleRate * 0.015), ctx.sampleRate);
+      const data = buffer.getChannelData(0);
+      for (let j = 0; j < data.length; j++) {
+        data[j] = Math.random() * 2 - 1;
+      }
+      const source = ctx.createBufferSource();
+      source.buffer = buffer;
+
+      const filter = ctx.createBiquadFilter();
+      filter.type = 'bandpass';
+      filter.frequency.setValueAtTime(1800 + i * 200, t);
+      filter.Q.setValueAtTime(4, t);
+
+      const gain = ctx.createGain();
+      gain.gain.setValueAtTime(0.04, t);
+
+      source.connect(filter);
+      filter.connect(gain);
+      gain.connect(this.masterGain);
+      source.start(t);
+    }
+  }
+
+  // 9. Stamp Thunk = heavy 80Hz resonant impact + crisp surface snap
+  public stampThunk() {
+    const ctx = this.getAudioContext();
+    if (!ctx || !this.masterGain) return;
+
+    const t = ctx.currentTime;
+    const osc = ctx.createOscillator();
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(140, t);
+    osc.frequency.exponentialRampToValueAtTime(45, t + 0.09);
+
+    const gain = ctx.createGain();
+    gain.gain.setValueAtTime(0.18, t);
+    gain.gain.exponentialRampToValueAtTime(0.001, t + 0.1);
+
+    osc.connect(gain);
+    gain.connect(this.masterGain);
+    osc.start(t);
+    osc.stop(t + 0.1);
+
+    // High snap transient
+    const buffer = ctx.createBuffer(1, Math.floor(ctx.sampleRate * 0.01), ctx.sampleRate);
+    const data = buffer.getChannelData(0);
+    for (let j = 0; j < data.length; j++) {
+      data[j] = Math.random() * 2 - 1;
+    }
+    const snap = ctx.createBufferSource();
+    snap.buffer = buffer;
+    const snapGain = ctx.createGain();
+    snapGain.gain.setValueAtTime(0.08, t);
+    snap.connect(snapGain);
+    snapGain.connect(this.masterGain);
+    snap.start(t);
+  }
+
+  // 10. Paper Slide = soft friction whoosh across counter
+  public paperSlide() {
+    const ctx = this.getAudioContext();
+    if (!ctx || !this.masterGain) return;
+
+    const t = ctx.currentTime;
+    const dur = 0.22;
+    const buffer = ctx.createBuffer(1, Math.floor(ctx.sampleRate * dur), ctx.sampleRate);
+    const data = buffer.getChannelData(0);
+    for (let j = 0; j < data.length; j++) {
+      data[j] = Math.random() * 2 - 1;
+    }
+    const noise = ctx.createBufferSource();
+    noise.buffer = buffer;
+
+    const filter = ctx.createBiquadFilter();
+    filter.type = 'bandpass';
+    filter.frequency.setValueAtTime(900, t);
+    filter.frequency.exponentialRampToValueAtTime(1400, t + dur);
+    filter.Q.setValueAtTime(1.5, t);
+
+    const gain = ctx.createGain();
+    gain.gain.setValueAtTime(0.01, t);
+    gain.gain.linearRampToValueAtTime(0.05, t + dur * 0.4);
+    gain.gain.exponentialRampToValueAtTime(0.001, t + dur);
+
+    noise.connect(filter);
+    filter.connect(gain);
+    gain.connect(this.masterGain);
+    noise.start(t);
+  }
+
+  // 11. Split-Flap Click = snappy mechanical solenoid tick
+  public flapClick() {
+    const ctx = this.getAudioContext();
+    if (!ctx || !this.masterGain) return;
+
+    const t = ctx.currentTime;
+    const osc = ctx.createOscillator();
+    osc.type = 'triangle';
+    osc.frequency.setValueAtTime(320, t);
+    osc.frequency.exponentialRampToValueAtTime(80, t + 0.025);
+
+    const gain = ctx.createGain();
+    gain.gain.setValueAtTime(0.07, t);
+    gain.gain.exponentialRampToValueAtTime(0.001, t + 0.03);
+
+    osc.connect(gain);
+    gain.connect(this.masterGain);
+    osc.start(t);
+    osc.stop(t + 0.03);
+  }
 }
 
 export const sound = new SoundEngine();

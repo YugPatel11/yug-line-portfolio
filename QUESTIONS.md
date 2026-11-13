@@ -20,3 +20,4 @@ Status: Proceeding immediately with sensible defaults for any unanswered items.
 10. **Education Noticeboard Pins (ST-06)**: Beyond B.Tech CSE (AI/ML) and CGPA, any specific certifications or awards to pin? *(Default: University semester record and tech fest coordination)*
 11. **Terminus Commemorative Ticket (ST-07)**: Preferred sign-off line on the stamped completion ticket? *(Default: "Journey Complete · Valid For Collaboration")*
 12. **3D Asset Provision**: Do you have custom `.glb` character models ready to provide, or should we build with our resilient 2D SVG conductor with WebGL 3D progressive enhancement? *(Default: Resilient 2D SVG conductor with lazy WebGL hook)*
+

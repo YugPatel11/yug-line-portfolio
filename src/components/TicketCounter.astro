@@ -1,0 +1,702 @@
+---
+// TicketCounter.astro
+// Signature 2.5D Ticket Counter with Clerk per Section 4 & Design Review
+import { PROFILE } from '../data/portfolio';
+import StationClock from './StationClock.astro';
+
+const DESTINATIONS = [
+  {
+    id: 'station-01',
+    code: 'ST-01',
+    title: 'Achievements',
+    desc: 'Smart India Hackathon 2026 win, awards and milestones',
+    dialogue: 'Wins and trophies? Platform 1.',
+    line: 'hardware',
+    lineColor: 'var(--line-hardware)',
+  },
+  {
+    id: 'station-02',
+    code: 'ST-02',
+    title: 'Ghumify — my flagship project',
+    desc: 'AI-powered travel companion & ground reality router',
+    dialogue: 'The flagship line! You’ll love this one.',
+    line: 'ai',
+    lineColor: 'var(--line-ai)',
+  },
+  {
+    id: 'station-03',
+    code: 'ST-03',
+    title: 'All projects',
+    desc: 'Curated production systems across frontend, backend, AI & IoT',
+    dialogue: 'Seven more builds on one stop. Take your time.',
+    line: 'frontend',
+    lineColor: 'var(--line-frontend)',
+  },
+  {
+    id: 'station-04',
+    code: 'ST-04',
+    title: 'Experience',
+    desc: 'Frontend intern at Edverb, VP of EBC Club & freelance developer',
+    dialogue: 'Meet the crew. Good choice.',
+    line: 'backend',
+    lineColor: 'var(--line-backend)',
+  },
+  {
+    id: 'station-05',
+    code: 'ST-05',
+    title: 'Skills and tools',
+    desc: 'Full technical capability stack across all 4 transit tracks',
+    dialogue: 'Every tool, sorted by line.',
+    line: 'hardware',
+    lineColor: 'var(--line-hardware)',
+  },
+  {
+    id: 'station-06',
+    code: 'ST-06',
+    title: 'Education',
+    desc: 'B.Tech CSE (AI/ML) at P P Savani University (2024–2028)',
+    dialogue: 'Quick stop: the classroom.',
+    line: 'ai',
+    lineColor: 'var(--line-ai)',
+  },
+  {
+    id: 'station-07',
+    code: 'ST-07',
+    title: 'Contact me',
+    desc: 'Direct communication channels, socials, and inquiry dispatch',
+    dialogue: 'End of the line. Say hello!',
+    line: 'central',
+    lineColor: 'var(--ink)',
+  },
+];
+---
+
+<div id="journey-step-choose" class="w-full">
+  <!-- Slim Identity Band & Proof Points (Rule 4.1.1) -->
+  <div class="mb-4 p-4 sm:p-5 bg-surface border-2 border-ink shadow-[4px_4px_0_var(--ink)] flex flex-wrap items-center justify-between gap-4">
+    <div class="flex items-center gap-3">
+      <div class="w-10 h-10 rounded-full border-2 border-ink bg-line-frontend text-paper font-black font-archivo flex items-center justify-center text-lg flex-shrink-0">
+        YR
+      </div>
+      <div>
+        <div class="flex items-center gap-2">
+          <h2 class="font-archivo text-xl sm:text-2xl font-black text-ink uppercase tracking-tight">
+            {PROFILE.name}
+          </h2>
+          <span class="hidden sm:inline-block font-mono text-[10px] font-bold px-2 py-0.5 bg-paper border border-ink text-line-frontend uppercase">
+            ARCHITECT
+          </span>
+        </div>
+        <p class="font-mono text-xs text-ink-soft">
+          // {PROFILE.role}
+        </p>
+      </div>
+    </div>
+
+    <!-- Proof Chips -->
+    <div class="flex flex-wrap items-center gap-2 font-mono text-xs">
+      <span class="px-2.5 py-1 bg-paper border border-ink text-ink font-bold inline-flex items-center gap-1.5 shadow-[2px_2px_0_var(--ink)]">
+        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+        {PROFILE.grantTotal} SSIP Grants
+      </span>
+      <span class="px-2.5 py-1 bg-paper border border-rule text-ink hidden md:inline-flex">
+        SIH 2026 Winner
+      </span>
+      <span class="px-2.5 py-1 bg-paper border border-rule text-ink hidden lg:inline-flex">
+        {PROFILE.leadershipRole}
+      </span>
+    </div>
+  </div>
+
+  <!-- Step Header & Progress -->
+  <div class="mb-6 p-3 bg-surface border-2 border-ink shadow-[3px_3px_0_var(--ink)] flex items-center justify-between">
+    <div class="flex items-center gap-2">
+      <span class="w-2.5 h-2.5 rounded-full bg-line-frontend animate-pulse"></span>
+      <span class="font-mono text-xs font-bold uppercase tracking-wider text-ink">
+        Step 1 of 3 · Buy a ticket
+      </span>
+    </div>
+
+    <div class="flex items-center gap-1.5" aria-hidden="true">
+      <span class="w-2.5 h-2.5 rounded-full bg-line-frontend border border-ink"></span>
+      <span class="w-2.5 h-2.5 rounded-full bg-paper border border-ink"></span>
+      <span class="w-2.5 h-2.5 rounded-full bg-paper border border-ink"></span>
+    </div>
+  </div>
+
+  <!-- Main 2.5D Ticket Counter + Fare Board Layout -->
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+    
+    <!-- LEFT: 2.5D Ticket Booth with Clerk (5 cols on lg) -->
+    <div class="lg:col-span-6 space-y-4">
+      
+      <!-- The 2.5D Physical Window Container -->
+      <div class="ticket-booth-stage relative w-full bg-paper border-4 border-ink shadow-[8px_8px_0_var(--ink)] overflow-hidden select-none">
+        
+        <!-- LAYER 1: BACK WALL (Subway Tiles, Lamp, Timetable, Clock) -->
+        <div class="booth-back-layer relative w-full h-[360px] sm:h-[420px] bg-[#14171E] subway-tile-wall p-4 flex flex-col justify-between overflow-hidden">
+          
+          <!-- Top Beam: Enamel Sign & Lamp -->
+          <div class="flex items-start justify-between z-10">
+            <!-- TICKETS Blade Sign -->
+            <div class="px-3 py-1 bg-[#111111] border-2 border-[#FFC933] shadow-[3px_3px_0_#000] flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+              <span class="font-mono text-xs font-black tracking-widest text-[#FFC933] uppercase">
+                TICKETS // COUNTER 01
+              </span>
+            </div>
+
+            <!-- Warm Lamp Cone -->
+            <div class="relative flex flex-col items-center">
+              <div class="w-12 h-3 bg-[#2A2E39] border border-black"></div>
+              <div class="w-8 h-4 bg-[#FFC933] border border-black" style="clip-path: polygon(20% 0%, 80% 0%, 100% 100%, 0% 100%);"></div>
+              <div class="w-24 h-16 bg-[#FFD98A]/15 pointer-events-none" style="clip-path: polygon(35% 0%, 65% 0%, 100% 100%, 0% 100%);"></div>
+            </div>
+          </div>
+
+          <!-- Wall Posters: Timetable & Small Clock -->
+          <div class="absolute top-16 right-4 z-10 opacity-80 pointer-events-none hidden sm:block">
+            <div class="p-2 bg-paper/90 border border-ink shadow-[2px_2px_0_#000] w-24 text-[8px] font-mono text-ink">
+              <div class="font-bold border-b border-ink/40 pb-0.5 mb-1 uppercase">TIMETABLE</div>
+              <div>ST-01 ➔ 09:00</div>
+              <div>ST-02 ➔ 09:15</div>
+              <div>ST-03 ➔ 09:30</div>
+            </div>
+          </div>
+
+          <!-- LAYER 2: THE 2D ANIMATED CLERK (Positioned inside window) -->
+          <div class="clerk-container absolute inset-x-0 bottom-12 flex justify-center items-end pointer-events-none z-15">
+            <svg
+              id="clerk-svg"
+              viewBox="0 0 240 240"
+              class="w-56 sm:w-64 h-56 sm:h-64 select-none"
+              xmlns="http://www.w3.org/2000/svg"
+              aria-label="Friendly Ticket Clerk"
+              role="img"
+            >
+              <defs>
+                <!-- Halftone Shadow Dot Pattern -->
+                <pattern id="halftone-dots" width="4" height="4" patternUnits="userSpaceOnUse">
+                  <circle cx="2" cy="2" r="1" fill="#111111" opacity="0.3" />
+                </pattern>
+              </defs>
+
+              <!-- Torso & Transit Uniform Vest -->
+              <g id="clerk-torso">
+                <!-- Shirt Base -->
+                <path d="M 60 170 Q 120 160 180 170 L 195 240 L 45 240 Z" fill="#F4F1EA" stroke="#111111" stroke-width="2.5" />
+                <!-- Line Livery Vest -->
+                <path d="M 75 170 L 100 240 L 140 240 L 165 170 Q 120 185 75 170 Z" fill="#FFC933" stroke="#111111" stroke-width="2.5" />
+                <!-- Halftone Shadow on Vest -->
+                <path d="M 120 180 L 100 240 L 140 240 L 165 170 Q 120 185 120 180 Z" fill="url(#halftone-dots)" />
+                <!-- Tie / Collar -->
+                <polygon points="112,168 128,168 123,205 117,205" fill="#E4572E" stroke="#111111" stroke-width="1.5" />
+                <polygon points="106,164 120,172 112,175" fill="#FFFFFF" stroke="#111111" stroke-width="1.5" />
+                <polygon points="134,164 120,172 128,175" fill="#FFFFFF" stroke="#111111" stroke-width="1.5" />
+                <!-- "TICKETS" Badge -->
+                <rect x="142" y="195" width="22" height="9" rx="1.5" fill="#111111" stroke="#FFC933" stroke-width="1" />
+                <text x="153" y="202" font-family="'IBM Plex Mono', monospace" font-size="5" font-weight="bold" fill="#FFC933" text-anchor="middle">PASS</text>
+              </g>
+
+              <!-- Animated Head & Face Group (Nods & Blinks) -->
+              <g id="clerk-head" class="clerk-head-motion origin-bottom">
+                <!-- Neck -->
+                <rect x="110" y="145" width="20" height="24" fill="#F5CBA7" stroke="#111111" stroke-width="2" />
+                <!-- Ears -->
+                <circle cx="86" cy="126" r="6" fill="#F5CBA7" stroke="#111111" stroke-width="2" />
+                <circle cx="154" cy="126" r="6" fill="#F5CBA7" stroke="#111111" stroke-width="2" />
+                <!-- Head Base -->
+                <ellipse cx="120" cy="125" rx="30" ry="34" fill="#F5CBA7" stroke="#111111" stroke-width="2.5" />
+                
+                <!-- Hair -->
+                <path d="M 88 120 Q 90 98 120 98 Q 150 98 152 120 Q 146 106 120 106 Q 94 106 88 120 Z" fill="#2C221E" />
+
+                <!-- Eyes (Blinking CSS keyframe) -->
+                <g id="clerk-eyes" class="clerk-blink-motion">
+                  <ellipse cx="109" cy="125" rx="3.5" ry="4.5" fill="#111111" />
+                  <circle cx="110.5" cy="123.5" r="1.2" fill="#FFFFFF" />
+                  <ellipse cx="131" cy="125" rx="3.5" ry="4.5" fill="#111111" />
+                  <circle cx="132.5" cy="123.5" r="1.2" fill="#FFFFFF" />
+                </g>
+
+                <!-- Eyebrows -->
+                <path d="M 103 117 Q 109 114 115 117" stroke="#2C221E" stroke-width="2" stroke-linecap="round" fill="none" />
+                <path d="M 125 117 Q 131 114 137 117" stroke="#2C221E" stroke-width="2" stroke-linecap="round" fill="none" />
+
+                <!-- Nose -->
+                <path d="M 120 123 L 118 132 L 123 132" stroke="#111111" stroke-width="1.8" stroke-linecap="round" fill="none" />
+
+                <!-- Friendly Smile -->
+                <path id="clerk-mouth" d="M 112 140 Q 120 147 128 140" stroke="#111111" stroke-width="2" stroke-linecap="round" fill="none" />
+
+                <!-- Conductor Peaked Cap -->
+                <g id="clerk-cap">
+                  <!-- Cap Crown -->
+                  <path d="M 85 106 Q 120 86 155 106 L 158 100 Q 120 78 82 100 Z" fill="#171A24" stroke="#111111" stroke-width="2.5" />
+                  <!-- Gold Livery Band -->
+                  <path d="M 85 106 Q 120 96 155 106 L 154 110 Q 120 100 86 110 Z" fill="#FFC933" stroke="#111111" stroke-width="1.2" />
+                  <!-- Metro Cockade / Badge -->
+                  <circle cx="120" cy="101" r="4" fill="#E4572E" stroke="#FFC933" stroke-width="1.2" />
+                  <circle cx="120" cy="101" r="1.5" fill="#FFFFFF" />
+                  <!-- Visor / Peak -->
+                  <path d="M 84 109 Q 120 116 156 109 Q 120 120 84 109 Z" fill="#111111" />
+                </g>
+              </g>
+
+              <!-- Left Arm / Typing / Handover Arm -->
+              <g id="clerk-left-arm">
+                <path d="M 68 180 Q 55 210 90 220" stroke="#111111" stroke-width="14" stroke-linecap="round" fill="none" />
+                <path d="M 68 180 Q 55 210 90 220" stroke="#FFC933" stroke-width="10" stroke-linecap="round" fill="none" />
+                <circle cx="92" cy="220" r="7" fill="#F5CBA7" stroke="#111111" stroke-width="2" />
+              </g>
+
+              <!-- Right Arm / Waving / Stamping Arm -->
+              <g id="clerk-right-arm" class="clerk-wave-motion origin-[175px_180px]">
+                <path d="M 172 180 Q 195 200 170 220" stroke="#111111" stroke-width="14" stroke-linecap="round" fill="none" />
+                <path d="M 172 180 Q 195 200 170 220" stroke="#FFC933" stroke-width="10" stroke-linecap="round" fill="none" />
+                <circle cx="168" cy="220" r="7" fill="#F5CBA7" stroke="#111111" stroke-width="2" />
+              </g>
+            </svg>
+          </div>
+
+          <!-- LAYER 3: GLASS WINDOW (Steel Frame, Reflection Bars, Speaker Grill) -->
+          <div class="booth-glass-layer absolute inset-0 pointer-events-none z-20">
+            <!-- Diagonal White Reflection Glare Bars -->
+            <div class="absolute -inset-x-12 top-10 h-10 bg-white/10 transform -rotate-12 pointer-events-none"></div>
+            <div class="absolute -inset-x-12 top-28 h-6 bg-white/5 transform -rotate-12 pointer-events-none"></div>
+
+            <!-- Perforated Speaking Grill (Circular dots in glass) -->
+            <div class="absolute top-[48%] left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center gap-1 opacity-40">
+              <div class="flex gap-1.5">
+                <span class="w-1.5 h-1.5 rounded-full bg-ink"></span>
+                <span class="w-1.5 h-1.5 rounded-full bg-ink"></span>
+                <span class="w-1.5 h-1.5 rounded-full bg-ink"></span>
+              </div>
+              <div class="flex gap-1.5">
+                <span class="w-1.5 h-1.5 rounded-full bg-ink"></span>
+                <span class="w-1.5 h-1.5 rounded-full bg-ink"></span>
+                <span class="w-1.5 h-1.5 rounded-full bg-ink"></span>
+                <span class="w-1.5 h-1.5 rounded-full bg-ink"></span>
+              </div>
+              <div class="flex gap-1.5">
+                <span class="w-1.5 h-1.5 rounded-full bg-ink"></span>
+                <span class="w-1.5 h-1.5 rounded-full bg-ink"></span>
+                <span class="w-1.5 h-1.5 rounded-full bg-ink"></span>
+              </div>
+            </div>
+
+            <!-- Glass Window Bottom Pass-Through Cutout Slot -->
+            <div class="absolute bottom-12 left-1/2 -translate-x-1/2 w-48 h-4 border-2 border-ink bg-transparent flex items-center justify-center">
+              <span class="w-40 h-1 bg-ink/60 block"></span>
+            </div>
+          </div>
+
+          <!-- LAYER 4: COUNTER SLAB (Foreground, Desk Bell, Printer, Stamp) -->
+          <div class="booth-counter-layer absolute inset-x-0 bottom-0 h-12 bg-[#2D241E] border-t-3 border-ink z-25 flex items-center justify-between px-4 sm:px-6">
+            
+            <!-- Mechanical Ticket Printer Unit -->
+            <div class="flex items-center gap-2">
+              <div class="w-14 h-8 bg-[#1A1D24] border-2 border-ink shadow-[2px_2px_0_#000] flex flex-col justify-center px-1.5 relative">
+                <span class="w-full h-1 bg-[#111111] mb-1"></span>
+                <span class="font-mono text-[7px] text-[#FFC933] font-bold">PRINTER</span>
+              </div>
+            </div>
+
+            <!-- Recessed Ticket Tray in Counter Center -->
+            <div class="relative w-44 h-7 bg-[#111111] border-2 border-ink flex items-center justify-center overflow-visible">
+              <span class="font-mono text-[8px] text-ink-soft uppercase tracking-wider">
+                // TICKET DISPATCH TRAY
+              </span>
+
+              <!-- THE PHYSICAL TICKET (Travels between printer, clerk & tray) -->
+              <div
+                id="counter-ticket-element"
+                class="absolute -top-3 w-40 p-2 bg-paper border-2 border-ink shadow-[3px_3px_0_var(--ink)] opacity-0 pointer-events-none transition-all duration-500 will-change-transform z-30"
+                style="transform: translateY(-24px) scale(0.9);"
+              >
+                <div class="flex items-center justify-between border-b border-rule pb-1 mb-1">
+                  <span id="ticket-strip-code" class="font-mono text-[9px] font-black text-line-frontend">ST-01</span>
+                  <span class="font-mono text-[8px] font-bold uppercase bg-line-hardware/30 px-1 text-ink">FREE PASS</span>
+                </div>
+                <div id="ticket-strip-title" class="font-archivo text-xs font-black text-ink uppercase truncate">
+                  ACHIEVEMENTS
+                </div>
+                <div class="mt-1 flex items-center justify-between font-mono text-[7px] text-ink-soft">
+                  <span>FARE: ₹0</span>
+                  <span class="font-bold text-emerald-600">VALID TODAY</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Brass Service Desk Bell (Interactive!) -->
+            <div class="flex items-center gap-3">
+              <button
+                type="button"
+                id="counter-bell-btn"
+                class="w-8 h-8 rounded-full bg-[#E5B53A] border-2 border-ink shadow-[2px_2px_0_#000] flex items-center justify-center cursor-pointer hover:scale-105 active:scale-95 transition-transform"
+                title="Ring Counter Bell"
+                aria-label="Ring service bell"
+              >
+                <span class="w-2 h-2 rounded-full bg-white/70 block"></span>
+              </button>
+
+              <!-- Stamp & Ink Pad -->
+              <div class="hidden sm:flex items-center gap-1.5 opacity-80">
+                <div class="w-6 h-4 bg-[#8C2D19] border border-ink shadow-[1px_1px_0_#000]"></div>
+                <div class="w-4 h-6 bg-[#6E5034] border border-ink shadow-[1px_1px_0_#000]"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SPEECH BUBBLE (Polite Live Region per Section 4.2) -->
+        <div
+          id="clerk-speech-bubble"
+          class="absolute top-12 sm:top-14 left-1/2 -translate-x-1/2 max-w-sm w-[88%] p-2.5 sm:p-3.5 bg-paper border-2 border-ink shadow-[4px_4px_0_var(--ink)] z-40"
+          role="status"
+          aria-live="polite"
+        >
+          <div class="flex items-center gap-2 mb-1">
+            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+            <span class="font-mono text-[10px] font-bold uppercase tracking-wider text-ink-soft">
+              STATION MASTER // COUNTER 01
+            </span>
+          </div>
+          <p id="clerk-speech-text" class="font-manrope text-sm sm:text-base font-bold text-ink leading-snug">
+            "Namaste! Where to today?"
+          </p>
+          <!-- Speech Bubble Downward Tail -->
+          <div class="absolute -bottom-2.5 left-1/2 -translate-x-1/2 w-4 h-4 bg-paper border-r-2 border-b-2 border-ink transform rotate-45"></div>
+        </div>
+      </div>
+
+      <!-- Action Button Area Below Counter -->
+      <div class="p-4 bg-surface border-2 border-ink shadow-[4px_4px_0_var(--ink)] space-y-3">
+        <!-- Main State Action Button -->
+        <button
+          type="button"
+          id="counter-primary-action-btn"
+          class="btn-stub btn-stub--primary w-full !min-h-[58px] sm:!min-h-[64px] text-base sm:text-lg font-black justify-center shadow-[4px_4px_0_var(--ink)] cursor-pointer"
+          disabled
+        >
+          <span>1. Select a stop on the right ➔</span>
+        </button>
+
+        <div class="flex items-center justify-between pt-1">
+          <!-- Quick Ticket Button (Rule 4.1: skips clerk animation for repeat/fast visitors) -->
+          <button
+            type="button"
+            id="counter-quick-ticket-btn"
+            class="font-mono text-xs text-ink-soft hover:text-ink underline uppercase tracking-wider"
+          >
+            Quick ticket (skip wait)
+          </button>
+
+          <!-- Skip to Express Mode -->
+          <button
+            type="button"
+            class="day-pass-toggle-btn font-mono text-xs text-ink-soft hover:text-ink underline uppercase tracking-wider"
+          >
+            Skip the metro · see everything
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: THE FARE BOARD (7 Destination Buttons) -->
+    <div class="lg:col-span-6">
+      <div class="mb-3 flex items-center justify-between">
+        <div>
+          <h3 class="font-archivo text-xl sm:text-2xl font-black text-ink uppercase tracking-tight">
+            Fare Board · Destinations
+          </h3>
+          <p class="font-manrope text-xs sm:text-sm text-ink-soft mt-0.5">
+            Tap any destination to request your boarding ticket.
+          </p>
+        </div>
+        <span class="font-mono text-xs font-bold uppercase tracking-wider px-2.5 py-1 bg-line-hardware text-ink border border-ink shadow-[2px_2px_0_var(--ink)]">
+          FARE: ₹0 FREE
+        </span>
+      </div>
+
+      <!-- 7 Roomy Destination Buttons List (Min 72px Tall) -->
+      <div class="space-y-2.5" role="list">
+        {DESTINATIONS.map((dest) => (
+          <button
+            type="button"
+            class="destination-choice-btn w-full min-h-[68px] sm:min-h-[72px] p-3.5 sm:p-4 bg-surface border-2 border-ink shadow-[3px_3px_0_var(--ink)] hover:shadow-[5px_5px_0_var(--ink)] hover:-translate-y-0.5 text-left flex items-center justify-between gap-4 transition-all group cursor-pointer"
+            data-station-id={dest.id}
+            data-station-code={dest.code}
+            data-station-title={dest.title}
+            data-station-line={dest.line}
+            data-dialogue={dest.dialogue}
+          >
+            <div class="flex items-center gap-3">
+              <span
+                class="w-3.5 h-3.5 rounded-full border-2 border-ink flex-shrink-0 group-hover:scale-125 transition-transform"
+                style={`background-color: ${dest.lineColor};`}
+              ></span>
+
+              <div>
+                <div class="flex items-center gap-2">
+                  <span class="font-archivo text-base sm:text-lg font-bold text-ink group-hover:text-line-frontend transition-colors">
+                    {dest.title}
+                  </span>
+                  <span class="font-mono text-xs uppercase px-1.5 py-0.5 bg-paper border border-rule text-ink-soft">
+                    {dest.code}
+                  </span>
+                </div>
+                <p class="font-manrope text-xs text-ink-soft mt-0.5 line-clamp-1">
+                  {dest.desc}
+                </p>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-2.5 flex-shrink-0">
+              <span class="hidden sm:inline-block font-mono text-[11px] font-bold px-2 py-0.5 bg-paper border border-rule text-emerald-600">
+                ₹0
+              </span>
+              <span class="font-mono text-base font-bold text-ink group-hover:translate-x-1 transition-transform">
+                ➔
+              </span>
+            </div>
+          </button>
+        ))}
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  /* CSS Animations for 2D Clerk (Rule 4.3 & 6: transform & opacity only) */
+  @keyframes clerkBlink {
+    0%, 94%, 98%, 100% { transform: scaleY(1); }
+    96% { transform: scaleY(0.1); }
+  }
+
+  @keyframes clerkWave {
+    0%, 100% { transform: rotate(0deg); }
+    25% { transform: rotate(-12deg); }
+    75% { transform: rotate(8deg); }
+  }
+
+  @keyframes clerkHeadNod {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    40% { transform: translateY(3px) rotate(1deg); }
+    70% { transform: translateY(-1px) rotate(-0.5deg); }
+  }
+
+  @keyframes clerkTypeHands {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-4px); }
+  }
+
+  .clerk-blink-motion {
+    animation: clerkBlink 4.5s infinite;
+    transform-origin: center;
+  }
+
+  .clerk-wave-motion {
+    animation: clerkWave 3s ease-in-out infinite;
+  }
+
+  .clerk-head-motion {
+    animation: clerkHeadNod 6s ease-in-out infinite;
+  }
+
+  .clerk-typing {
+    animation: clerkTypeHands 0.15s ease-in-out infinite alternate !important;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .clerk-blink-motion,
+    .clerk-wave-motion,
+    .clerk-head-motion,
+    .clerk-typing {
+      animation: none !important;
+    }
+  }
+</style>
+
+<script>
+  import { sound } from '../scripts/sound';
+  import type { StationCode } from '../scripts/journey/constants';
+
+  let selectedStationId: StationCode | null = null;
+  let selectedTitle = '';
+  let selectedCode = '';
+  let isPrinting = false;
+  let isReadyForTake = false;
+  let idleTimer: any = null;
+
+  const speechText = document.getElementById('clerk-speech-text');
+  const primaryBtn = document.getElementById('counter-primary-action-btn') as HTMLButtonElement | null;
+  const quickBtn = document.getElementById('counter-quick-ticket-btn');
+  const bellBtn = document.getElementById('counter-bell-btn');
+  const ticketEl = document.getElementById('counter-ticket-element');
+  const stripCode = document.getElementById('ticket-strip-code');
+  const stripTitle = document.getElementById('ticket-strip-title');
+  const clerkHead = document.getElementById('clerk-head');
+  const clerkRightArm = document.getElementById('clerk-right-arm');
+  const clerkLeftArm = document.getElementById('clerk-left-arm');
+
+  // Ring Counter Bell
+  if (bellBtn) {
+    bellBtn.addEventListener('click', () => {
+      sound.counterBell();
+      if (speechText) speechText.textContent = '"Ding! Yes, right here! Where to today?"';
+    });
+  }
+
+  // Idle timer for 8s no interaction per Section 4.5
+  const resetIdleTimer = () => {
+    clearTimeout(idleTimer);
+    idleTimer = setTimeout(() => {
+      if (!selectedStationId && speechText) {
+        speechText.textContent = '"Take your time. Any stop is a good stop."';
+      }
+    }, 8000);
+  };
+  resetIdleTimer();
+
+  // Listen to destination button clicks
+  document.querySelectorAll('.destination-choice-btn').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      clearTimeout(idleTimer);
+      const stId = btn.getAttribute('data-station-id') as StationCode;
+      const stCode = btn.getAttribute('data-station-code') || '';
+      const stTitle = btn.getAttribute('data-station-title') || '';
+      const dialogue = btn.getAttribute('data-dialogue') || '';
+
+      selectedStationId = stId;
+      selectedCode = stCode;
+      selectedTitle = stTitle;
+
+      // 1. Clerk nods head
+      if (clerkHead) {
+        clerkHead.style.transform = 'translateY(4px) rotate(2deg)';
+        setTimeout(() => { clerkHead.style.transform = 'translateY(0) rotate(0deg)'; }, 350);
+      }
+
+      // 2. Play soft bell / click
+      sound.doorDing();
+
+      // 3. Update speech bubble
+      if (speechText) {
+        speechText.textContent = `"${dialogue}"`;
+      }
+
+      // 4. Update primary action button
+      if (primaryBtn) {
+        primaryBtn.disabled = false;
+        primaryBtn.classList.remove('opacity-60');
+        primaryBtn.innerHTML = `<span>Buy ticket for ${stCode} · ₹0 (Free pass) ➔</span>`;
+        primaryBtn.focus();
+      }
+
+      // Update ticket strip preview
+      if (stripCode) stripCode.textContent = stCode;
+      if (stripTitle) stripTitle.textContent = stTitle.toUpperCase();
+    });
+  });
+
+  // Execute Ticket Purchase Sequence (~3s per Section 4.1)
+  const executeBuyTicket = async () => {
+    if (!selectedStationId || isPrinting) return;
+    isPrinting = true;
+
+    if (primaryBtn) {
+      primaryBtn.disabled = true;
+      primaryBtn.innerHTML = `<span>Printing & Stamping ticket...</span>`;
+    }
+
+    // Clerk speech update
+    if (speechText) {
+      speechText.textContent = '"Printing your pass now..."';
+    }
+
+    // Step A: Typing clatter (0s - 0.8s)
+    if (clerkLeftArm) clerkLeftArm.classList.add('clerk-typing');
+    sound.keyboardClick();
+    await new Promise((r) => setTimeout(r, 600));
+    sound.keyboardClick();
+    await new Promise((r) => setTimeout(r, 400));
+    if (clerkLeftArm) clerkLeftArm.classList.remove('clerk-typing');
+
+    // Step B: Printer extrusion sound (0.8s - 1.8s)
+    sound.printer();
+    if (ticketEl) {
+      ticketEl.style.opacity = '0.6';
+      ticketEl.style.transform = 'translateY(-12px) scale(0.95)';
+    }
+    await new Promise((r) => setTimeout(r, 900));
+
+    // Step C: Rubber Stamp impact thunk (1.8s - 2.2s)
+    if (clerkRightArm) {
+      clerkRightArm.style.transform = 'translateY(8px) rotate(-15deg)';
+    }
+    sound.stampThunk();
+    if (ticketEl) {
+      ticketEl.style.opacity = '1';
+      ticketEl.style.transform = 'translateY(0) scale(1)';
+    }
+    await new Promise((r) => setTimeout(r, 300));
+    if (clerkRightArm) clerkRightArm.style.transform = 'translateY(0) rotate(0deg)';
+
+    // Step D: Slide ticket through glass slot into tray (2.2s - 2.8s)
+    sound.paperSlide();
+    if (speechText) {
+      speechText.textContent = '"Fare: ₹0. Free pass. Mind the gap!"';
+    }
+
+    // Step E: Ready in tray!
+    isPrinting = false;
+    isReadyForTake = true;
+
+    if (primaryBtn) {
+      primaryBtn.disabled = false;
+      primaryBtn.classList.add('animate-pulse');
+      primaryBtn.innerHTML = `<span>Take my ticket ➔</span>`;
+      primaryBtn.focus();
+    }
+  };
+
+  // Primary Button Click (Handles Buy OR Take)
+  if (primaryBtn) {
+    primaryBtn.addEventListener('click', () => {
+      if (!isReadyForTake) {
+        executeBuyTicket();
+      } else {
+        // Take ticket and proceed to GateScreen
+        sound.punch();
+        if (ticketEl) {
+          ticketEl.style.transform = 'translateY(60px) scale(0.8)';
+          ticketEl.style.opacity = '0';
+        }
+
+        // Notify Machine
+        const machine = (window as any).__yugline || (window as any).__yuglineMachine;
+        if (machine) {
+          machine.selectDestination(selectedStationId);
+          machine.setStep('gate');
+        }
+      }
+    });
+  }
+
+  // Quick ticket (Rule 4.1: Instant ticket handover without clerk wait)
+  if (quickBtn) {
+    quickBtn.addEventListener('click', () => {
+      if (!selectedStationId) {
+        selectedStationId = 'station-01';
+      }
+      sound.printer();
+      sound.stampThunk();
+      const machine = (window as any).__yugline || (window as any).__yuglineMachine;
+      if (machine) {
+        machine.selectDestination(selectedStationId);
+        machine.setStep('gate');
+      }
+    });
+  }
+</script>
