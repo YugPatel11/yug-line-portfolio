@@ -26,13 +26,19 @@
   --floor: #CFCBC0;
   --tunnel: #0F1115;
 
-  /* Typography scale (fluid) */
-  --text-xs: 0.75rem;     /* 12px */
-  --text-sm: 0.875rem;    /* 14px */
-  --text-base: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);  /* 17-18px */
-  --text-lg: 1.5rem;      /* 24px */
-  --text-xl: 2.5rem;      /* 40px */
-  --text-display: clamp(4.5rem, 4rem + 2.5vw, 10rem); /* 72-160px */
+  /* Safe area insets */
+  --sat: env(safe-area-inset-top, 0px);
+  --sar: env(safe-area-inset-right, 0px);
+  --sab: env(safe-area-inset-bottom, 0px);
+  --sal: env(safe-area-inset-left, 0px);
+
+  /* Typography scale (fluid proportional scaling) */
+  --text-xs: clamp(0.7rem, 0.65rem + 0.25vw, 0.75rem);     /* 11-12px */
+  --text-sm: clamp(0.8rem, 0.75rem + 0.25vw, 0.875rem);    /* 13-14px */
+  --text-base: clamp(0.95rem, 0.9rem + 0.25vw, 1.125rem);  /* 15-18px */
+  --text-lg: clamp(1.25rem, 1.15rem + 0.5vw, 1.5rem);      /* 20-24px */
+  --text-xl: clamp(1.75rem, 1.5rem + 1vw, 2.5rem);         /* 28-40px */
+  --text-display: clamp(3rem, 2.2rem + 3.5vw, 8rem);        /* 48-128px */
 
   /* Spacing base: 4px */
   --sp-1: 4px;
@@ -53,11 +59,11 @@
   --button-shift: 4px;
   --focus-ring-offset: 3px;
 
-  /* Button and row tokens (Section 5.2) */
-  --btn-h-default: 56px;
-  --btn-h-primary: 64px;
-  --btn-px: 28px;
-  --row-h-dest: 72px;
+  /* Button and row tokens (Fluid scaling) */
+  --btn-h-default: clamp(48px, 12vw, 56px);
+  --btn-h-primary: clamp(54px, 14vw, 64px);
+  --btn-px: clamp(16px, 4vw, 28px);
+  --row-h-dest: clamp(64px, 16vw, 72px);
 }
 
 /* Night mode */

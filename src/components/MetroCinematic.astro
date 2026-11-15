@@ -18,14 +18,17 @@ import Pictograms from './Pictograms.astro';
      ======================================================== -->
 <div
   id="metro-cinematic-stage"
-  class="fixed inset-0 z-[90] bg-paper overflow-hidden select-none"
-  style="display: none; width: 100vw; height: 100vh;"
+  class="fixed inset-0 z-[90] bg-paper overflow-hidden select-none max-w-full"
+  style="display: none; width: 100vw; height: 100vh; height: 100dvh;"
   role="dialog"
   aria-modal="true"
   aria-label="Metro arrival and boarding"
 >
   <!-- Stage Top Controls Bar -->
-  <div class="absolute top-0 left-0 right-0 z-40 p-4 sm:p-6 flex items-center justify-between pointer-events-auto">
+  <div
+    class="absolute top-0 left-0 right-0 z-40 p-3 sm:p-6 flex items-center justify-between pointer-events-auto"
+    style="padding-top: max(var(--sat), 0.75rem); padding-left: max(var(--sal), 0.75rem); padding-right: max(var(--sar), 0.75rem);"
+  >
     <!-- Sound Toggle with Full Text (Section 4.2) -->
     <button
       type="button"
@@ -136,8 +139,8 @@ import Pictograms from './Pictograms.astro';
   <!-- LAYER 4: THE 4-CAR METRO TRAIN (Stands on Track at Horizon 76%) -->
   <div
     id="layer-train-track"
-    class="absolute inset-x-0 flex items-end overflow-hidden pointer-events-auto"
-    style="bottom: 24vh; height: clamp(140px, 30vh, 280px); z-index: 20;"
+    class="absolute inset-x-0 flex items-end overflow-hidden pointer-events-auto max-w-full"
+    style="bottom: 24vh; bottom: 24dvh; height: clamp(140px, 30vh, 280px); z-index: 20; overflow: hidden;"
   >
     <!-- Flat Horizontal Speed Streaks -->
     <div

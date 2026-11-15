@@ -16,7 +16,7 @@ import Pictograms from './Pictograms.astro';
      ======================================================== -->
 <div
   id="scene-welcome"
-  class="fixed inset-0 z-[80] bg-[#0B0C0E] text-[#EDEAE2] flex flex-col justify-between overflow-hidden select-none h-screen h-[100dvh] w-screen"
+  class="fixed inset-0 z-[80] bg-[#0B0C0E] text-[#EDEAE2] flex flex-col justify-between overflow-y-auto lg:overflow-hidden select-none min-h-screen min-h-[100dvh] w-screen max-w-full p-safe"
   style="display: none;"
   role="dialog"
   aria-modal="true"
@@ -302,7 +302,7 @@ import Pictograms from './Pictograms.astro';
           class="w-full relative bg-[#0E1118] border-2 border-[#262D3D] shadow-[8px_8px_0_#000] rounded-xs overflow-hidden flex flex-col items-center justify-center cursor-default group select-none"
         >
           <!-- Plinth Top Status Beam -->
-          <div class="w-full bg-[#141720] border-b-2 border-[#262D3D] px-3 sm:px-4 py-2 flex items-center justify-between font-mono text-[10px] select-none">
+          <div class="w-full bg-[#141720] border-b-2 border-[#262D3D] px-3 sm:px-4 py-2 flex flex-wrap items-center justify-between gap-2 font-mono text-[10px] select-none">
             <div class="flex items-center gap-2 text-[#EDEAE2] font-bold">
               <span class="w-2 h-2 rounded-full bg-[#E4572E]"></span>
               <span class="tracking-wider uppercase">CAR NO. YR-01 // ROLLING STOCK CINEMATIC STAGE</span>
@@ -316,7 +316,7 @@ import Pictograms from './Pictograms.astro';
           </div>
 
           <!-- 3D Canvas Stage (Always Display 3D Scene) -->
-          <div class="relative w-full h-[250px] sm:h-[300px] lg:h-[330px] flex items-center justify-center overflow-hidden bg-[#0A0C12]">
+          <div class="relative w-full h-[clamp(190px,36vh,330px)] flex items-center justify-center overflow-hidden bg-[#0A0C12]">
             <canvas
               id="welcome-3d-canvas"
               class="w-full h-full select-none block"
@@ -325,7 +325,7 @@ import Pictograms from './Pictograms.astro';
           </div>
 
           <!-- Platform Edge Tactile Warning Strip (Yellow Line #F2B705) -->
-          <div class="w-full bg-[#18160E] border-t-2 border-[#F2B705]/80 px-3 py-1 flex items-center justify-between font-mono text-[9px] text-[#F2B705]">
+          <div class="w-full bg-[#18160E] border-t-2 border-[#F2B705]/80 px-3 py-1 flex flex-wrap items-center justify-between gap-1.5 font-mono text-[9px] text-[#F2B705]">
             <div class="flex items-center gap-1.5">
               <span class="w-1.5 h-1.5 rounded-full bg-[#F2B705]"></span>
               <span class="w-1.5 h-1.5 rounded-full bg-[#F2B705]"></span>

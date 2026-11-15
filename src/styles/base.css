@@ -12,6 +12,8 @@
     scroll-behavior: smooth;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    max-width: 100%;
+    overflow-x: hidden;
   }
 
   body {
@@ -20,6 +22,9 @@
     line-height: 1.6;
     color: var(--ink);
     background-color: var(--paper);
+    max-width: 100%;
+    overflow-x: hidden;
+    position: relative;
   }
 
   h1, h2, h3, h4, h5, h6 {
@@ -508,5 +513,37 @@ html.reduce-motion *::after {
   animation-iteration-count: 1 !important;
   transition-duration: 0.01ms !important;
   scroll-behavior: auto !important;
+}
+
+/* ============================================
+   Fluid Viewport & Safe-Area Inset Support
+   ============================================ */
+.p-safe {
+  padding-top: max(var(--sat), 0.75rem);
+  padding-bottom: max(var(--sab), 0.75rem);
+  padding-left: max(var(--sal), 0.75rem);
+  padding-right: max(var(--sar), 0.75rem);
+}
+
+.pt-safe {
+  padding-top: max(var(--sat), 1rem);
+}
+
+.pb-safe {
+  padding-bottom: max(var(--sab), 1rem);
+}
+
+/* On compact mobile viewports (<= 480px), scale down brutalist hard drop shadows */
+@media (max-width: 480px) {
+  :root {
+    --ticket-shadow: 4px;
+    --button-shift: 2px;
+  }
+
+  .ticket,
+  .station-set,
+  .station-plaque {
+    box-shadow: 4px 4px 0 var(--ink) !important;
+  }
 }
 

@@ -1074,10 +1074,19 @@ export class Welcome3DScene {
     if (!this.renderer || !this.container) return;
     const canvasWrap = this.canvas ? this.canvas.parentElement : null;
     const width = (canvasWrap && canvasWrap.clientWidth) || this.container.clientWidth || 580;
-    const height = (canvasWrap && canvasWrap.clientHeight) || Math.min(340, Math.max(240, Math.floor(width * 0.48)));
+    const height = (canvasWrap && canvasWrap.clientHeight) || Math.min(340, Math.max(200, Math.floor(width * 0.48)));
 
     this.renderer.setSize(width, height);
-    this.camera.aspect = width / height;
+    const aspect = width / height;
+    this.camera.aspect = aspect;
+
+    // Dynamically adjust FOV on narrow viewports (aspect < 1.35)
+    // Keeps the entire 3D train cab and flank framed with generous margins
+    if (aspect < 1.35) {
+      this.camera.fov = 26 * (1.35 / aspect);
+    } else {
+      this.camera.fov = 26;
+    }
     this.camera.updateProjectionMatrix();
   }
 

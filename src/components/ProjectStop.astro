@@ -30,7 +30,7 @@ const lineVar = `var(--line-${primaryLine})`;
 ---
 
 <div
-  class="station-plaque p-5 sm:p-7 bg-surface flex flex-col justify-between project-card transition-all relative border-2 border-ink hover:border-ink shadow-[5px_5px_0_var(--ink)] hover:shadow-[8px_8px_0_var(--ink)] hover:-translate-y-1"
+  class="station-plaque p-4 sm:p-7 bg-surface flex flex-col justify-between project-card transition-all relative border-2 border-ink hover:border-ink shadow-[5px_5px_0_var(--ink)] hover:shadow-[8px_8px_0_var(--ink)] hover:-translate-y-1"
   data-lines={project.lines.join(' ')}
   data-project-id={project.id}
   data-title={project.title}
@@ -55,7 +55,7 @@ const lineVar = `var(--line-${primaryLine})`;
 
   <div>
     <!-- Ticket Header: Pictogram, Lines & Fare -->
-    <div class="flex items-start justify-between gap-3 border-b border-rule pb-3.5 mb-3.5">
+    <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-3 border-b border-rule pb-3.5 mb-3.5">
       <div class="flex items-center gap-3">
         <div class="w-11 h-11 border-2 border-ink bg-paper flex items-center justify-center text-ink flex-shrink-0 shadow-[2px_2px_0_var(--ink)]">
           <Pictograms name={project.pictogram} size={24} />
@@ -74,7 +74,7 @@ const lineVar = `var(--line-${primaryLine})`;
 
       <!-- Fare / Grant Badge -->
       {project.grantAmount && (
-        <div class="text-right flex-shrink-0">
+        <div class="sm:text-right flex-shrink-0 self-start sm:self-auto">
           <span class="font-mono text-[9px] text-ink-soft uppercase block font-bold">GRANT FARE</span>
           <span class="font-mono text-xs font-bold text-ink bg-line-hardware/30 px-2 py-0.5 border border-line-hardware inline-block shadow-[1px_1px_0_var(--ink)]">
             {project.grantAmount}
