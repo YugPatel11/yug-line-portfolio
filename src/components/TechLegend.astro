@@ -1,276 +1,920 @@
 ---
 // TechLegend.astro
-// Signature Interactive Skills Metro Map with Live Project Connectivity (Section 5)
-import { TECH_GROUPS, LINES, PROJECTS } from '../data/portfolio';
+// Elevated Bento Grid Technical Arsenal & Deployment Telemetry (Station 04)
+import { PROJECTS } from '../data/portfolio';
 
-// Precompute tech-to-project mappings from real data (no guessing)
-const TECH_MAP: Record<string, string[]> = {};
-PROJECTS.forEach((proj) => {
-  proj.techStack.forEach((t) => {
-    const key = t.trim().toLowerCase();
-    if (!TECH_MAP[key]) TECH_MAP[key] = [];
-    TECH_MAP[key].push(proj.title);
-  });
-});
-
-const SKILL_STATIONS = [
-  // AI Line
-  { id: 'gemini', name: 'Gemini AI', line: 'ai', cx: 80, cy: 60, projects: ['Ghumify'] },
-  { id: 'groq', name: 'Groq Llama', line: 'ai', cx: 180, cy: 60, projects: ['Ghumify'] },
-  { id: 'llm', name: 'LLM APIs', line: 'ai', cx: 280, cy: 60, projects: ['Ghumify', 'DataMorfix'] },
-  { id: 'python-ai', name: 'NumPy / Pandas', line: 'ai', cx: 380, cy: 60, projects: ['DataMorfix'] },
-
-  // Frontend Line
-  { id: 'nextjs', name: 'Next.js 15', line: 'frontend', cx: 80, cy: 130, projects: ['Ghumify', 'Edverb'] },
-  { id: 'typescript', name: 'TypeScript', line: 'frontend', cx: 180, cy: 130, projects: ['Ghumify', 'The Yug Line'] },
-  { id: 'flutter', name: 'Flutter / Dart', line: 'frontend', cx: 280, cy: 130, projects: ['Ghumify', 'GeoBus'] },
-  { id: 'tailwind', name: 'Tailwind CSS', line: 'frontend', cx: 380, cy: 130, projects: ['All Web Builds'] },
-
-  // Backend Line
-  { id: 'django', name: 'Django / Python', line: 'backend', cx: 80, cy: 200, projects: ['Grantpilot', 'EMS'] },
-  { id: 'firebase', name: 'Firebase', line: 'backend', cx: 180, cy: 200, projects: ['GeoBus', 'Clinic', 'Ghumify'] },
-  { id: 'postgres', name: 'PostgreSQL / SQL', line: 'backend', cx: 280, cy: 200, projects: ['Grantpilot', 'DataMorfix'] },
-  { id: 'sqlite', name: 'SQLite Caching', line: 'backend', cx: 380, cy: 200, projects: ['Ghumify'] },
-
-  // Hardware Line
-  { id: 'gps', name: 'GPS APIs', line: 'hardware', cx: 80, cy: 270, projects: ['GeoBus'] },
-  { id: 'osm', name: 'OpenStreetMap', line: 'hardware', cx: 180, cy: 270, projects: ['Ghumify'] },
-  { id: 'hardware-iot', name: 'IoT Sensors', line: 'hardware', cx: 280, cy: 270, projects: ['GeoBus', 'EcosortX'] },
-  { id: 'telemetry', name: 'Real-time Telemetry', line: 'hardware', cx: 380, cy: 270, projects: ['GeoBus'] },
-];
+// Detailed verified project mappings for each technical capability
+const SKILL_DETAILS: Record<
+  string,
+  {
+    name: string;
+    category: string;
+    line: 'ai' | 'frontend' | 'backend' | 'hardware';
+    projects: { title: string; role: string; url?: string }[];
+    description: string;
+  }
+> = {
+  'GEMINI/CLAUDE': {
+    name: 'Gemini / Claude',
+    category: 'AI, ML & Automation',
+    line: 'ai',
+    projects: [
+      { title: 'Ghumify', role: 'Time-bound itinerary generation engine' },
+      { title: 'DataMorfix', role: 'Dataset summaries & natural language schema' },
+    ],
+    description: 'Production LLMs integrated via REST API for dynamic reasoning, multilingual generation, and dataset analysis.',
+  },
+  'KIMI AI': {
+    name: 'Kimi AI',
+    category: 'AI, ML & Automation',
+    line: 'ai',
+    projects: [
+      { title: 'Travel Research', role: 'Long-context prompt testing & routing' },
+    ],
+    description: 'Ultra-long context synthesis and multi-source document ingestion testing for itinerary generation.',
+  },
+  'ANTIGRAVITY': {
+    name: 'Antigravity',
+    category: 'AI, ML & Automation',
+    line: 'ai',
+    projects: [
+      { title: 'The Yug Line', role: 'Multi-agent orchestration & UI build' },
+    ],
+    description: 'DeepMind agentic development system used for pipeline execution, verification audits, and workflow synthesis.',
+  },
+  'CLAUDE CODE': {
+    name: 'Claude Code',
+    category: 'AI, ML & Automation',
+    line: 'ai',
+    projects: [
+      { title: 'Architecture Scaffolding', role: 'Boilerplate acceleration & test suites' },
+    ],
+    description: 'Terminal-native agentic development tool for rapid refactoring, architectural auditing, and automated testing.',
+  },
+  'NUMPY': {
+    name: 'NumPy',
+    category: 'AI, ML & Automation',
+    line: 'ai',
+    projects: [
+      { title: 'DataMorfix', role: 'Vectorized dataset operations & health scoring' },
+      { title: 'EcoSortX', role: 'Matrix manipulation for image classification' },
+    ],
+    description: 'High-performance numerical computing and array operations for data science pipelines.',
+  },
+  'PANDAS': {
+    name: 'Pandas',
+    category: 'AI, ML & Automation',
+    line: 'ai',
+    projects: [
+      { title: 'DataMorfix', role: 'CSV/Excel/JSON profiling & cleaning' },
+    ],
+    description: 'Dataframe parsing, anomaly detection, statistical profiling, and automated documentation generation.',
+  },
+  'LLM INTEGRATION': {
+    name: 'LLM Integration',
+    category: 'AI, ML & Automation',
+    line: 'ai',
+    projects: [
+      { title: 'Ghumify', role: 'Context-injected itinerary prompts' },
+      { title: 'DataMorfix', role: 'Conversational dataset query engine' },
+    ],
+    description: 'Production integration of foundation models with structured JSON schemas, fallback retries, and token budgeting.',
+  },
+  'AI API INTEGRATION': {
+    name: 'AI API Integration',
+    category: 'AI, ML & Automation',
+    line: 'ai',
+    projects: [
+      { title: 'Ghumify', role: 'Gemini 1.5 + Groq Llama API endpoints' },
+      { title: 'DataMorfix', role: 'Multi-model dataset evaluation' },
+    ],
+    description: 'Robust server-side connectors with rate-limiting, error fallbacks, and real-time streaming responses.',
+  },
+  'AI DASHBOARD DEV': {
+    name: 'AI Dashboard Dev',
+    category: 'AI, ML & Automation',
+    line: 'ai',
+    projects: [
+      { title: 'DataMorfix', role: 'Interactive health score & schema viewer' },
+      { title: 'EMS', role: 'Faculty grade distributions & analytics' },
+    ],
+    description: 'Full analytics dashboards with interactive visualization, custom data filtering, and real-time metrics.',
+  },
+  'PROMPT ENGINEERING': {
+    name: 'Prompt Engineering',
+    category: 'AI, ML & Automation',
+    line: 'ai',
+    projects: [
+      { title: 'Ghumify', role: 'Few-shot multilingual travel prompting' },
+      { title: 'DataMorfix', role: 'Schema inference prompt matrices' },
+    ],
+    description: 'Structured few-shot, chain-of-thought, and system framing techniques for high-reliability outputs.',
+  },
+  'LOOP ENGINEERING': {
+    name: 'Loop Engineering',
+    category: 'AI, ML & Automation',
+    line: 'ai',
+    projects: [
+      { title: 'Autonomous Workflows', role: 'Recursive verification & self-healing code' },
+    ],
+    description: 'Autonomous feedback loops with multi-agent critique, test assertions, and automated corrections.',
+  },
+  'AI AUTOMATION': {
+    name: 'AI Automation',
+    category: 'AI, ML & Automation',
+    line: 'ai',
+    projects: [
+      { title: 'EcoSortX', role: 'Automated camera-driven waste classification' },
+      { title: 'DataMorfix', role: 'Automated data dictionary synthesis' },
+    ],
+    description: 'End-to-end autonomous processes replacing manual intervention with computer vision and machine learning.',
+  },
+  'PYTHON': {
+    name: 'Python',
+    category: 'Languages',
+    line: 'backend',
+    projects: [
+      { title: 'EMS', role: 'Full campus backend architecture' },
+      { title: 'GrantPilot', role: 'State grant tracking system' },
+      { title: 'EcoSortX', role: 'Computer vision classification model' },
+    ],
+    description: 'Core backend, ML modeling, and automation programming language across production systems.',
+  },
+  'HTML/CSS': {
+    name: 'HTML/CSS',
+    category: 'Languages',
+    line: 'frontend',
+    projects: [
+      { title: 'The Yug Line', role: 'Accessible semantic transit markup' },
+      { title: 'Edverb Client Platforms', role: '2 full live client platforms delivered' },
+    ],
+    description: 'Modern semantic HTML5, CSS custom properties, responsive layout grids, and WCAG AA compliance.',
+  },
+  'SQL': {
+    name: 'SQL',
+    category: 'Languages',
+    line: 'backend',
+    projects: [
+      { title: 'EMS', role: 'Relational schema for exams & marks' },
+      { title: 'GrantPilot', role: 'SSIP grant records & audit logs' },
+    ],
+    description: 'Relational schema design, indexed queries, joins, performance optimization, and data integrity.',
+  },
+  'TAILWIND': {
+    name: 'Tailwind CSS',
+    category: 'Frontend & Mobile',
+    line: 'frontend',
+    projects: [
+      { title: 'The Yug Line', role: 'Custom transit design tokens & animations' },
+      { title: 'DataMorfix', role: 'Dark-mode analytics interface' },
+      { title: 'Clinic Booking', role: 'Full responsive patient interface' },
+    ],
+    description: 'Utility-first CSS architecture, design token mapping, fluid typography, and dark mode themes.',
+  },
+  'FLUTTERFLOW': {
+    name: 'FlutterFlow',
+    category: 'Frontend & Mobile',
+    line: 'frontend',
+    projects: [
+      { title: 'GeoBus Mobile', role: 'Real-time GPS tracker app prototype' },
+      { title: 'Rapid Prototypes', role: 'Cross-platform iOS/Android architectures' },
+    ],
+    description: 'Rapid mobile UI/UX engineering, state management, and real-time backend synchronization.',
+  },
+  'FIGMA': {
+    name: 'Figma',
+    category: 'Frontend & Mobile',
+    line: 'frontend',
+    projects: [
+      { title: 'Ghumify', role: 'Mobile design system & wireframes' },
+      { title: 'The Yug Line', role: 'Metro kiosk interface & schematic mockups' },
+    ],
+    description: 'High-fidelity wireframing, interactive prototyping, vector design systems, and design handoff.',
+  },
+  'DJANGO': {
+    name: 'Django',
+    category: 'Backend & Databases',
+    line: 'backend',
+    projects: [
+      { title: 'EMS', role: 'Campus-wide marks & exam management platform' },
+      { title: 'GrantPilot', role: 'SSIP grant approvals workflow backend' },
+      { title: 'Clinic Appointment', role: 'Full-stack booking engine' },
+    ],
+    description: 'Robust batteries-included Python framework: ORM, authentication, admin interfaces, and REST APIs.',
+  },
+  'FIREBASE': {
+    name: 'Firebase',
+    category: 'Backend & Databases',
+    line: 'backend',
+    projects: [
+      { title: 'GeoBus', role: 'Real-time database for vehicle telemetry' },
+      { title: 'Ghumify', role: 'User auth & cloud data synchronization' },
+    ],
+    description: 'Realtime Database, Firestore, Authentication, and Cloud Functions for responsive real-time state.',
+  },
+  'MONGODB': {
+    name: 'MongoDB',
+    category: 'Backend & Databases',
+    line: 'backend',
+    projects: [
+      { title: 'Full-Stack Apps', role: 'NoSQL document storage & schema flexibility' },
+    ],
+    description: 'Document-based database for unstructured data payloads, dynamic schemas, and fast querying.',
+  },
+  'NEON DB': {
+    name: 'Neon DB',
+    category: 'Backend & Databases',
+    line: 'backend',
+    projects: [
+      { title: 'Cloud Deployments', role: 'Serverless PostgreSQL branching & autoscaling' },
+    ],
+    description: 'Modern serverless PostgreSQL cloud database with instant branching, connection pooling, and autoscaling.',
+  },
+  'RENDER': {
+    name: 'Render',
+    category: 'Tools & Platforms',
+    line: 'hardware',
+    projects: [
+      { title: 'Clinic Appointment', role: 'Live production deployment & health checks' },
+    ],
+    description: 'Cloud hosting platform for containerized web services, managed PostgreSQL databases, and SSL certificates.',
+  },
+  'VERCEL': {
+    name: 'Vercel',
+    category: 'Tools & Platforms',
+    line: 'hardware',
+    projects: [
+      { title: 'The Yug Line', role: 'Production edge deployment & fast CDN caching' },
+    ],
+    description: 'Serverless edge hosting, continuous git deployments, instant asset optimization, and CDN routing.',
+  },
+  'STITCH': {
+    name: 'Stitch',
+    category: 'Tools & Platforms',
+    line: 'hardware',
+    projects: [
+      { title: 'Design Architecture', role: 'Token schema & brand token synchronizer' },
+    ],
+    description: 'Google Labs open design system tooling (DESIGN.md) for bridging human design and AI coding.',
+  },
+  'GOOGLE COLAB': {
+    name: 'Google Colab',
+    category: 'Tools & Platforms',
+    line: 'hardware',
+    projects: [
+      { title: 'EcoSortX', role: 'Trained model on 30,000+ waste images' },
+    ],
+    description: 'Cloud-hosted Jupyter notebook environment with dedicated GPU/TPU acceleration for ML model training.',
+  },
+  'ANACONDA': {
+    name: 'Anaconda',
+    category: 'Tools & Platforms',
+    line: 'hardware',
+    projects: [
+      { title: 'Data Science Lab', role: 'Isolated conda virtual environments & package management' },
+    ],
+    description: 'Enterprise scientific computing environment for managing Python distributions, CUDA, and dependencies.',
+  },
+};
 ---
 
 <div class="space-y-6 select-none" id="skills-metro-station">
-  <!-- Top Gantry Header -->
-  <div class="p-4 sm:p-5 bg-surface border-4 border-ink shadow-[6px_6px_0_var(--ink)] flex flex-wrap items-center justify-between gap-4">
-    <div class="flex items-center gap-3">
-      <div class="w-3.5 h-3.5 rounded-full bg-line-hardware animate-pulse"></div>
+  <!-- Top Gantry Header Bar -->
+  <div class="p-5 sm:p-6 bg-[#14161B] border border-white/10 rounded-2xl sm:rounded-3xl shadow-[0_10px_30px_rgba(0,0,0,0.5)] flex flex-col md:flex-row md:items-center justify-between gap-4 relative overflow-hidden">
+    <div class="absolute inset-x-0 top-0 h-[1px] bg-gradient-to-r from-transparent via-white/20 to-transparent pointer-events-none"></div>
+    
+    <div class="flex items-center gap-3.5">
+      <div class="w-3.5 h-3.5 rounded-full bg-line-hardware animate-pulse shrink-0"></div>
       <div>
-        <h3 class="font-archivo text-xl sm:text-2xl font-black text-ink uppercase tracking-tight">
-          TRANSIT ARSENAL // SKILLS METRO MAP
-        </h3>
-        <p class="font-mono text-xs text-ink-soft">
-          NO ARBITRARY PERCENTAGES • SELECT ANY STATION TO TRACE PRODUCTION DEPLOYMENTS
-        </p>
-      </div>
-    </div>
-
-    <!-- Active Line Legend Pills -->
-    <div class="flex flex-wrap items-center gap-2 font-mono text-xs font-bold">
-      <span class="px-2.5 py-1 bg-paper border border-ink text-line-ai flex items-center gap-1.5 shadow-[2px_2px_0_var(--ink)]">
-        <span class="w-2 h-2 rounded-full bg-line-ai"></span>
-        AI / ML LINE
-      </span>
-      <span class="px-2.5 py-1 bg-paper border border-ink text-line-frontend flex items-center gap-1.5 shadow-[2px_2px_0_var(--ink)]">
-        <span class="w-2 h-2 rounded-full bg-line-frontend"></span>
-        FRONTEND LINE
-      </span>
-      <span class="px-2.5 py-1 bg-paper border border-ink text-line-backend flex items-center gap-1.5 shadow-[2px_2px_0_var(--ink)]">
-        <span class="w-2 h-2 rounded-full bg-line-backend"></span>
-        BACKEND LINE
-      </span>
-      <span class="px-2.5 py-1 bg-paper border border-ink text-line-hardware flex items-center gap-1.5 shadow-[2px_2px_0_var(--ink)]">
-        <span class="w-2 h-2 rounded-full bg-line-hardware"></span>
-        HARDWARE LINE
-      </span>
-    </div>
-  </div>
-
-  <!-- Interactive Subway Map Schematic Canvas -->
-  <div class="p-6 bg-paper border-4 border-ink shadow-[8px_8px_0_var(--ink)] overflow-x-auto">
-    <div class="min-w-[640px]">
-      <svg
-        id="skills-schematic-svg"
-        viewBox="0 0 520 330"
-        class="w-full h-auto select-none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <!-- Background Engineering Blueprint Grid -->
-        <defs>
-          <pattern id="skills-grid" width="20" height="20" patternUnits="userSpaceOnUse">
-            <path d="M 20 0 L 0 0 0 20" fill="none" stroke="var(--ink)" stroke-width="0.5" stroke-opacity="0.08" />
-          </pattern>
-        </defs>
-        <rect width="100%" height="100%" fill="url(#skills-grid)" />
-
-        <!-- 4 Transit Rail Lines -->
-        <!-- AI / ML Track (Blue) -->
-        <path d="M 40 60 L 460 60" stroke="var(--line-ai)" stroke-width="6" stroke-linecap="round" fill="none" />
-        <!-- Frontend Track (Orange) -->
-        <path d="M 40 130 L 460 130" stroke="var(--line-frontend)" stroke-width="6" stroke-linecap="round" fill="none" />
-        <!-- Backend Track (Green) -->
-        <path d="M 40 200 L 460 200" stroke="var(--line-backend)" stroke-width="6" stroke-linecap="round" fill="none" />
-        <!-- Hardware Track (Yellow) -->
-        <path d="M 40 270 L 460 270" stroke="var(--line-hardware)" stroke-width="6" stroke-linecap="round" fill="none" />
-
-        <!-- Vertical Interconnecting Trunk Routes (Diagonal Transfers) -->
-        <path d="M 80 60 L 80 270" stroke="var(--ink)" stroke-width="2" stroke-dasharray="4 4" opacity="0.3" fill="none" />
-        <path d="M 180 60 L 180 270" stroke="var(--ink)" stroke-width="2" stroke-dasharray="4 4" opacity="0.3" fill="none" />
-        <path d="M 280 60 L 280 270" stroke="var(--ink)" stroke-width="2" stroke-dasharray="4 4" opacity="0.3" fill="none" />
-        <path d="M 380 60 L 380 270" stroke="var(--ink)" stroke-width="2" stroke-dasharray="4 4" opacity="0.3" fill="none" />
-
-        <!-- Line Track Head Labels (Left Side) -->
-        <text x="35" y="44" font-family="'IBM Plex Mono', monospace" font-size="9" font-weight="900" fill="var(--line-ai)">AI / ML TRACK</text>
-        <text x="35" y="114" font-family="'IBM Plex Mono', monospace" font-size="9" font-weight="900" fill="var(--line-frontend)">FRONTEND TRACK</text>
-        <text x="35" y="184" font-family="'IBM Plex Mono', monospace" font-size="9" font-weight="900" fill="var(--line-backend)">BACKEND TRACK</text>
-        <text x="35" y="254" font-family="'IBM Plex Mono', monospace" font-size="9" font-weight="900" fill="var(--line-hardware)">HARDWARE TRACK</text>
-
-        <!-- Individual Skill Station Nodes -->
-        {SKILL_STATIONS.map((st) => (
-          <g
-            class="skill-station-node cursor-pointer group"
-            data-skill-id={st.id}
-            data-skill-name={st.name}
-            data-line={st.line}
-            data-projects={st.projects.join(', ')}
-            tabindex="0"
-            role="button"
-            aria-label={`Skill station: ${st.name} on ${st.line} line`}
-          >
-            <!-- Outer Pulsing Ring on Focus/Hover -->
-            <circle
-              cx={st.cx}
-              cy={st.cy}
-              r="14"
-              fill="transparent"
-              stroke="var(--ink)"
-              stroke-width="1.5"
-              stroke-dasharray="3 3"
-              class="node-target-ring opacity-0 group-hover:opacity-100 transition-opacity"
-            />
-            <!-- Outer Station Outer Rim -->
-            <circle
-              cx={st.cx}
-              cy={st.cy}
-              r="9"
-              fill="var(--paper)"
-              stroke="var(--ink)"
-              stroke-width="3"
-              class="transition-transform group-hover:scale-125 origin-center"
-            />
-            <!-- Inner Line Color Core -->
-            <circle
-              cx={st.cx}
-              cy={st.cy}
-              r="4.5"
-              fill={
-                st.line === 'ai' ? 'var(--line-ai)' :
-                st.line === 'frontend' ? 'var(--line-frontend)' :
-                st.line === 'backend' ? 'var(--line-backend)' :
-                'var(--line-hardware)'
-              }
-            />
-            <!-- Station Monospace Title Label -->
-            <text
-              x={st.cx}
-              y={st.cy + 22}
-              font-family="'IBM Plex Mono', monospace"
-              font-size="9"
-              font-weight="bold"
-              fill="var(--ink)"
-              text-anchor="middle"
-              class="group-hover:fill-line-frontend transition-colors pointer-events-none select-none"
-            >
-              {st.name}
-            </text>
-          </g>
-        ))}
-      </svg>
-    </div>
-
-    <!-- Active Station Live Inspector Ledger -->
-    <div
-      id="skill-inspector-ledger"
-      class="mt-6 p-4 sm:p-5 bg-surface border-3 border-ink shadow-[4px_4px_0_var(--ink)] flex flex-col sm:flex-row sm:items-center justify-between gap-4"
-    >
-      <div>
-        <div class="flex items-center gap-2 mb-1">
-          <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
-          <span class="font-mono text-[10px] font-black uppercase tracking-widest text-ink-soft">
-            STATION TELEMETRY // ACTIVE JUNCTION
+        <div class="flex items-center gap-2">
+          <span class="font-mono text-[10px] font-black uppercase tracking-widest text-line-hardware">
+            // TERMINAL BERTH 04 · TECHNICAL ARSENAL
+          </span>
+          <span class="px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-mono text-[10px] font-bold">
+            27 VERIFIED TECHNOLOGIES
           </span>
         </div>
-        <h4 id="inspector-skill-title" class="font-archivo text-xl sm:text-2xl font-black text-ink uppercase tracking-tight">
-          Gemini AI
-        </h4>
-        <p id="inspector-skill-line" class="font-mono text-xs text-line-ai font-bold uppercase mt-0.5">
-          // AI / ML TRANSIT LINE
-        </p>
+        <h3 class="font-archivo text-xl sm:text-2xl font-black text-white uppercase tracking-tight mt-0.5">
+          TECHNICAL CAPABILITIES & PRODUCTION STACK
+        </h3>
+      </div>
+    </div>
+
+    <!-- Category Filter Switcher Buttons -->
+    <div class="flex flex-wrap items-center gap-1.5 font-mono text-[11px] font-bold">
+      <button type="button" class="category-filter-btn px-3 py-1 rounded-full bg-white/10 text-white border border-white/20 hover:bg-white/20 transition-all active:scale-95" data-filter="all">ALL</button>
+      <button type="button" class="category-filter-btn px-3 py-1 rounded-full bg-transparent text-neutral-400 border border-white/10 hover:text-white hover:border-white/20 transition-all active:scale-95" data-filter="ai">AI / ML</button>
+      <button type="button" class="category-filter-btn px-3 py-1 rounded-full bg-transparent text-neutral-400 border border-white/10 hover:text-white hover:border-white/20 transition-all active:scale-95" data-filter="languages">LANGUAGES</button>
+      <button type="button" class="category-filter-btn px-3 py-1 rounded-full bg-transparent text-neutral-400 border border-white/10 hover:text-white hover:border-white/20 transition-all active:scale-95" data-filter="frontend">FRONTEND</button>
+      <button type="button" class="category-filter-btn px-3 py-1 rounded-full bg-transparent text-neutral-400 border border-white/10 hover:text-white hover:border-white/20 transition-all active:scale-95" data-filter="backend">BACKEND</button>
+      <button type="button" class="category-filter-btn px-3 py-1 rounded-full bg-transparent text-neutral-400 border border-white/10 hover:text-white hover:border-white/20 transition-all active:scale-95" data-filter="tools">TOOLS</button>
+    </div>
+  </div>
+
+  <!-- Main Bento Grid (Exact layout from user specification) -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5" id="bento-skills-grid">
+    
+    <!-- ========================================================
+         COLUMN 1: AI, ML & AUTOMATION + BACKEND & DATABASES
+         ======================================================== -->
+    <div class="flex flex-col gap-5">
+      <!-- CARD 1: AI, ML & Automation (12 Chips) -->
+      <div class="bento-card p-6 sm:p-7 rounded-2xl sm:rounded-3xl bg-[#14161B] border border-white/10 hover:border-white/20 shadow-[0_12px_32px_rgba(0,0,0,0.5)] transition-all duration-300 relative flex flex-col justify-between" data-category="ai">
+        <div class="absolute inset-x-0 top-0 h-[1px] bg-gradient-to-r from-transparent via-white/15 to-transparent pointer-events-none"></div>
+        
+        <div>
+          <!-- Header with Robot Icon -->
+          <div class="flex items-center gap-3.5 mb-5">
+            <div class="w-10 h-10 rounded-2xl bg-white/[0.05] border border-white/10 flex items-center justify-center text-white/90 shadow-inner shrink-0">
+              <svg class="w-5 h-5 text-line-ai" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="11" width="18" height="10" rx="2"></rect>
+                <circle cx="12" cy="5" r="2"></circle>
+                <path d="M12 7v4"></path>
+                <line x1="8" y1="16" x2="8" y2="16"></line>
+                <line x1="16" y1="16" x2="16" y2="16"></line>
+              </svg>
+            </div>
+            <h4 class="card-editorial-title text-2xl sm:text-[26px] text-white">
+              AI, ML & Automation
+            </h4>
+          </div>
+
+          <!-- 12 Tag Pills -->
+          <div class="flex flex-wrap gap-2">
+            {[
+              'GEMINI/CLAUDE',
+              'KIMI AI',
+              'ANTIGRAVITY',
+              'CLAUDE CODE',
+              'NUMPY',
+              'PANDAS',
+              'LLM INTEGRATION',
+              'AI API INTEGRATION',
+              'AI DASHBOARD DEV',
+              'PROMPT ENGINEERING',
+              'LOOP ENGINEERING',
+              'AI AUTOMATION',
+            ].map((tag) => (
+              <button
+                type="button"
+                class="skill-chip px-3.5 py-1.5 rounded-full bg-[#1F2228] text-neutral-300 border border-white/[0.07] font-mono text-[11px] sm:text-xs font-semibold tracking-wider hover:bg-white/[0.14] hover:border-line-ai hover:text-white transition-all cursor-pointer shadow-[0_2px_4px_rgba(0,0,0,0.3)] active:scale-95"
+                data-skill={tag}
+              >
+                {tag}
+              </button>
+            ))}
+          </div>
+        </div>
       </div>
 
-      <!-- Verified Connected Production Deployments -->
-      <div class="p-3 bg-paper border-2 border-ink shadow-[2px_2px_0_var(--ink)] sm:max-w-md w-full">
-        <span class="font-mono text-[10px] uppercase font-bold text-ink-soft block mb-1">
-          ACTIVE IN PRODUCTION SYSTEMS:
-        </span>
-        <div id="inspector-projects-chips" class="flex flex-wrap gap-1.5 font-mono text-xs font-bold text-ink">
-          <span class="px-2 py-0.5 bg-surface border border-ink text-line-frontend">Ghumify</span>
+      <!-- CARD 4: Backend & Databases (4 Chips) -->
+      <div class="bento-card p-6 sm:p-7 rounded-2xl sm:rounded-3xl bg-[#14161B] border border-white/10 hover:border-white/20 shadow-[0_12px_32px_rgba(0,0,0,0.5)] transition-all duration-300 relative flex flex-col justify-between" data-category="backend">
+        <div class="absolute inset-x-0 top-0 h-[1px] bg-gradient-to-r from-transparent via-white/15 to-transparent pointer-events-none"></div>
+        
+        <div>
+          <!-- Header with Database Icon -->
+          <div class="flex items-center gap-3.5 mb-5">
+            <div class="w-10 h-10 rounded-2xl bg-white/[0.05] border border-white/10 flex items-center justify-center text-white/90 shadow-inner shrink-0">
+              <svg class="w-5 h-5 text-line-backend" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <ellipse cx="12" cy="5" rx="9" ry="3"></ellipse>
+                <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path>
+                <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path>
+              </svg>
+            </div>
+            <h4 class="card-editorial-title text-2xl sm:text-[26px] text-white">
+              Backend & Databases
+            </h4>
+          </div>
+
+          <!-- 4 Tag Pills -->
+          <div class="flex flex-wrap gap-2">
+            {[
+              'DJANGO',
+              'FIREBASE',
+              'MONGODB',
+              'NEON DB',
+            ].map((tag) => (
+              <button
+                type="button"
+                class="skill-chip px-3.5 py-1.5 rounded-full bg-[#1F2228] text-neutral-300 border border-white/[0.07] font-mono text-[11px] sm:text-xs font-semibold tracking-wider hover:bg-white/[0.14] hover:border-line-backend hover:text-white transition-all cursor-pointer shadow-[0_2px_4px_rgba(0,0,0,0.3)] active:scale-95"
+                data-skill={tag}
+              >
+                {tag}
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========================================================
+         COLUMN 2: LANGUAGES + FRONTEND & MOBILE
+         ======================================================== -->
+    <div class="flex flex-col gap-5">
+      <!-- CARD 2: Languages (3 Chips) -->
+      <div class="bento-card p-6 sm:p-7 rounded-2xl sm:rounded-3xl bg-[#14161B] border border-white/10 hover:border-white/20 shadow-[0_12px_32px_rgba(0,0,0,0.5)] transition-all duration-300 relative flex flex-col justify-between" data-category="languages">
+        <div class="absolute inset-x-0 top-0 h-[1px] bg-gradient-to-r from-transparent via-white/15 to-transparent pointer-events-none"></div>
+        
+        <div>
+          <!-- Header with Code Icon -->
+          <div class="flex items-center gap-3.5 mb-5">
+            <div class="w-10 h-10 rounded-2xl bg-white/[0.05] border border-white/10 flex items-center justify-center text-white/90 shadow-inner shrink-0">
+              <svg class="w-5 h-5 text-line-frontend" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="16 18 22 12 16 6"></polyline>
+                <polyline points="8 6 2 12 8 18"></polyline>
+              </svg>
+            </div>
+            <h4 class="card-editorial-title text-2xl sm:text-[26px] text-white">
+              Languages
+            </h4>
+          </div>
+
+          <!-- 3 Tag Pills -->
+          <div class="flex flex-wrap gap-2">
+            {[
+              'PYTHON',
+              'HTML/CSS',
+              'SQL',
+            ].map((tag) => (
+              <button
+                type="button"
+                class="skill-chip px-3.5 py-1.5 rounded-full bg-[#1F2228] text-neutral-300 border border-white/[0.07] font-mono text-[11px] sm:text-xs font-semibold tracking-wider hover:bg-white/[0.14] hover:border-line-frontend hover:text-white transition-all cursor-pointer shadow-[0_2px_4px_rgba(0,0,0,0.3)] active:scale-95"
+                data-skill={tag}
+              >
+                {tag}
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <!-- CARD 3: Frontend & Mobile (3 Chips) -->
+      <div class="bento-card p-6 sm:p-7 rounded-2xl sm:rounded-3xl bg-[#14161B] border border-white/10 hover:border-white/20 shadow-[0_12px_32px_rgba(0,0,0,0.5)] transition-all duration-300 relative flex flex-col justify-between" data-category="frontend">
+        <div class="absolute inset-x-0 top-0 h-[1px] bg-gradient-to-r from-transparent via-white/15 to-transparent pointer-events-none"></div>
+        
+        <div>
+          <!-- Header with Monitor Icon -->
+          <div class="flex items-center gap-3.5 mb-5">
+            <div class="w-10 h-10 rounded-2xl bg-white/[0.05] border border-white/10 flex items-center justify-center text-white/90 shadow-inner shrink-0">
+              <svg class="w-5 h-5 text-line-frontend" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                <line x1="8" y1="21" x2="16" y2="21"></line>
+                <line x1="12" y1="17" x2="12" y2="21"></line>
+              </svg>
+            </div>
+            <h4 class="card-editorial-title text-2xl sm:text-[26px] text-white">
+              Frontend & Mobile
+            </h4>
+          </div>
+
+          <!-- 3 Tag Pills -->
+          <div class="flex flex-wrap gap-2">
+            {[
+              'TAILWIND',
+              'FLUTTERFLOW',
+              'FIGMA',
+            ].map((tag) => (
+              <button
+                type="button"
+                class="skill-chip px-3.5 py-1.5 rounded-full bg-[#1F2228] text-neutral-300 border border-white/[0.07] font-mono text-[11px] sm:text-xs font-semibold tracking-wider hover:bg-white/[0.14] hover:border-line-frontend hover:text-white transition-all cursor-pointer shadow-[0_2px_4px_rgba(0,0,0,0.3)] active:scale-95"
+                data-skill={tag}
+              >
+                {tag}
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========================================================
+         COLUMN 3: TOOLS & PLATFORMS + TELEMETRY INSPECTOR
+         ======================================================== -->
+    <div class="flex flex-col gap-5">
+      <!-- CARD 5: Tools & Platforms (5 Chips) -->
+      <div class="bento-card p-6 sm:p-7 rounded-2xl sm:rounded-3xl bg-[#14161B] border border-white/10 hover:border-white/20 shadow-[0_12px_32px_rgba(0,0,0,0.5)] transition-all duration-300 relative flex flex-col justify-between" data-category="tools">
+        <div class="absolute inset-x-0 top-0 h-[1px] bg-gradient-to-r from-transparent via-white/15 to-transparent pointer-events-none"></div>
+        
+        <div>
+          <!-- Header with Tools Icon -->
+          <div class="flex items-center gap-3.5 mb-5">
+            <div class="w-10 h-10 rounded-2xl bg-white/[0.05] border border-white/10 flex items-center justify-center text-white/90 shadow-inner shrink-0">
+              <svg class="w-5 h-5 text-line-hardware" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path>
+              </svg>
+            </div>
+            <h4 class="card-editorial-title text-2xl sm:text-[26px] text-white">
+              Tools & Platforms
+            </h4>
+          </div>
+
+          <!-- 5 Tag Pills -->
+          <div class="flex flex-wrap gap-2">
+            {[
+              'RENDER',
+              'VERCEL',
+              'STITCH',
+              'GOOGLE COLAB',
+              'ANACONDA',
+            ].map((tag) => (
+              <button
+                type="button"
+                class="skill-chip px-3.5 py-1.5 rounded-full bg-[#1F2228] text-neutral-300 border border-white/[0.07] font-mono text-[11px] sm:text-xs font-semibold tracking-wider hover:bg-white/[0.14] hover:border-line-hardware hover:text-white transition-all cursor-pointer shadow-[0_2px_4px_rgba(0,0,0,0.3)] active:scale-95"
+                data-skill={tag}
+              >
+                {tag}
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <!-- CARD 6: Interactive Live Production Telemetry & System Trace Hub -->
+      <div class="bento-card p-6 sm:p-7 rounded-2xl sm:rounded-3xl bg-[#14161B] border border-white/10 hover:border-white/20 shadow-[0_12px_32px_rgba(0,0,0,0.5)] transition-all duration-300 relative flex flex-col justify-between overflow-hidden">
+        <div class="absolute inset-x-0 top-0 h-[1px] bg-gradient-to-r from-transparent via-white/15 to-transparent pointer-events-none"></div>
+        
+        <!-- Faint 3D Isometric Cube Watermark matching the user image -->
+        <div class="absolute -right-3 -bottom-3 opacity-15 pointer-events-none text-white transition-transform duration-700 group-hover:rotate-12 group-hover:scale-110">
+          <svg class="w-32 h-32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
+            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+            <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+            <line x1="12" y1="22.08" x2="12" y2="12"></line>
+          </svg>
+        </div>
+
+        <div>
+          <!-- Header with Radar / Activity Icon -->
+          <div class="flex items-center gap-3.5 mb-4">
+            <div class="w-10 h-10 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 shrink-0 shadow-inner">
+              <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+            </div>
+            <div>
+              <span class="font-mono text-[10px] uppercase font-bold text-neutral-400 tracking-widest block">// TELEMETRY JUNCTION</span>
+              <h4 class="card-editorial-title text-2xl sm:text-[26px] text-white">
+                Live Deployments
+              </h4>
+            </div>
+          </div>
+
+          <!-- Telemetry Output Display Box -->
+          <div id="telemetry-display-box" class="p-4 rounded-xl bg-[#0D0F13] border border-white/10 min-h-[148px] flex flex-col justify-between relative z-10">
+            <!-- Standby View (Initial) -->
+            <div id="telemetry-standby-view">
+              <div class="flex items-center justify-between text-[11px] font-mono text-neutral-400 uppercase font-bold mb-2">
+                <span>STATUS: 27 NODES VERIFIED</span>
+                <span class="text-emerald-400">100% OPERATIONAL</span>
+              </div>
+              <p class="font-manrope text-xs text-neutral-300 leading-relaxed mb-3">
+                Hover or tap any skill tag to trace live production systems, university deployments, and verified architectures.
+              </p>
+              <div class="flex flex-wrap items-center gap-2 font-mono text-[10px] text-neutral-400 pt-1 border-t border-white/[0.08]">
+                <span class="inline-flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-line-ai"></span> AI/ML</span>
+                <span class="inline-flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-line-frontend"></span> FRONTEND</span>
+                <span class="inline-flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-line-backend"></span> BACKEND</span>
+                <span class="inline-flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-line-hardware"></span> TOOLS</span>
+              </div>
+            </div>
+
+            <!-- Active Inspector View (When hovering/tapping a chip) -->
+            <div id="telemetry-active-view" class="hidden">
+              <div class="flex items-center justify-between gap-2 mb-1.5">
+                <h5 id="telemetry-skill-name" class="font-mono text-sm sm:text-base font-black text-white uppercase tracking-wider">
+                  GEMINI/CLAUDE
+                </h5>
+                <span id="telemetry-line-badge" class="font-mono text-[10px] font-bold px-2 py-0.5 rounded border border-white/10 uppercase">
+                  AI / ML LINE
+                </span>
+              </div>
+              <p id="telemetry-skill-desc" class="font-manrope text-xs text-neutral-300 leading-relaxed mb-2.5">
+                Production multi-modal LLM APIs and reasoning models integrated for itinerary synthesis.
+              </p>
+              <div class="pt-2 border-t border-white/10">
+                <span class="font-mono text-[10px] text-neutral-400 uppercase font-bold block mb-1">
+                  ACTIVE IN PRODUCTION SYSTEMS:
+                </span>
+                <div id="telemetry-project-chips" class="flex flex-wrap gap-1.5">
+                  <!-- Populated dynamically via JS -->
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Mandatory Honest AI Workflow Note per brief A7 -->
-  <div class="p-5 bg-surface border-4 border-ink shadow-[6px_6px_0_var(--ink)] text-xs font-mono text-ink leading-relaxed">
-    <div class="font-black uppercase tracking-wider text-line-ai mb-1.5 flex items-center gap-2">
-      <span class="w-2 h-2 rounded-full bg-line-ai"></span>
-      <span>// AI ASSISTANCE DECLARATION & WORKFLOW DISCLOSURE (BRIEF A7)</span>
+  <!-- AI Assistance Declaration & Workflow Disclosure (Brief A7) -->
+  <div class="p-5 sm:p-6 bg-[#14161B] border border-white/10 rounded-2xl sm:rounded-3xl shadow-[0_10px_30px_rgba(0,0,0,0.5)] text-xs font-mono text-neutral-300 leading-relaxed relative overflow-hidden">
+    <div class="absolute inset-x-0 top-0 h-[1px] bg-gradient-to-r from-transparent via-white/15 to-transparent pointer-events-none"></div>
+    <div class="font-black uppercase tracking-wider text-line-ai mb-2 flex items-center gap-2">
+      <span class="w-2.5 h-2.5 rounded-full bg-line-ai animate-pulse"></span>
+      <span class="text-sm text-white font-bold">// AI ASSISTANCE DECLARATION & WORKFLOW DISCLOSURE (BRIEF A7)</span>
     </div>
-    <p class="text-ink-soft font-manrope text-sm">
+    <p class="text-neutral-400 font-manrope text-sm leading-relaxed">
       Modern AI coding assistants (including Antigravity and Claude Code) are integrated into my workflow as accelerators for boilerplate generation, test scaffolding, and research. System architecture, engineering decisions, visual art direction, and code verification remain 100% human-directed and authored by me.
     </p>
   </div>
 </div>
 
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@1,6..72,500;1,6..72,600&family=Playfair+Display:ital,wght@1,500;1,600&display=swap');
+
+  .card-editorial-title {
+    font-family: 'Newsreader', 'Playfair Display', Georgia, 'Times New Roman', serif;
+    font-style: italic;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+  }
+</style>
+
 <script>
   import { sound } from '../scripts/sound';
 
-  const nodes = document.querySelectorAll('.skill-station-node');
-  const titleEl = document.getElementById('inspector-skill-title');
-  const lineEl = document.getElementById('inspector-skill-line');
-  const projectsContainer = document.getElementById('inspector-projects-chips');
+  document.addEventListener('DOMContentLoaded', () => {
+    // Dynamic Skill Data injected for client interaction
+    const SKILL_DATA: Record<string, { name: string; category: string; line: string; projects: string[]; desc: string }> = {
+      'GEMINI/CLAUDE': {
+        name: 'Gemini / Claude',
+        category: 'AI, ML & Automation',
+        line: 'ai',
+        projects: ['Ghumify', 'DataMorfix'],
+        desc: 'Production multimodal reasoning APIs and streaming intelligence for itineraries and datasets.',
+      },
+      'KIMI AI': {
+        name: 'Kimi AI',
+        category: 'AI, ML & Automation',
+        line: 'ai',
+        projects: ['Ghumify Research', 'Model Benchmarks'],
+        desc: 'Ultra-long context synthesis and multi-source document ingestion testing.',
+      },
+      'ANTIGRAVITY': {
+        name: 'Antigravity',
+        category: 'AI, ML & Automation',
+        line: 'ai',
+        projects: ['The Yug Line', 'Agentic Workflows'],
+        desc: 'DeepMind agentic development system used for pipeline execution, verification audits, and workflow synthesis.',
+      },
+      'CLAUDE CODE': {
+        name: 'Claude Code',
+        category: 'AI, ML & Automation',
+        line: 'ai',
+        projects: ['System Architecture', 'Test Scaffolding'],
+        desc: 'Terminal-native agentic development tool for rapid refactoring, architectural auditing, and automated testing.',
+      },
+      'NUMPY': {
+        name: 'NumPy',
+        category: 'AI, ML & Automation',
+        line: 'ai',
+        projects: ['DataMorfix', 'EcoSortX'],
+        desc: 'High-performance numerical computing and array operations for data science pipelines.',
+      },
+      'PANDAS': {
+        name: 'Pandas',
+        category: 'AI, ML & Automation',
+        line: 'ai',
+        projects: ['DataMorfix'],
+        desc: 'Dataframe parsing, anomaly detection, statistical profiling, and automated documentation generation.',
+      },
+      'LLM INTEGRATION': {
+        name: 'LLM Integration',
+        category: 'AI, ML & Automation',
+        line: 'ai',
+        projects: ['Ghumify', 'DataMorfix'],
+        desc: 'Production integration of foundation models with structured JSON schemas, fallback retries, and token budgeting.',
+      },
+      'AI API INTEGRATION': {
+        name: 'AI API Integration',
+        category: 'AI, ML & Automation',
+        line: 'ai',
+        projects: ['Ghumify', 'DataMorfix'],
+        desc: 'Robust server-side connectors with rate-limiting, error fallbacks, and real-time streaming responses.',
+      },
+      'AI DASHBOARD DEV': {
+        name: 'AI Dashboard Dev',
+        category: 'AI, ML & Automation',
+        line: 'ai',
+        projects: ['DataMorfix', 'EMS'],
+        desc: 'Full analytics dashboards with interactive visualization, custom data filtering, and real-time metrics.',
+      },
+      'PROMPT ENGINEERING': {
+        name: 'Prompt Engineering',
+        category: 'AI, ML & Automation',
+        line: 'ai',
+        projects: ['Ghumify', 'DataMorfix'],
+        desc: 'Structured few-shot, chain-of-thought, and system framing techniques for high-reliability outputs.',
+      },
+      'LOOP ENGINEERING': {
+        name: 'Loop Engineering',
+        category: 'AI, ML & Automation',
+        line: 'ai',
+        projects: ['Autonomous Workflows', 'Agent Swarms'],
+        desc: 'Autonomous feedback loops with multi-agent critique, test assertions, and automated corrections.',
+      },
+      'AI AUTOMATION': {
+        name: 'AI Automation',
+        category: 'AI, ML & Automation',
+        line: 'ai',
+        projects: ['EcoSortX', 'DataMorfix'],
+        desc: 'End-to-end autonomous processes replacing manual intervention with computer vision and machine learning.',
+      },
+      'PYTHON': {
+        name: 'Python',
+        category: 'Languages',
+        line: 'backend',
+        projects: ['EMS', 'GrantPilot', 'EcoSortX', 'DataMorfix'],
+        desc: 'Core backend, ML modeling, and automation programming language across production systems.',
+      },
+      'HTML/CSS': {
+        name: 'HTML/CSS',
+        category: 'Languages',
+        line: 'frontend',
+        projects: ['The Yug Line', 'Edverb Platforms', 'BlackBanana'],
+        desc: 'Modern semantic HTML5, CSS custom properties, responsive layout grids, and WCAG AA compliance.',
+      },
+      'SQL': {
+        name: 'SQL',
+        category: 'Languages',
+        line: 'backend',
+        projects: ['EMS', 'GrantPilot', 'PostgreSQL'],
+        desc: 'Relational schema design, indexed queries, joins, performance optimization, and data integrity.',
+      },
+      'TAILWIND': {
+        name: 'Tailwind CSS',
+        category: 'Frontend & Mobile',
+        line: 'frontend',
+        projects: ['The Yug Line', 'DataMorfix', 'Clinic Booking', 'Edverb'],
+        desc: 'Utility-first CSS architecture, design token mapping, fluid typography, and dark mode themes.',
+      },
+      'FLUTTERFLOW': {
+        name: 'FlutterFlow',
+        category: 'Frontend & Mobile',
+        line: 'frontend',
+        projects: ['GeoBus Mobile', 'Rapid Prototypes'],
+        desc: 'Rapid mobile UI/UX engineering, state management, and real-time backend synchronization.',
+      },
+      'FIGMA': {
+        name: 'Figma',
+        category: 'Frontend & Mobile',
+        line: 'frontend',
+        projects: ['Ghumify', 'The Yug Line', 'Edverb'],
+        desc: 'High-fidelity wireframing, interactive prototyping, vector design systems, and design handoff.',
+      },
+      'DJANGO': {
+        name: 'Django',
+        category: 'Backend & Databases',
+        line: 'backend',
+        projects: ['EMS (Campus-Wide)', 'GrantPilot', 'Clinic Booking'],
+        desc: 'Robust batteries-included Python framework: ORM, authentication, admin interfaces, and REST APIs.',
+      },
+      'FIREBASE': {
+        name: 'Firebase',
+        category: 'Backend & Databases',
+        line: 'backend',
+        projects: ['GeoBus', 'Ghumify', 'Clinic Booking'],
+        desc: 'Realtime Database, Firestore, Authentication, and Cloud Functions for responsive real-time state.',
+      },
+      'MONGODB': {
+        name: 'MongoDB',
+        category: 'Backend & Databases',
+        line: 'backend',
+        projects: ['Full-Stack Prototypes', 'Data Storage'],
+        desc: 'Document-based database for unstructured data payloads, dynamic schemas, and fast querying.',
+      },
+      'NEON DB': {
+        name: 'Neon DB',
+        category: 'Backend & Databases',
+        line: 'backend',
+        projects: ['Cloud Deployments', 'Serverless Postgres'],
+        desc: 'Modern serverless PostgreSQL cloud database with instant branching, connection pooling, and autoscaling.',
+      },
+      'RENDER': {
+        name: 'Render',
+        category: 'Tools & Platforms',
+        line: 'hardware',
+        projects: ['Clinic Appointment (Live)'],
+        desc: 'Cloud hosting platform for containerized web services, managed PostgreSQL databases, and SSL certificates.',
+      },
+      'VERCEL': {
+        name: 'Vercel',
+        category: 'Tools & Platforms',
+        line: 'hardware',
+        projects: ['The Yug Line (Live Vercel Host)'],
+        desc: 'Serverless edge hosting, continuous git deployments, instant asset optimization, and CDN routing.',
+      },
+      'STITCH': {
+        name: 'Stitch',
+        category: 'Tools & Platforms',
+        line: 'hardware',
+        projects: ['DESIGN.md Tokens', 'Brand System'],
+        desc: 'Google Labs open design system tooling (DESIGN.md) for bridging human design and AI coding.',
+      },
+      'GOOGLE COLAB': {
+        name: 'Google Colab',
+        category: 'Tools & Platforms',
+        line: 'hardware',
+        projects: ['EcoSortX ML Training (30K+ images)'],
+        desc: 'Cloud-hosted Jupyter notebook environment with dedicated GPU/TPU acceleration for ML model training.',
+      },
+      'ANACONDA': {
+        name: 'Anaconda',
+        category: 'Tools & Platforms',
+        line: 'hardware',
+        projects: ['Data Science Lab', 'Virtual Envs'],
+        desc: 'Enterprise scientific computing environment for managing Python distributions, CUDA, and dependencies.',
+      },
+    };
 
-  const selectSkillStation = (node: Element) => {
-    sound.beep();
-    const name = node.getAttribute('data-skill-name') || '';
-    const line = node.getAttribute('data-line') || '';
-    const projects = (node.getAttribute('data-projects') || '').split(',').map((p) => p.trim());
+    const chips = document.querySelectorAll('.skill-chip');
+    const standbyView = document.getElementById('telemetry-standby-view');
+    const activeView = document.getElementById('telemetry-active-view');
+    const skillNameEl = document.getElementById('telemetry-skill-name');
+    const lineBadgeEl = document.getElementById('telemetry-line-badge');
+    const skillDescEl = document.getElementById('telemetry-skill-desc');
+    const projectChipsEl = document.getElementById('telemetry-project-chips');
 
-    if (titleEl) titleEl.textContent = name;
-    if (lineEl) {
-      lineEl.textContent = `// ${line.toUpperCase()} TRANSIT LINE`;
-      lineEl.style.color = line === 'ai' ? 'var(--line-ai)' :
-                           line === 'frontend' ? 'var(--line-frontend)' :
-                           line === 'backend' ? 'var(--line-backend)' :
-                           'var(--line-hardware)';
-    }
+    let resetTimer: any = null;
 
-    if (projectsContainer) {
-      projectsContainer.innerHTML = '';
-      projects.forEach((proj) => {
-        const chip = document.createElement('span');
-        chip.className = 'px-2 py-0.5 bg-surface border border-ink text-line-frontend font-bold shadow-[1px_1px_0_var(--ink)]';
-        chip.textContent = proj;
-        projectsContainer.appendChild(chip);
+    const highlightSkill = (chip: Element) => {
+      clearTimeout(resetTimer);
+      sound.beep();
+
+      const skillKey = chip.getAttribute('data-skill') || '';
+      const data = SKILL_DATA[skillKey];
+      if (!data) return;
+
+      // Update chip styles
+      chips.forEach((c) => {
+        c.classList.remove('ring-2', 'ring-white/40', 'bg-white/20', 'text-white');
       });
-    }
+      chip.classList.add('ring-2', 'ring-white/40', 'bg-white/20', 'text-white');
 
-    // Node highlight styling
-    nodes.forEach((n) => {
-      const ring = n.querySelector('.node-target-ring');
-      if (ring) (ring as HTMLElement).style.opacity = '0';
-    });
-    const targetRing = node.querySelector('.node-target-ring');
-    if (targetRing) (targetRing as HTMLElement).style.opacity = '1';
-  };
+      // Update telemetry box
+      if (standbyView) standbyView.classList.add('hidden');
+      if (activeView) activeView.classList.remove('hidden');
 
-  nodes.forEach((node) => {
-    node.addEventListener('click', () => selectSkillStation(node));
-    node.addEventListener('keydown', (e: any) => {
-      if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
-        selectSkillStation(node);
+      if (skillNameEl) skillNameEl.textContent = data.name;
+      if (skillDescEl) skillDescEl.textContent = data.desc;
+
+      if (lineBadgeEl) {
+        lineBadgeEl.textContent = `${data.category.toUpperCase()} // ${data.line.toUpperCase()} LINE`;
+        lineBadgeEl.style.color = data.line === 'ai' ? 'var(--line-ai)' :
+                                 data.line === 'frontend' ? 'var(--line-frontend)' :
+                                 data.line === 'backend' ? 'var(--line-backend)' :
+                                 'var(--line-hardware)';
+        lineBadgeEl.style.borderColor = lineBadgeEl.style.color;
       }
+
+      if (projectChipsEl) {
+        projectChipsEl.innerHTML = '';
+        data.projects.forEach((proj) => {
+          const pill = document.createElement('span');
+          pill.className = 'px-2.5 py-1 rounded-md bg-[#1B1E24] border border-white/15 text-xs font-mono font-bold text-white shadow-sm flex items-center gap-1.5';
+          pill.innerHTML = `<span class="w-1.5 h-1.5 rounded-full ${
+            data.line === 'ai' ? 'bg-line-ai' :
+            data.line === 'frontend' ? 'bg-line-frontend' :
+            data.line === 'backend' ? 'bg-line-backend' :
+            'bg-line-hardware'
+          }"></span><span>${proj}</span>`;
+          projectChipsEl.appendChild(pill);
+        });
+      }
+    };
+
+    chips.forEach((chip) => {
+      chip.addEventListener('mouseenter', () => highlightSkill(chip));
+      chip.addEventListener('focus', () => highlightSkill(chip));
+      chip.addEventListener('click', () => highlightSkill(chip));
+    });
+
+    // Category Filter Switcher Logic
+    const filterButtons = document.querySelectorAll('.category-filter-btn');
+    const bentoCards = document.querySelectorAll('.bento-card');
+
+    filterButtons.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        sound.click();
+        const filter = btn.getAttribute('data-filter') || 'all';
+
+        // Update button active styles
+        filterButtons.forEach((b) => {
+          b.classList.remove('bg-white/10', 'text-white', 'border-white/20');
+          b.classList.add('bg-transparent', 'text-neutral-400', 'border-white/10');
+        });
+        btn.classList.add('bg-white/10', 'text-white', 'border-white/20');
+        btn.classList.remove('bg-transparent', 'text-neutral-400', 'border-white/10');
+
+        // Highlight matching cards
+        bentoCards.forEach((card) => {
+          const cat = card.getAttribute('data-category');
+          if (filter === 'all' || cat === filter) {
+            (card as HTMLElement).style.opacity = '1';
+            (card as HTMLElement).style.transform = 'scale(1)';
+          } else {
+            (card as HTMLElement).style.opacity = '0.35';
+            (card as HTMLElement).style.transform = 'scale(0.98)';
+          }
+        });
+      });
     });
   });
 </script>
