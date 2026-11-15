@@ -41,7 +41,6 @@ const stations = [
   'station-04',
   'station-05',
   'station-06',
-  'station-07',
 ];
 
 checkFile(
