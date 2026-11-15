@@ -695,19 +695,10 @@ import { PROFILE, PROJECTS } from '../data/portfolio';
         });
       }
 
-      // 2. Theme toggle
-      const toggleBtn = document.getElementById('theme-toggle');
-      if (toggleBtn) {
-        toggleBtn.addEventListener('click', () => {
-          document.documentElement.classList.toggle('dark');
-        });
-      }
-
       // Mobile Menu Drawer Binding
       const mobileMenuBtn = document.getElementById('mobile-menu-btn');
       const mobileNavMenu = document.getElementById('mobile-nav-menu');
       const mobileCloseBtn = document.getElementById('mobile-menu-close-btn');
-      const mobileThemeBtn = document.getElementById('mobile-theme-toggle');
       const mobileSoundBtn = document.getElementById('mobile-sound-toggle');
       const mobileAllStopsBtn = document.getElementById('mobile-all-stops-btn');
 
@@ -723,12 +714,6 @@ import { PROFILE, PROJECTS } from '../data/portfolio';
         mobileCloseBtn.addEventListener('click', () => {
           mobileNavMenu.classList.add('hidden');
           if (mobileMenuBtn) mobileMenuBtn.setAttribute('aria-expanded', 'false');
-        });
-      }
-
-      if (mobileThemeBtn && toggleBtn) {
-        mobileThemeBtn.addEventListener('click', () => {
-          toggleBtn.click();
         });
       }
 
