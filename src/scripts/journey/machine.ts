@@ -145,41 +145,19 @@ export class JourneyStateMachine {
       const h = document.getElementById('choose-stop-heading');
       if (h) h.focus();
       window.dispatchEvent(new CustomEvent('yugline:step_choose'));
-    } else if (step === 'ticket') {
-      this.hideElement('journey-step-choose');
-      this.showElement('journey-step-ticket');
-      this.hideElement('journey-step-gate');
-      this.populateTicketCard();
-      this.announce('Step 2 of 3: Your ticket. Ready to proceed to gate.');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-      const h = document.getElementById('ticket-step-heading');
-      if (h) h.focus();
-    } else if (step === 'gate') {
+    } else if (step === 'ticket' || step === 'gate') {
+      // Boarding pass / gate screen is removed; directly launch the cinematic metro
       this.hideElement('journey-step-choose');
       this.hideElement('journey-step-ticket');
-      this.showElement('journey-step-gate');
-      this.announce('Step 3 of 3: Scan your ticket to open the platform barrier.');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-      const h = document.getElementById('gate-step-heading');
-      if (h) h.focus();
+      this.hideElement('journey-step-gate');
+      this.launchCinematicMetro(this.selectedStation || 'station-01');
     }
   }
 
-  // Station Choice Handler (Step 1 -> Step 2)
+  // Station Choice Handler: Directly launch cinematic metro without boarding pass screen
   public selectDestination(stationId: StationCode) {
     this.selectedStation = stationId;
-
-    // Audio printer click
-    metroSound.printer();
-
-    // Check if repeat trip with Tap & Go (already visited)
-    if (this.visited.has(stationId) && stationId !== 'station-00') {
-      // Tap & Go direct jump to cinematic metro
-      this.launchCinematicMetro(stationId);
-      return;
-    }
-
-    this.setStep('ticket');
+    this.launchCinematicMetro(stationId);
   }
 
   // Populate Ticket Card
@@ -401,7 +379,9 @@ export class JourneyStateMachine {
     document.querySelectorAll('.destination-choice-btn').forEach((btn) => {
       btn.addEventListener('click', () => {
         const id = btn.getAttribute('data-station-id') as StationCode;
-        if (id) this.selectDestination(id);
+        if (id) {
+          this.selectedStation = id;
+        }
       });
     });
 
