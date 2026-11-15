@@ -233,3 +233,4 @@ server {
 - [ ] Click "All Stops" and verify interactive station navigation (Stations 00–06).
 - [ ] Test the Project Dossier Modals and links to live projects.
 - [ ] Verify 404 page by visiting `yourdomain.com/non-existent-page`.
+
