@@ -488,6 +488,34 @@ import Pictograms from './Pictograms.astro';
       });
     }
 
+    // Announcer Voice Helper (Indian English preferred for authentic transit tone)
+    const getAnnouncerVoice = (): SpeechSynthesisVoice | null => {
+      if (!('speechSynthesis' in window)) return null;
+      const voices = window.speechSynthesis.getVoices();
+      if (!voices || voices.length === 0) return null;
+      const indianVoice = voices.find(
+        (v) =>
+          v.lang === 'en-IN' ||
+          v.name.includes('India') ||
+          v.name.includes('Ravi') ||
+          v.name.includes('Heera') ||
+          v.name.includes('Veena')
+      );
+      if (indianVoice) return indianVoice;
+      return (
+        voices.find((v) => v.lang.startsWith('en') && (v.name.includes('Natural') || v.name.includes('Google') || v.name.includes('Guy') || v.name.includes('George'))) ||
+        voices.find((v) => v.lang.startsWith('en')) ||
+        voices[0] ||
+        null
+      );
+    };
+
+    if ('speechSynthesis' in window && window.speechSynthesis.onvoiceschanged !== undefined) {
+      window.speechSynthesis.onvoiceschanged = () => {
+        getAnnouncerVoice();
+      };
+    }
+
     // Precise Geometric Calculations for Viewport-Fitting Alignment
     // SVG viewBox: 1600 x 240.
     // Car 2 center door is at x = 580 in SVG coordinates (Car 2 starts at 400 + 180 center door = 580).
@@ -580,8 +608,7 @@ import Pictograms from './Pictograms.astro';
       }
 
       // Reset positions & streaks
-      if (streaks) streaks.style.opacity = '1';
-      if (ticker) ticker.textContent = 'TRAIN APPROACHING';
+      if (streaks) streaks.style.opacity = '0';
       if (boardContainer) {
         boardContainer.style.display = 'none';
         boardContainer.style.opacity = '0';
@@ -596,8 +623,10 @@ import Pictograms from './Pictograms.astro';
       const { startX, stopX } = calculatePositions();
       lastStopX = stopX;
 
-      // Start approach audio sequence (brown noise, flange, brake squeal, pneumatic hiss)
-      metroSound.playArrivalSequence();
+      // Position train offscreen left initially while announcement plays
+      if (trainWrapper) {
+        trainWrapper.style.transform = `translate3d(${startX}px, 0, 0)`;
+      }
 
       let doorsOpened = false;
       const openDoorsAndShowButton = () => {
@@ -638,31 +667,111 @@ import Pictograms from './Pictograms.astro';
         }, 6000);
       };
 
-      // Train enters and decelerates to stop with WAAPI (0s - 2.0s)
-      if (trainWrapper) {
-        currentAnim = trainWrapper.animate(
-          [
-            { transform: `translate3d(${startX}px, 0, 0) rotate(0deg)` },
-            { transform: `translate3d(${stopX}px, 0, 0) rotate(0.4deg)`, offset: 0.88 },
-            { transform: `translate3d(${stopX}px, 0, 0) rotate(0deg)`, offset: 1.0 },
-          ],
-          {
-            duration: 2000,
-            easing: 'cubic-bezier(0.08, 0.7, 0.2, 1)',
-            fill: 'forwards',
+      // Start train rolling into the platform after announcement
+      const startTrainArrival = () => {
+        if (streaks) streaks.style.opacity = '1';
+        if (ticker) ticker.textContent = 'TRAIN APPROACHING';
+
+        // Start approach audio sequence (brown noise, flange, brake squeal, pneumatic hiss)
+        metroSound.playArrivalSequence();
+
+        // Train enters and decelerates to stop with WAAPI (0s - 2.0s)
+        if (trainWrapper) {
+          currentAnim = trainWrapper.animate(
+            [
+              { transform: `translate3d(${startX}px, 0, 0) rotate(0deg)` },
+              { transform: `translate3d(${stopX}px, 0, 0) rotate(0.4deg)`, offset: 0.88 },
+              { transform: `translate3d(${stopX}px, 0, 0) rotate(0deg)`, offset: 1.0 },
+            ],
+            {
+              duration: 2000,
+              easing: 'cubic-bezier(0.08, 0.7, 0.2, 1)',
+              fill: 'forwards',
+            }
+          );
+
+          if (currentAnim && currentAnim.finished) {
+            currentAnim.finished.then(() => {
+              clearTimeout(doorsTimer);
+              openDoorsAndShowButton();
+            }).catch(() => {});
           }
-        );
-
-        if (currentAnim && currentAnim.finished) {
-          currentAnim.finished.then(() => {
-            clearTimeout(doorsTimer);
-            openDoorsAndShowButton();
-          }).catch(() => {});
         }
-      }
 
-      // Fallback timer ensures doors open even if WAAPI finished promise is delayed
-      doorsTimer = setTimeout(openDoorsAndShowButton, 2050);
+        // Fallback timer ensures doors open even if WAAPI finished promise is delayed
+        doorsTimer = setTimeout(openDoorsAndShowButton, 2050);
+      };
+
+      // Check sound preference
+      const isSoundActive = () => {
+        try {
+          if (localStorage.getItem('yugline_sound') === 'off') return false;
+          return metroSound.isEnabled();
+        } catch (e) {
+          return false;
+        }
+      };
+
+      const CLEAN_NAMES: Record<string, string> = {
+        'station-00': 'Base',
+        'station-01': 'Achievements',
+        'station-02': 'Projects',
+        'station-03': 'Experience',
+        'station-04': 'Skills',
+        'station-05': 'Education',
+        'station-06': 'Contact',
+      };
+      const cleanName = CLEAN_NAMES[currentDestination] || (STATIONS[currentDestination] ? STATIONS[currentDestination].name.replace(/^All\s+/i, '') : 'Next Station');
+
+      // Play audio announcement on metro screen first; then train rolls in!
+      if (isSoundActive() && 'speechSynthesis' in window) {
+        if (ticker) ticker.textContent = `PASS: ${cleanName.toUpperCase()}`;
+
+        let hasStartedArrival = false;
+        const triggerArrivalOnce = () => {
+          if (hasStartedArrival) return;
+          hasStartedArrival = true;
+          startTrainArrival();
+        };
+
+        try {
+          window.speechSynthesis.cancel();
+          const voiceLine = `Here is the transit pass for ${cleanName}.`;
+          const utterance = new SpeechSynthesisUtterance(voiceLine);
+          utterance.rate = 1.0;
+          utterance.pitch = 1.05;
+          utterance.volume = 1.0;
+
+          const voice = getAnnouncerVoice();
+          if (voice) {
+            utterance.voice = voice;
+            utterance.lang = voice.lang;
+          } else {
+            utterance.lang = 'en-IN';
+          }
+
+          const safetyTimer = setTimeout(triggerArrivalOnce, 2600);
+
+          utterance.onend = () => {
+            clearTimeout(safetyTimer);
+            setTimeout(triggerArrivalOnce, 120);
+          };
+
+          utterance.onerror = () => {
+            clearTimeout(safetyTimer);
+            triggerArrivalOnce();
+          };
+
+          setTimeout(() => {
+            window.speechSynthesis.speak(utterance);
+          }, 40);
+        } catch (err) {
+          triggerArrivalOnce();
+        }
+      } else {
+        // Sound disabled or speech synthesis unsupported: roll train in immediately
+        startTrainArrival();
+      }
     };
 
     // Boarding Trigger
