@@ -95,17 +95,6 @@ import { PROFILE, PROJECTS } from '../data/portfolio';
           <span id="sound-status">Sound: Off</span>
         </button>
 
-        <!-- 4. Theme: Dark / Light -->
-        <button
-          type="button"
-          id="theme-toggle"
-          class="px-3 py-1.5 border border-rule bg-surface text-ink hover:border-ink transition-colors font-bold"
-          aria-label="Toggle Night/Day Mode"
-        >
-          <span class="hidden dark:inline">Light</span>
-          <span class="inline dark:hidden">Dark</span>
-        </button>
-
         <!-- Hidden motion toggle accessible via key M or screen reader -->
         <button
           type="button"
@@ -163,20 +152,13 @@ import { PROFILE, PROJECTS } from '../data/portfolio';
         >
           All stops (Stops visited: 1 of 7)
         </button>
-        <div class="grid grid-cols-2 gap-3 pt-2">
+        <div class="pt-2">
           <button
             type="button"
             id="mobile-sound-toggle"
-            class="p-3 border-2 border-ink bg-surface font-bold text-xs uppercase text-ink text-center"
+            class="w-full p-3 border-2 border-ink bg-surface font-bold text-xs uppercase text-ink text-center"
           >
             Sound: Off
-          </button>
-          <button
-            type="button"
-            id="mobile-theme-toggle"
-            class="p-3 border-2 border-ink bg-surface font-bold text-xs uppercase text-ink text-center"
-          >
-            Theme
           </button>
         </div>
         <div class="pt-2">
@@ -692,6 +674,14 @@ import { PROFILE, PROJECTS } from '../data/portfolio';
           try {
             localStorage.setItem('yugline_reduce_motion', String(nextState));
           } catch (e) {}
+        });
+      }
+
+      // 2. Theme toggle
+      const toggleBtn = document.getElementById('theme-toggle');
+      if (toggleBtn) {
+        toggleBtn.addEventListener('click', () => {
+          document.documentElement.classList.toggle('dark');
         });
       }
 

@@ -31,20 +31,6 @@ const ogImage = `${canonicalURL}og-image.svg`;
     <meta name="author" content="Yug Rojivadiya" />
     <meta name="robots" content="index, follow" />
 
-    <!-- Immediate Theme Initialization Script (Prevents FOUC) -->
-    <script is:inline>
-      (function() {
-        try {
-          const savedTheme = localStorage.getItem('yugline_theme');
-          if (savedTheme === 'light') {
-            document.documentElement.classList.remove('dark');
-          } else if (savedTheme === 'dark') {
-            document.documentElement.classList.add('dark');
-          }
-        } catch (e) {}
-      })();
-    </script>
-
     <!-- Canonical -->
     <link rel="canonical" href={canonicalURL} />
 

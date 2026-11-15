@@ -68,45 +68,7 @@ export function initInteractions() {
     stations.forEach((st) => observer.observe(st));
   }
 
-  // 3. View Transitions API Theme Switch (Section 7.6)
-  const themeToggle = document.getElementById('theme-toggle');
-  const mobileThemeToggle = document.getElementById('mobile-theme-toggle');
-
-  const executeThemeToggle = () => {
-    const toggle = () => {
-      const isCurrentlyDark = document.documentElement.classList.contains('dark');
-      const nextState = !isCurrentlyDark;
-      if (nextState) {
-        document.documentElement.classList.add('dark');
-      } else {
-        document.documentElement.classList.remove('dark');
-      }
-      try {
-        localStorage.setItem('yugline_theme', nextState ? 'dark' : 'light');
-      } catch (err) {}
-    };
-
-    if (!isReduced() && (document as any).startViewTransition) {
-      (document as any).startViewTransition(() => toggle());
-    } else {
-      toggle();
-    }
-  };
-
-  if (themeToggle) {
-    themeToggle.onclick = (e) => {
-      e.preventDefault();
-      executeThemeToggle();
-    };
-  }
-  if (mobileThemeToggle) {
-    mobileThemeToggle.onclick = (e) => {
-      e.preventDefault();
-      executeThemeToggle();
-    };
-  }
-
-  // 4. Keyboard Shortcuts Navigation (Section 6 & 11)
+  // 3. Keyboard Shortcuts Navigation (Section 6 & 11)
   const stationHashes = [
     '#base',
     '#board',
