@@ -46,7 +46,7 @@ export const PROFILE: ProfileData = {
     linkedin: 'https://www.linkedin.com/in/yug-rojivadiya-115bb435a/',
     github: 'https://github.com/YugPatel11',
     instagram: 'https://www.instagram.com/yug.rojivadiya/',
-    resumeUrl: '/resume/YUG-ROJIVADIYA-final-cv.pdf',
+    resumeUrl: '/Yug%20Rojivadiya%20resume%20.pdf',
   },
 };
 
