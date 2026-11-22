@@ -202,6 +202,29 @@ export const PROJECTS: ProjectItem[] = [
     liveUrl: 'https://clinic-v9j2.onrender.com/',
     repoUrl: 'TODO-USER: Add Clinic Appointment repo link',
   },
+  {
+    id: 'shree-rang-laminates',
+    title: 'Shree Rang Laminates',
+    tagline: 'Desktop Inventory & Invoicing Management System',
+    description: 'Custom desktop software (.exe) built for a Surat furniture showroom. Automates invoice generation, inventory tracking, and client and wholesaler payment records.',
+    lines: ['backend', 'frontend'],
+    techStack: ['Python', 'Desktop App (.EXE)', 'SQLite', 'Invoice Engine'],
+    pictogram: 'rupee-document',
+    featured: true,
+    repoUrl: 'TODO-USER: Add Shree Rang Laminates repo link',
+  },
+  {
+    id: 'unity-pg-hostel',
+    title: 'Unity PG & Hostel',
+    tagline: 'Hostel Management Portal & Financial Analytics',
+    description: 'Full-stack accommodation portal featuring resident info, rent tracking, maintenance logs, and financial dashboards with month/year-wise profit graphs.',
+    lines: ['frontend', 'backend'],
+    techStack: ['Next.js', 'React', 'Tailwind CSS', 'Vercel', 'Analytics'],
+    pictogram: 'table-grid',
+    featured: true,
+    liveUrl: 'https://unitypgandhostel.vercel.app/',
+    repoUrl: 'TODO-USER: Add Unity PG repo link',
+  },
 ];
 
 export const EXPERIENCES: ExperienceItem[] = [
